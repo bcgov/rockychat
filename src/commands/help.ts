@@ -1,12 +1,12 @@
 import { driver } from "@rocket.chat/sdk";
 import { CommandInt, ExtendedIMessage } from "../interfaces/CommandInt";
 
-export const ping: CommandInt = {
-  name: "ping",
-  description: "Pings the bot.",
+export const help: CommandInt = {
+  name: "help",
+  description: "Rocky user manual.",
   command: async (message) => {
     const response: ExtendedIMessage = {
-      msg: "Pong",
+      msg: "You gotta call my name to talk to me!",
       rid: message.rid,
       tmid: message.tmid,
     };
