@@ -30,7 +30,7 @@ export const CommandHandler = async (
   const [prefix, commandName] = message.msg.split(" ");
   // when calling rocky:
   if (prefix === "!Rocky") {
-    // set thread for IMessage: threadID is t(tmid) or _id if thread doesn't exist:
+    // set thread for IMessage: threadID is tmid or _id if thread doesn't exist:
     if(!message.tmid) message.tmid = message._id;
 
     // check for predefined commands:
