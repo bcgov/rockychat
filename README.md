@@ -3,6 +3,7 @@
 ### Requirements:
 Node v20+
 npm v10.4+
+Rocketchat: a bot user with password, a channel that the bot user can join
 
 ### Run locally:
 ```bash
