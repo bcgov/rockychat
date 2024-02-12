@@ -14,3 +14,7 @@ npm install
 npm run build
 npm run start
 ```
+
+To test the app:
+- head to the channel
+- message starting with `!Rocky`
