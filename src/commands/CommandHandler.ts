@@ -1,3 +1,10 @@
+/*
+Respond function of the chatbot:
+- identify predefined commands
+- connect to GenAI endpoint for response
+- reply in a thread in the channel
+*/
+
 import { driver } from "@rocket.chat/sdk";
 import { CommandList } from "./CommandList";
 import { ExtendedIMessage } from "../interfaces/CommandInt";
@@ -41,7 +48,7 @@ export const CommandHandler = async (
       }
     }
 
-    // if not, intake question:
+    // if not, intake question (Gen AI integration here):
     const response: ExtendedIMessage = {
       msg: "pretend to be some smart feedback from AI",
       rid: message.rid,

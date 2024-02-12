@@ -1,5 +1,7 @@
 /*
-Main function of the chatbot
+Main function of the chatbot:
+- Connect and authenticate the chatbot account
+- Join the channel and listen for calls
 */
 import { driver } from "@rocket.chat/sdk";
 import { CommandHandler } from "./commands/CommandHandler";

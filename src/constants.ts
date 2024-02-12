@@ -1,3 +1,7 @@
+/*
+Import constants from .env
+*/
+
 import dotenv from "dotenv";
 dotenv.config();
 

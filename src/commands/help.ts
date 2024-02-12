@@ -1,3 +1,7 @@
+/*
+Help command of the chatbot:
+*/
+
 import { driver } from "@rocket.chat/sdk";
 import { CommandInt, ExtendedIMessage } from "../interfaces/CommandInt";
 
