@@ -1,7 +1,7 @@
 # ChatBot User Requirements
 
 ## Service Definition:
-A Rocket.Chat integrated Generative AI ChatBot to answer community questions related to the platform. Rocketchat users can interact with the Chatbot from a designated channel, the chatbot is able to provide information from the platform knowledge base with links to the material.
+A Rocket.Chat integrated Generative AI ChatBot to answer community questions related to the platform. Rocketchat users can interact with the Chatbot from a designated channel, the chatbot is able to provide information from the platform knowledge base with links to the material. This [Mural board](https://app.mural.co/t/platformservices5977/m/platformservices5977/1704914565841/08fdfeda069ad1ecd9c718ac2479afa5b309bb86?sender=ubd5b0c8c42584deffe081219) includes the infrastructure overview of the service design.
 
 ## MVP features:
 The **Generative AI model** is trained with the platform knowledge base, including the following sources:
@@ -31,3 +31,22 @@ The **Chatbot account** is able to provide an answer to a message with the speci
         - shared services repo (artifactory, vault, sysdig, ACS, Registry, etc.)
     - data validation/clean up is required
 - the ability to follow through a message thread as the conversation context
+
+
+## Plan to Evaluate the ChatBot AI model:
+
+We will be evaluating the following GenAI services:
+
+- Google Vertex AI: `Search and Conversation` and `customized model with fine tuning`
+- RedHat Openshift AI
+
+### Evaluation Criteria:
+
+- Accuracy and Relevance: the model understands and responds correctly based on BCGov platform information, the response includes suggestions and reference link to the data source.
+- Customization: the service is able to perform grounding with BCGov specific knowledge from various sources and formats; the response is formatted with custom templates.
+- Maintenance: the service is low-maintenance in contiguously feeding updated information
+- Cost-effectiveness: the service charges by usage with lowest price
+
+### Testing:
+- randomly pick existing questions from the #devops-how-to channel as initial test scenarios
+- open up Rocky to small group of users for two weeks of testing and feedback
