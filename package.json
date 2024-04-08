@@ -8,7 +8,8 @@
     "build": "tsc",
     "start": "node ./prod/bot.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "lint": "eslint --ignore-path .eslintignore --ext .js,.ts"
+    "lint": "eslint --ignore-path .eslintignore --ext .js,.ts",
+    "pretty": "prettier --ignore-path .gitignore --write \"src/**/*.+(js|ts)\""
   },
   "repository": {
     "type": "git",
@@ -26,6 +27,7 @@
     "@typescript-eslint/parser": "^7.5.0",
     "eslint": "^8.57.0",
     "eslint-plugin-react": "^7.34.1",
+    "prettier": "^3.2.5",
     "typescript": "^5.3.3"
   },
   "dependencies": {
