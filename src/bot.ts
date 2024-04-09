@@ -30,14 +30,14 @@ if (
     // Verify connection to Redis:
     await redisClient.set('0', 'Hello Redis');
     const testRedis = await redisClient.get('0');
-    console.log(testRedis);
-    if (testRedis !== 'Hello Redis123') {
+    console.log(`Testing Redis: ${testRedis}`);
+    if (testRedis !== 'Hello Redis') {
       throw new Error('Redis DB not ready!');
     }
 
     // Connect to Rocketchat:
     const ssl = !!ROCKETCHAT_USE_SSL;
-    console.log(ROCKETCHAT_USER);
+    console.log(`Rocketchat user: ${ROCKETCHAT_USER}`);
     await driver.connect({ host: ROCKETCHAT_URL, useSsl: ssl });
     
     await driver.login({
