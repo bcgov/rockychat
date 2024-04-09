@@ -1,10 +1,8 @@
 /*
-Create Redis client to save Rocketchat to Gen AI conversation relationship:
+Create Redis client to store Rocketchat to Gen AI conversation relationship:
 */
 import Redis from 'ioredis';
-import {
-  REDIS_HOST
-} from '../constants';
+import { REDIS_HOST } from '../constants';
 
 // Setup redis client:
 const redisClient = new Redis(`redis://${REDIS_HOST}`);

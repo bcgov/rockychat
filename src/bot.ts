@@ -26,7 +26,6 @@ if (
 
 (async () => {
   try {
-
     // Verify connection to Redis:
     await redisClient.set('0', 'Hello Redis');
     const testRedis = await redisClient.get('0');
@@ -39,17 +38,17 @@ if (
     const ssl = !!ROCKETCHAT_USE_SSL;
     console.log(`Rocketchat user: ${ROCKETCHAT_USER}`);
     await driver.connect({ host: ROCKETCHAT_URL, useSsl: ssl });
-    
+
     await driver.login({
       username: ROCKETCHAT_USER,
       password: ROCKETCHAT_PASSWORD,
     });
-    
+
     await driver.joinRooms([ROCKETCHAT_CHANNEL]);
     await driver.subscribeToMessages();
     driver.reactToMessages(CommandHandler);
     // await driver.sendToRoom("I am alive!", ROCKETCHAT_CHANNEL);
   } catch (error) {
-    throw Error(`>>>>> Error setting up bot: ${error}`)
+    throw Error(`>>>>> Error setting up bot: ${error}`);
   }
 })();
