@@ -11,4 +11,5 @@ export const {
   ROCKETCHAT_PASSWORD,
   ROCKETCHAT_USE_SSL,
   ROCKETCHAT_CHANNEL,
+  REDIS_HOST,
 } = process.env;
