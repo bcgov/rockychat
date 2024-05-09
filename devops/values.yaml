@@ -1,0 +1,76 @@
+# values.yaml
+
+# Configuration for the TypeScript application
+my-typescript-app-chart:
+  replicaCount: 3
+  image:
+    repository: my-typescript-app
+    tag: latest
+  containerPort: 3000
+  # Add any other configuration specific to your TypeScript application
+
+  # OpenShift resources
+  buildConfig:
+    enabled: true
+    strategy: Source
+    source:
+      type: Git
+      git:
+        uri: "https://github.com/your-repo/your-app"
+        ref: "main"
+  imageStream:
+    enabled: true
+  deploymentConfig:
+    enabled: true
+    replicas: {{ .Values.my-typescript-app-chart.replicaCount }}
+    # Add any other deployment configuration
+  service:
+    enabled: true
+    port: 3000
+  route:
+    enabled: true
+    hostname: my-typescript-app.example.com
+    path: /
+  # Add any other OpenShift resources needed for your application
+
+# Configuration for Redis
+redis:
+  usePassword: true
+  passwordSecret: "redis-secret" # Name of the Kubernetes Secret containing the Redis password
+  passwordKey: "redis-password"  # Key within the Secret containing the Redis password
+  persistence:
+    enabled: true
+    storageClass: "standard"
+    accessMode: "ReadWriteOnce"
+    size: "1Gi"
+  # Add any other configuration specific to your Redis deployment
+
+
+# values.yaml
+
+redis:
+  architecture: standalone
+  master:
+    podSecurityContext:
+      enabled: false
+    containerSecurityContext:
+      enabled: false
+    persistence:
+      size: 1Gi
+      accessModes: ['ReadWriteMany']
+
+
+  usePassword: true
+  # Specify the password for Redis (or use a secret)
+  # password: "your-redis-password"
+  passwordSecret:
+    enabled: false
+    existingSecret: ""
+    passwordKey: ""
+  # Configure persistence if needed
+  persistence:
+    enabled: true
+    storageClass: "standard"
+    accessMode: "ReadWriteOnce"
+    size: "1Gi"
+  # Add any other configuration specific to your Redis deployment

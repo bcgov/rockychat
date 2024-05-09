@@ -1,0 +1,11 @@
+apiVersion: v2
+name: rockychat-devops
+description: A Helm chart for deploying Rocky Chatbot with Redis DB
+version: 0.1.0
+
+type: application
+
+dependencies:
+  - name: redis
+    version: 19.1.0
+    repository: "https://charts.bitnami.com/bitnami"
