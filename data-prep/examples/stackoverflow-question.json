@@ -1,0 +1,25 @@
+{
+  "items": [
+      {
+          "tags": [
+              "helm"
+          ],
+          "owner": {
+            "content": "abc"
+          },
+          "is_answered": false,
+          "view_count": 79,
+          "answer_count": 1,
+          "score": 1,
+          "last_activity_date": 1713650400,
+          "creation_date": 1687785867,
+          "question_id": 1111,
+          "link": "https://stackoverflow.developer.gov.bc.ca/questions/1111",
+          "title": "Solr Deployment Strategies (Operator vs Standalone)",
+          "body": "<h2>Overview</h2>\n<p>Our current project (MFIN-Data-Catalogue) and numerous other future potential projects will be using the Search API Solr backend for Drupal.</p>\n<p>Solr is much more performant against large datasets, and provides many additional features:</p>\n<ul>\n<li>Improved file contents indexing</li>\n<li>Superior performance especially when dealing with numerous facets</li>\n<li>Better keywords handling</li>\n<li>Complete features like stemming, highlighting, spellchecking and phrase queries</li>\n</ul>\n<p>There are two ways we can launch Solr in the BC Gov Platform:</p>\n<ul>\n<li><a href=\"https://github.com/apache/solr-operator\" rel=\"nofollow noreferrer\">Install Solr through the Solr Operator</a></li>\n<li><a href=\"https://github.com/bitnami/charts/tree/main/bitnami/solr\" rel=\"nofollow noreferrer\">Install Solr via Helm Chart</a></li>\n</ul>\n<h2>Background</h2>\n<p>In my job as a senior Technical Architect of the Platform Team as Statistics Canada we installed the Solr Operator built by Apache itself so project teams can easily deploy a secured, distributed, and fully managed lifecycle of Solr themselves.</p>\n<p>The Solr Operator is superior then the Standalone container method due to:</p>\n<ul>\n<li>Managing the full lifecycle of Solr</li>\n<li>Providing a default secure configuration of Solr</li>\n<li>Solr being run in Solr Cloud mode in a distributed fashion under Zookeeper</li>\n<li>Created and maintained by Apache and Lucidworks so is officially supported</li>\n</ul>\n<p>I would like to know what is the interest in the BC Gov Platform team would have to install the Solr Operator. I do feel the Solr Operator does align with the platform's team model as a great deal many other operators are installed and given to the users of the BC Gov Platform.</p>\n<p>If the BC Gov Platform team signals low interest or the time period for such a feature is prohibited then I can install Solr via the Helm Chart method and run as a standalone single container.</p>\n<p>I posted below an example of the spec we would use which sets up a secured Solr instance via the Solr Operator.</p>\n<h3>Configuration of Solr Operator</h3>\n<pre><code>apiVersion: solr.apache.org/v1beta1\nkind: SolrCloud\nmetadata:\n  annotations:\n    meta.helm.sh/release-name: mfin-data-catalogue-solr\n    meta.helm.sh/release-namespace: ea352d-dev\n  labels:\n    app.kubernetes.io/instance: mfin-data-catalogue-solr\n    app.kubernetes.io/managed-by: Helm\n    app.kubernetes.io/name: mfin-data-catalogue-solr\n    app.kubernetes.io/version: 8.11.1\n    helm.sh/chart: solr-0.1.7\n  name: mfin-data-catalogue-solr\n  namespace: ea352d-dev\nspec:\n  busyBoxImage:\n    repository: library/busybox\n    tag: 1.28.0-glibc\n  customSolrKubeOptions:\n    podOptions:\n      livenessProbe:\n        timeoutSeconds: 5\n      readinessProbe:\n        timeoutSeconds: 5\n      resources:\n        limits:\n          memory: 5Gi\n        requests:\n          cpu: 65m\n          memory: 156Mi\n  dataStorage:\n    persistent:\n      pvcTemplate:\n        metadata: {}\n        spec:\n          resources:\n            requests:\n              storage: 5Gi\n      reclaimPolicy: Delete\n  replicas: 1\n  solrAddressability:\n    commonServicePort: 80\n    podPort: 8983\n  solrGCTune: '-XX:SurvivorRatio=4 -XX:TargetSurvivorRatio=90 -XX:MaxTenuringThreshold=8'\n  solrImage:\n    repository: library/solr\n    tag: 8.11.1\n  solrJavaMem: '-Xms1g -Xmx5g'\n  solrLogLevel: INFO\n  solrOpts: '-Dsolr.autoSoftCommit.maxTime=10000 -Dlog4j2.formatMsgNoLookups=true'\n  solrSecurity:\n    authenticationType: Basic\n    basicAuthSecret: rsams-solr-basic-auth\n    probesRequireAuth: true\n  updateStrategy:\n    managed: {}\n    method: Managed\n  zookeeperRef:\n    provided:\n      chroot: /this/will/be/auto/created\n      image:\n        pullPolicy: IfNotPresent\n        repository: pravega/zookeeper\n        tag: 0.2.6\n      persistence:\n        reclaimPolicy: Retain\n        spec:\n          accessModes:\n            - ReadWriteOnce\n          resources:\n            requests:\n              storage: 5Gi\n          storageClassName: default\n      replicas: 1\n      zookeeperPodPolicy:\n        resources:\n          limits:\n            memory: 2Gi\n          requests:\n            cpu: 65m\n            memory: 156Mi\n\n</code></pre>\n"
+      }
+  ],
+  "has_more": false,
+  "quota_max": 10000,
+  "quota_remaining": 9797
+}

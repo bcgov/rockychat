@@ -1,0 +1,19 @@
+{
+    "items": [
+        {
+            "owner": {
+                "content": "abc"
+            },
+            "is_accepted": "False",
+            "score": 0,
+            "last_activity_date": 1690322017,
+            "creation_date": 1690322017,
+            "answer_id": 1123,
+            "question_id": 1111,
+            "body": "<p>After surveying the community, there doesn\"t appear to be enough interest at this time to install the operator on the clusters. We recommend you use the Helm install for now and let us know if you can get more community interest in the future.</p>\n"
+        }
+    ],
+    "has_more": "False",
+    "quota_max": 10000,
+    "quota_remaining": 9881
+}
