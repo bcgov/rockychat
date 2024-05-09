@@ -1,20 +1,20 @@
 # ChatBot User Requirements
 
 ## Service Definition:
-A Rocket.Chat integrated Generative AI ChatBot to answer community questions related to the platform. Rocketchat users can interact with the Chatbot from a designated channel, the chatbot is able to provide information from the platform knowledge base with links to the material. This [Mural board](https://app.mural.co/t/platformservices5977/m/platformservices5977/1704914565841/08fdfeda069ad1ecd9c718ac2479afa5b309bb86?sender=ubd5b0c8c42584deffe081219) includes the infrastructure overview of the service design.
+A Rocket.Chat integrated Generative AI ChatBot to answer community questions related to the platform. RocketChat users can interact with the Chatbot from a designated channel, the chatbot is able to provide information from the platform knowledge base with links to the material. This [Miro board](https://miro.com/app/board/uXjVKVqzyA4=/) includes the infrastructure overview of the service design.
 
 ## MVP features:
 The **Generative AI model** is trained with the platform knowledge base, including the following sources:
 - documentation websites
-    - public information only
-    - TBD on IDIR protected pages
+    - public information
+    - IDIR protected pages
 - BCGov StackOverflow
 - BCGov GitHub repos
     - public repos only
     - covering `bcgov` and `BCDevOps` GitHub organizations
 - ~existing Rocketchat channel chat history~ (not in MVP)
 
-The **Chatbot account** is able to provide an answer to a message with the specific prompt (i.e.: `/chatbot ...`). Here's the workflow:
+The **Chatbot account** is able to provide an answer to a message with the specific prompt (i.e.: `!Rocky ...`). Here's the workflow:
 1. user post a message in the Chatbot channel
 1. Chatbot account pick up the question, process a response:
     1. if an answer is available, provide the document link (with the relevant message body quoted) for the responding message
@@ -23,7 +23,7 @@ The **Chatbot account** is able to provide an answer to a message with the speci
 
 ## Second Steps:
 - consider how to continuously/iteratively train the model when information updated from the sources
-- include existing Rocketchat channel chat history as part of knowledge base:
+- include existing RocketChat channel chat history as part of knowledge base:
     - use platform services channels only
         - #devops-how-to
         - #devops-alerts
