@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: {{ .Values.global.licenseplate }}-{{ .Values.global.environment }}
+  name: {{ include "rockychat.fullname" . }}-api
+  labels:
+    {{- include "rockychat.labels" . | nindent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "rockychat.name" . }}-api
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "rockychat.name" . }}-api
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+      containers:
+      - name: api
+        image: "{{ .Values.apiImage.repository }}:{{ .Values.apiImage.tag }}"
+        resources:
+          {{- toYaml .Values.resources.api | nindent 12 }}
+        env:
+        - name: ROCKETCHAT_URL
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "rockychat.fullname" . }}-rockey-secrets
+              key: rocketchat-url
+        - name: ROCKETCHAT_USER
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "rockychat.fullname" . }}-rockey-secrets
+              key: rocketchat-user
+        - name: ROCKETCHAT_CHANNEL
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "rockychat.fullname" . }}-rockey-secrets
+              key: rocketchat-channel
+        - name: ROCKETCHAT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "rockychat.fullname" . }}-rockey-secrets
+              key: rocketchat-password
+        - name: ROCKETCHAT_USE_SSL
+          value: "True"
+        - name: REDIS_HOST
+          value: {{ include "rockychat.fullname" . }}-redis
+        - name: REDIS_USERNAME
+          value: "default"
+        - name: REDIS_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: rockychat-devops-redis-secret
+              key: redis-password
+        ports:
+        - containerPort: 3000

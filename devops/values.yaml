@@ -1,76 +1,100 @@
 # values.yaml
-
+global:
+  licenseplate: 6e2f55
+  environment: dev
 # Configuration for the TypeScript application
-my-typescript-app-chart:
-  replicaCount: 3
-  image:
-    repository: my-typescript-app
-    tag: latest
-  containerPort: 3000
+apiImage:
+  repository: image-registry.openshift-image-registry.svc:5000/6e2f55-dev/rockychat-api
+  tag: latest
+  pullPolicy: IfNotPresent
   # Add any other configuration specific to your TypeScript application
 
+replicaCount:
+  api: 1
+  redis: 1
+
+resources:
+  api:
+    limits:
+      cpu: 200m
+      memory: 256Mi
+    requests:
+      cpu: 10m
+      memory: 128Mi
+  redis:
+    limits:
+      cpu: 100m
+      memory: 128Mi
+    requests:
+      cpu: 50m
+      memory: 64Mi
+      
   # OpenShift resources
-  buildConfig:
-    enabled: true
-    strategy: Source
-    source:
-      type: Git
-      git:
-        uri: "https://github.com/your-repo/your-app"
-        ref: "main"
-  imageStream:
-    enabled: true
-  deploymentConfig:
-    enabled: true
-    replicas: {{ .Values.my-typescript-app-chart.replicaCount }}
+buildConfig:
+  enabled: true
+  strategy: Source
+  source:
+    type: Git
+    git:
+      uri: "https://github.com/your-repo/your-app"
+      ref: "main"
+imageStream:
+  enabled: true
+
     # Add any other deployment configuration
-  service:
-    enabled: true
+
+service:
+  api:
+    type: ClusterIP
     port: 3000
+  redis:
+    type: ClusterIP
+    port: 6379
   route:
     enabled: true
     hostname: my-typescript-app.example.com
     path: /
+
   # Add any other OpenShift resources needed for your application
 
 # Configuration for Redis
 redis:
-  usePassword: true
-  passwordSecret: "redis-secret" # Name of the Kubernetes Secret containing the Redis password
-  passwordKey: "redis-password"  # Key within the Secret containing the Redis password
+  enabled: true
+  replica:
+    replicaCount: 3
+  # image: redis
+  # tag: 7.2.4
+  # pullPolicy: IfNotPresent
+  # port: 6379
+  # storage:
+  #   size: 200Mi
+
+  auth:
+    existingSecret: rockychat-devops-redis-secret
+    existingSecretPasswordKey: redis-password
+sentinel:
+  resources:
+    limits:
+      cpu: 1
+      memory: 1500Mi
+    requests:
+      cpu: 0.5
+      memory: 500Mi
+master:
   persistence:
     enabled: true
-    storageClass: "standard"
-    accessMode: "ReadWriteOnce"
-    size: "1Gi"
-  # Add any other configuration specific to your Redis deployment
-
-
-# values.yaml
-
-redis:
-  architecture: standalone
-  master:
-    podSecurityContext:
-      enabled: false
-    containerSecurityContext:
-      enabled: false
-    persistence:
-      size: 1Gi
-      accessModes: ['ReadWriteMany']
-
-
-  usePassword: true
-  # Specify the password for Redis (or use a secret)
-  # password: "your-redis-password"
-  passwordSecret:
-    enabled: false
-    existingSecret: ""
-    passwordKey: ""
-  # Configure persistence if needed
+    size: 1Gi
+    storageClass: netapp-file-standard
+replica:
   persistence:
     enabled: true
-    storageClass: "standard"
-    accessMode: "ReadWriteOnce"
-    size: "1Gi"
-  # Add any other configuration specific to your Redis deployment
+    size: 1Gi
+    storageClass: netapp-file-standard
+
+
+networkPolicy:
+  intraNamespace:
+    enabled: true
+  allowFromIngress:
+    enabled: true
+    
