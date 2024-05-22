@@ -7,6 +7,10 @@ WORKDIR /app
 # Copy package.json and package-lock.json to the working directory
 COPY package*.json ./
 
+# Change config file path, because wedont have access to /npm
+# TODO, don't use npm in deployment. use stages. 
+ENV npm_config_cache /tmp/npm
+
 # Install dependencies
 RUN npm install
 

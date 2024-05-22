@@ -1,0 +1,58 @@
+[
+    {
+        "tags": [
+            "helm"
+        ],
+        "owner": {
+            "content": "abc"
+        },
+        "is_answered": false,
+        "view_count": 79,
+        "answer_count": 1,
+        "score": 1,
+        "last_activity_date": 1713650400,
+        "creation_date": 1687785867,
+        "question_id": 1111,
+        "link": "https://stackoverflow.developer.gov.bc.ca/questions/1111",
+        "title": "Solr Deployment Strategies (Operator vs Standalone)"
+    },
+    {
+        "tags": [
+            "openshift",
+            "sdn",
+            "kafka"
+        ],
+        "owner": {
+            "content": "abc"
+        },
+        "is_answered": true,
+        "view_count": 23,
+        "accepted_answer_id": 1219,
+        "answer_count": 1,
+        "score": 0,
+        "last_activity_date": 1713369691,
+        "creation_date": 1713369184,
+        "question_id": 1218,
+        "link": "https://stackoverflow.developer.gov.bc.ca/questions/1218",
+        "title": "How to customize Kafka for use in Emerald?"
+    },
+    {
+        "tags": [
+            "cname",
+            "emerald",
+            "dns"
+        ],
+        "owner": {
+            "content": "abc"
+        },
+        "is_answered": false,
+        "view_count": 12,
+        "answer_count": 1,
+        "score": 2,
+        "last_activity_date": 1713368716,
+        "creation_date": 1712596587,
+        "question_id": 1215,
+        "link": "https://stackoverflow.developer.gov.bc.ca/questions/1215",
+        "title": "Process or information for CNAME for Emerald"
+    }
+]

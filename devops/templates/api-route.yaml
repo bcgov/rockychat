@@ -1,0 +1,14 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: {{ include "rockychat.fullname" . }}-api
+  labels:
+    {{- include "rockychat.labels" . | nindent 4 }}
+spec:
+  to:
+    kind: Service
+    name: {{ include "rockychat.fullname" . }}-api
+  port:
+    targetPort: 3000
+  tls:
+    termination: edge

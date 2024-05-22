@@ -9,6 +9,7 @@ import { driver } from '@rocket.chat/sdk';
 import { CommandList } from './CommandList';
 import { ExtendedIMessage } from '../interfaces/CommandInt';
 import { ROCKETCHAT_USER, ROCKETCHAT_CHANNEL } from '../constants';
+// import redisClient from '../services/redis';
 
 export const CommandHandler = async (
   err: unknown,
@@ -51,7 +52,29 @@ export const CommandHandler = async (
       }
     }
 
-    // if not, intake question (Gen AI integration here):
+    // // if not, intake question (Gen AI integration here)
+    // const threadID = (message.tmid)? message.tmid : message._id;
+
+    // let responseMsg = 'placeholder';
+
+    // // 1. get the message ID and check for Gen AI conversation ID:
+    // const convoId = await redisClient.get(threadID);
+
+    // if (convoId) {
+    //   console.log('conversation exist, pass along the question here');
+    //   responseMsg = 'hi again, xxxx';
+    // }
+    // else {
+    //   console.log('conversation not exist yet, create one here');
+    //   const newConcoId = 'abc';
+    //   await redisClient.setNX(message.tmid, newConcoId);
+    //   responseMsg = 'hi again, xxxx';
+
+    // }
+
+    // 2. send question to Gen AI convo, create new if not yet exist
+
+    // 3. pass the response back to chat:
     const response: ExtendedIMessage = {
       msg: 'pretend to be some smart feedback from AI',
       rid: message.rid,

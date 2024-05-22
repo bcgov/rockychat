@@ -1,0 +1,38 @@
+{{- if .Values.networkPolicy.intraNamespace.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ include "rockychat.fullname" . }}-intra-namespace-comms
+  namespace: {{ .Values.global.licenseplate }}-{{ .Values.global.environment }}
+  labels:
+    {{- include "rockychat.labels" . | nindent 4 }}
+spec:
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          name: {{ .Values.global.licenseplate }}
+          environment: {{ .Values.global.environment }}
+  podSelector: {}
+  policyTypes:
+  - Ingress
+{{- end }}
+
+{{- if .Values.networkPolicy.allowFromIngress.enabled }}
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ include "rockychat.fullname" . }}-allow-from-openshift-ingress
+  labels:
+    {{- include "rockychat.labels" . | nindent 4 }}
+spec:
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          network.openshift.io/policy-group: ingress
+  podSelector: {}
+  policyTypes:
+  - Ingress
+{{- end }}
