@@ -13,26 +13,28 @@ To index a website, we need to [verify the domain](https://cloud.google.com/iden
 
 ### Private cloud website
 
-We use `wget` to obtain the html files from all website pages, including the internal resources that requires IDIR authentication:
+We use `wget` to obtain the html files from all website pages, including the internal resources that requires IDIR authentication.
 
+> Note that if you want to include the IDIR protected data, a login session token could be obtained from the browser -> developer settings -> cookies. The format is like `wordpress_logged_in_xxxx=xxx`.
+`
+
+Use the docker option:
 ```bash
-# get the session token from cookies:
-export DIGITAL_SESSION="wordpress_logged_in_xxx=xxxx"
+# obtain the API key and fill in .env file
+cp .env.sample .env
 
-# no local conversion of the link to keep the original URLs:
-wget --header "Cookie: $DIGITAL_SESSION" --mirror -np https://digital.gov.bc.ca/cloud/services/private
+# check in the dockerFile to make sure the right script is used
 
-# create folder structure to match the GCP storage bucket name:
-mkdir data-exports
-mv digital.gov.bc.ca/ data-exports/digital-website/
+# build the docker container:
+docker build -t data-prep .
 
-# create the JSONL file with the Title and URL metadata:
-python3 website-html-script.py data-exports data-exports/html_files.jsonl
-# To check: generate URI should be "gs://digital-website/cloud/services/private/intro/index.html"
+# Set the output to data-prep folder
+rm -rf output
+mkdir output
+docker run -v $(pwd)/output:/app/output -p 4000:80 --env-file .env data-prep
 
+# to check: in the JONSL file, there should be a generate URI should be "gs://digital-website/cloud/services/private/intro/index.html"
 ```
-
-Note: add this to the docker option
 
 # BCGov StackOverflow:
 
@@ -42,9 +44,12 @@ Use the StackOverflow API endpoint to export questions and answers, an API key g
 # obtain the API key and fill in .env file
 cp .env.sample .env
 
+# check in the dockerFile to make sure the right script is used
+
 # build the docker container:
 docker build -t data-prep .
 
 # Set the output to data-prep folder
-docker run -v ./output:/app/output -p 4000:80 --env-file .env data-prep
+mkdir output
+docker run -v $(pwd)/output:/app/output -p 4000:80 --env-file .env data-prep
 ```
