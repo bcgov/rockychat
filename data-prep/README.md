@@ -18,30 +18,18 @@ We use `wget` to obtain the html files from all website pages, including the int
 > Note that if you want to include the IDIR protected data, a login session token could be obtained from the browser -> developer settings -> cookies. The format is like `wordpress_logged_in_xxxx=xxx`.
 `
 
-Use the docker option:
-```bash
-# obtain the API key and fill in .env file
-cp .env.sample .env
-
-# check in the dockerFile to make sure the right script is used
-
-# build the docker container:
-docker build -t data-prep .
-
-# Set the output to data-prep folder
-rm -rf output
-mkdir output
-docker run -v $(pwd)/output:/app/output -p 4000:80 --env-file .env data-prep
-
-# to check: in the JONSL file, there should be a generate URI should be "gs://digital-website/cloud/services/private/intro/index.html"
-```
-
-# BCGov StackOverflow:
+### BCGov StackOverflow:
 
 Use the StackOverflow API endpoint to export questions and answers, an API key generated from a user is required. [Docs for reference](https://api.stackexchange.com/docs).
 
+### How to run the scripts to collect data:
+
 ```bash
-# obtain the API key and fill in .env file
+# quick clean up of the output folder
+rm -rf output
+mkdir output
+
+# obtain all the credentials and configs to fill in .env file
 cp .env.sample .env
 
 # check in the dockerFile to make sure the right script is used
@@ -50,6 +38,9 @@ cp .env.sample .env
 docker build -t data-prep .
 
 # Set the output to data-prep folder
-mkdir output
 docker run -v $(pwd)/output:/app/output -p 4000:80 --env-file .env data-prep
+
+# to check:
+# Stackoverflow output should have at least 300 items
+# in the JONSL file, there should be a generate URI should be "gs://digital-website/cloud/services/private/intro/index.html"
 ```
