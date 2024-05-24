@@ -1,9 +1,16 @@
-# This is the script to parse the html file, which removes header footers and style blocks
+# This is does the following:
+# - fetch HTML files from a website
+# - parse the html file and removes header footers and style blocks
+# - create metadata JSONL file, for the digital.gov.bc.ca website html exports
+# Reference: https://cloud.google.com/dialogflow/vertex/docs/concept/data-store#with-metadata
 
-import sys
 import os
+import sys
+import json
 import subprocess
+import re
 from bs4 import BeautifulSoup
+
 
 def remove_header_footer(html_content):
     soup = BeautifulSoup(html_content, 'html.parser')  # Use the built-in parser
@@ -63,13 +70,67 @@ def download_website(url, output_directory, session_token):
         f'--directory-prefix={output_directory}', url
     ])
 
+# def clean_title(title):
+#     # Remove special ASCII characters
+#     cleaned_title = re.sub(r'[^\x00-\x7F]+', '', title)
+#     return cleaned_title.strip()
+
+# Get page title and URL from the HTML headers:
+def extract_metadata(html_file):
+    metadata = {}
+    with open(html_file, "r", encoding="utf-8") as f:
+        for line in f:
+            # Extract canonical URL
+            match_canonical = re.search(r'<link[^>]*rel=["\']canonical["\'][^>]*href=["\']([^"\']+)["\']', line)
+            if match_canonical and not metadata.get("url"):
+                metadata["url"] = match_canonical.group(1)
+
+            # Extract page title
+            match_title = re.search(r'<meta[^>]*name=["\']description["\'][^>]*content=["\']([^"\']+)["\']', line)
+            if match_title and not metadata.get("title"):
+                metadata["title"] = match_title.group(1)
+
+            # Break if both URL and title are found
+            if metadata.get("url") and metadata.get("title"):
+                break
+    return metadata
+
+# Setup JSONL with unique ID and Cloud Storage file path:
+def generate_json_lines(directory):
+    json_lines = []
+    id_counter = 1
+    for root, dirs, files in os.walk(directory):
+        for file in files:
+            if file.endswith(".html"):
+                # first generate a unique ID, in the format of d001:
+                unique_id = "d{:03d}".format(id_counter)
+
+                # get the path to the HTML file:
+                html_file_path = os.path.join(root, file)
+
+                # Convert to URI of document in GCP Cloud Storage
+                url = os.path.relpath(html_file_path, directory)
+                file_url = "gs://" + url.replace("\\", "/")  # starts with gs://
+                content = {"mimeType": "text/html", "uri": file_url}
+
+                # collect the page title and URL:
+                metadata = extract_metadata(html_file_path)
+
+                # Example: {"id": "d001", "content": {"mimeType": "text/html", "uri": "gs://digital-website/cloud/services/index.html"}, "structData": {"title": "Learn about cloud services available in the B.C. government.", "url": "https://digital.gov.bc.ca/cloud/services/"}}
+                json_lines.append(json.dumps({"id": unique_id, "content": content, "structData": metadata}))
+
+                id_counter += 1
+                
+    return json_lines
+
 if __name__ == "__main__":
-    if len(sys.argv) != 3:
-        print("Usage: python website-html-chunking.py <download_directory> <output_directory>")
+    if len(sys.argv) != 4:
+        print("Usage: python website-html-parsing-script.py <download_directory> <output_directory> <output_metadata_file>")
         sys.exit(1)
     
     download_directory = sys.argv[1]
     output_directory = sys.argv[2]
+    output_metadata_file = sys.argv[3]
 
     # Access the environment variable
     if 'DIGITAL_WEBSITE_URL' in os.environ and 'DIGITAL_WEBSITE_SESSION_TOKEN' in os.environ:
@@ -84,7 +145,15 @@ if __name__ == "__main__":
 
 
     # Download the website
+    print(f"Fetching data from {website_url}, output to {download_directory}")
     download_website(website_url, download_directory, session_token)
     
     # Process the downloaded HTML files
+    print(f"Parsing file from {download_directory}, output to {output_directory}")
     process_html_files(download_directory, output_directory)
+
+    print(f"sourcing file from {output_directory}, and output metadata to {output_metadata_file}")
+    json_lines = generate_json_lines(output_directory)
+
+    with open(output_metadata_file, "w") as f:
+        f.write('\n'.join(json_lines))
