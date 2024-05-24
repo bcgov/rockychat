@@ -110,7 +110,8 @@ def generate_json_lines(directory):
 
                 # Convert to URI of document in GCP Cloud Storage
                 url = os.path.relpath(html_file_path, directory)
-                file_url = "gs://" + url.replace("\\", "/")  # starts with gs://
+                # Note: the URI starts with gs://, and includes "digital-website" that matches the datastore name, following with the folder structure of the website output
+                file_url = "gs://" + "digital-website/" + url.replace("\\", "/")
                 content = {"mimeType": "text/html", "uri": file_url}
 
                 # collect the page title and URL:
@@ -152,8 +153,9 @@ if __name__ == "__main__":
     print(f"Parsing file from {download_directory}, output to {output_directory}")
     process_html_files(download_directory, output_directory)
 
-    print(f"sourcing file from {output_directory}, and output metadata to {output_metadata_file}")
-    json_lines = generate_json_lines(output_directory)
+    # Create metadata file for the downloaded HTML files
+    print(f"sourcing file from {download_directory}, and output metadata to {output_metadata_file}")
+    json_lines = generate_json_lines(download_directory)
 
     with open(output_metadata_file, "w") as f:
         f.write('\n'.join(json_lines))
