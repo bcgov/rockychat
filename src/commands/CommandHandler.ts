@@ -76,7 +76,7 @@ export const CommandHandler = async (
 
     // 3. pass the response back to chat:
     const response: ExtendedIMessage = {
-      msg: 'pretend to be some smart feedback from AI',
+      msg: 'Billy Test 123 change again! :pretend to be some smart feedback from AI',
       rid: message.rid,
       tmid: message.tmid,
     };
