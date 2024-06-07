@@ -17,6 +17,9 @@ RUN npm install
 # Copy the rest of the application code
 COPY . .
 
+
+ENV GOOGLE_APPLICATION_CREDENTIALS=/app/google-cloud-service-account.json
+
 # Build app
 RUN npm run build
 

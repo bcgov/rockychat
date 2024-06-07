@@ -6,7 +6,7 @@ services:
       dockerfile: Dockerfile.dev
     develop:
       watch:
-        - action: rebuild
+        - action: sync
           path: ./src
           target: /app/src
     ports:
