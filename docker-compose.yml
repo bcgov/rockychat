@@ -1,22 +1,25 @@
 version: '3.8'
-
 services:
-  # chatbot:
   rockychat:
-    build: 
+    build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
+    develop:
+      watch:
+        - action: sync
+          path: ./src
+          target: /app/src
     ports:
-      - "3000:3000"
+      - '3000:3000'
+    # volumes:
+    #   - .:/src
     env_file:
       - .env
     depends_on:
       - rockychat-redis
-  # Redis DB:
   rockychat-redis:
     image: redis:7.2.4
     ports:
-      - "6379:6379"
+      - '6379:6379'
     env_file:
       - .env
-    # volumes:

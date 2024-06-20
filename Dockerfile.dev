@@ -11,20 +11,23 @@ COPY package*.json ./
 # TODO, don't use npm in deployment. use stages. 
 ENV npm_config_cache /tmp/npm
 
+
+# Copy package.json and package-lock.json to the working directory
+COPY package*.json ./
+
 # Install dependencies
 RUN npm install
-
 # Copy the rest of the application code
 COPY . .
 
-
 ENV GOOGLE_APPLICATION_CREDENTIALS=/app/google-cloud-service-account.json
 
-# Build app
-RUN npm run build
 
 # Expose port 3000
 EXPOSE 3000
 
-# Command to run app
-CMD ["npm", "run", "start"]
+# Install nodemon for development
+RUN npm install --save-dev nodemon
+
+# Command to run app in development mode
+CMD ["npm", "run", "dev"]
