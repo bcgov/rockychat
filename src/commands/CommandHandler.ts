@@ -10,7 +10,22 @@ import { CommandList } from './CommandList';
 import { ExtendedIMessage } from '../interfaces/CommandInt';
 import { ROCKETCHAT_USER, ROCKETCHAT_CHANNEL, AGENT_ID, LOCATION,PROJECT_ID } from '../constants';
 import {SessionsClient} from '@google-cloud/dialogflow-cx';
+import redisClient from '../services/redis';
+import _ from 'lodash';
 // import redisClient from '../services/redis';
+
+
+async function getOrSetSessionId(threadId: string): Promise<string> {
+  // Attempt to retrieve the existing session ID from Redis
+  let sessionId = await redisClient.hget(threadId, 'sessionId');
+  if (!sessionId) {
+    // No session ID exists, create a new one and store it
+    sessionId = threadId; // Using threadId as the session ID for simplicity
+    await redisClient.hset(threadId, 'sessionId', sessionId);
+    await redisClient.hset(threadId, 'platform', 'GCP'); // Assuming GCP as default platform
+  }
+  return sessionId;
+}
 
 export const CommandHandler = async (
   err: unknown,
@@ -43,10 +58,17 @@ export const CommandHandler = async (
   const splitPoint = message.msg.indexOf(' ') + 1;
   const prefix = message.msg.substring(0, splitPoint).trim();
   const commandName = message.msg.substring(splitPoint).trim();
+  const client = new SessionsClient({apiEndpoint: `${LOCATION}-dialogflow.googleapis.com`})
+  const query = commandName;
+  const languageCode = 'en'
+
   // when calling rocky:
   if (prefix === '!Rocky') {
     // set thread for IMessage: threadID is tmid or _id if thread doesn't exist:
-    if (!message.tmid) message.tmid = message._id;
+     if (!message.tmid) message.tmid = message._id;
+    const threadId = message.tmid || '';
+    const GCPsessionId = await getOrSetSessionId(threadId);
+    console.log(`Using session ID: ${GCPsessionId} for thread ID: ${threadId}`);
     // check for predefined commands:
     for (const Command of CommandList) {
       if (commandName === Command.name) {
@@ -56,18 +78,21 @@ export const CommandHandler = async (
       }
     }
 
-    const query = commandName;
-    const languageCode = 'en'
 
-    const client = new SessionsClient({apiEndpoint: `${LOCATION}-dialogflow.googleapis.com`})
+
+
+
     async function detectIntentText() {
-      let responseMsg
-      const sessionId = Math.random().toString(36).substring(7);
+      let responseMsg = []
+      //  A session remains active and its data is stored for 30 minutes after the last request is sent for the session.
+      // https://cloud.google.com/dialogflow/cx/docs/concept/session
+      // https://googleapis.dev/nodejs/dialogflow-cx/latest/v3.SessionsClient.html
+      // const sessionId = message.tmid || Math.random().toString(36).substring(7); //use tmid for sessionId so every thread use same session
       const sessionPath = client.projectLocationAgentSessionPath(
         PROJECT_ID || '',
         LOCATION || '',
         AGENT_ID || '',
-        sessionId
+        GCPsessionId 
       );
       const request = {
         session: sessionPath,
@@ -79,25 +104,40 @@ export const CommandHandler = async (
         },
       };
       const [response] = await client.detectIntent(request)
-      
       for (const message of response?.queryResult?.responseMessages || []) {
         if (message.text) {
-          console.log(`Agent Response: ${message.text.text}`);
-          responseMsg = message.text.text || 'Default Message'
+          responseMsg.push (`${message.text.text}(current session: ${GCPsessionId}`|| 'Default Message')
+        }
+        // Assuming message.payload.fields is of type { [k: string]: IValue; } and IValue can be any type
+        // EXAMPLE payload:
+        // {
+        //   "richContent": 
+        //    [
+        //     [
+        //       {
+        //         "actionLink": "",
+        //         "type": "info",
+        //         "subtitle": "",
+        //         "title": ""
+        //       }
+        //     ]
+        //   ]
+        // }
+        if(message.payload?.fields?.richContent) {
+          const richContents = _.get(message, 'payload.fields.richContent');
+          const actionLink = _.get(richContents, 'listValue.values[0].listValue.values[0].structValue.fields.actionLink.stringValue');
+          responseMsg.push(actionLink);
         }
       }
-      if (response?.queryResult?.match?.intent) {
-        console.log(`Matched Intent: ${response.queryResult.match.intent.displayName}`);
-      }
-      console.log(`Current Page: ${response?.queryResult?.currentPage?.displayName}`);
 
-
-    const RCresponse: ExtendedIMessage = {
-      msg: Array.isArray(responseMsg) ? responseMsg.join(' ') : (responseMsg || 'default msg'),
-      rid: message.rid,
-      tmid: message.tmid,
-    };
-    await driver.sendMessage(RCresponse);
+    for ( const responseMessage of responseMsg ){
+      const RCresponse: ExtendedIMessage = {
+        msg: Array.isArray(responseMessage) ? responseMessage.join(' ') : (responseMessage || 'default msg'),
+        rid: message.rid,
+        tmid: threadId
+      };
+      await driver.sendMessage(RCresponse);
+    }
     }
 
     detectIntentText();
