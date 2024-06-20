@@ -141,7 +141,6 @@ export const CommandHandler = async (
     }
 
     detectIntentText();
-// =======
     // // if not, intake question (Gen AI integration here)
     // const threadID = (message.tmid)? message.tmid : message._id;
 
