@@ -2,10 +2,30 @@
 global:
   licenseplate: 6e2f55
   environment: dev
+  vault:
+    role: ""
+    subPath: ""
+    podAnnotations:
+      vault.hashicorp.com/auth-path: "auth/k8s-silver"
+      vault.hashicorp.com/namespace: "platform-services"
+      vault.hashicorp.com/agent-inject: "true"
+      vault.hashicorp.com/agent-inject-token: "false"
+      vault.hashicorp.com/agent-pre-populate: "true"
+      vault.hashicorp.com/agent-pre-populate-only: "true"
+      vault.hashicorp.com/agent-requests-cpu: "50m"
+      vault.hashicorp.com/agent-limits-cpu: "100m"
+      vault.hashicorp.com/agent-requests-mem: "32Mi"
+      vault.hashicorp.com/agent-limits-mem: "64Mi"
+  env:
+    "Env": ""
+    "SECURE_HEADERS": "true"
+    "AUTH_TRUST_HOST": "true"
+  serviceAccountName: 6e2f55-vault
+
 # Configuration for the TypeScript application
 apiImage:
   repository: image-registry.openshift-image-registry.svc:5000/6e2f55-dev/rockychat-api
-  tag: latest
+  tag: ""
   pullPolicy: IfNotPresent
   # Add any other configuration specific to your TypeScript application
 
@@ -97,4 +117,3 @@ networkPolicy:
     enabled: true
   allowFromIngress:
     enabled: true
-    

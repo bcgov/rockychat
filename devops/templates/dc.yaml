@@ -16,33 +16,34 @@ spec:
       labels:
         app.kubernetes.io/name: {{ include "rockychat.name" . }}-api
         app.kubernetes.io/instance: {{ .Release.Name }}
+      annotations:
+        {{- $podAnnotations := merge (.Values.podAnnotations | default dict) (.Values.global.vault.podAnnotations | default dict) }}
+        {{- with $podAnnotations }}
+          {{- toYaml . | nindent 8 }}
+        {{- end }}
+        vault.hashicorp.com/role: "{{ .Values.global.vault.role }}"
+        vault.hashicorp.com/agent-inject-secret-rockychat.env: "{{ .Values.global.vault.role }}/{{ .Values.global.vault.subPath }}"
+        vault.hashicorp.com/agent-inject-template-rockychat.env: |
+          {{`{{- with secret "`}}{{ .Values.global.vault.role }}/{{ .Values.global.vault.subPath }}{{`" -}}
+          export ROCKETCHAT_URL='{{ .Data.data.rocketchat_url }}'
+          export ROCKETCHAT_USER='{{ .Data.data.rocketchat_user }}'
+          export ROCKETCHAT_CHANNEL='{{ .Data.data.rocketchat_channel }}'
+          export ROCKETCHAT_PASSWORD='{{ .Data.data.rocketchat_password }}'
+          export PROJECT_ID='{{ .Data.data.GCP_PROJECT_ID }}'
+          export LOCATION='{{ .Data.data.GCP_LOCATION }}'
+          export AGENT_ID='{{ .Data.data.GCP_AGENT_ID }}'
+          {{- end }}`}}
     spec:
+      serviceAccountName: {{ default .Values.global.serviceAccountName .Values.serviceAccountName }}
       containers:
       - name: api
+        command: ["/bin/sh", "-c"]
+        args: 
+          [' . /vault/secrets/rockychat.env && npm run start']
         image: "{{ .Values.apiImage.repository }}:{{ .Values.apiImage.tag }}"
         resources:
           {{- toYaml .Values.resources.api | nindent 12 }}
         env:
-        - name: ROCKETCHAT_URL
-          valueFrom:
-            secretKeyRef:
-              name: {{ include "rockychat.fullname" . }}-rockey-secrets
-              key: rocketchat-url
-        - name: ROCKETCHAT_USER
-          valueFrom:
-            secretKeyRef:
-              name: {{ include "rockychat.fullname" . }}-rockey-secrets
-              key: rocketchat-user
-        - name: ROCKETCHAT_CHANNEL
-          valueFrom:
-            secretKeyRef:
-              name: {{ include "rockychat.fullname" . }}-rockey-secrets
-              key: rocketchat-channel
-        - name: ROCKETCHAT_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: {{ include "rockychat.fullname" . }}-rockey-secrets
-              key: rocketchat-password
         - name: ROCKETCHAT_USE_SSL
           value: "True"
         - name: REDIS_HOST
