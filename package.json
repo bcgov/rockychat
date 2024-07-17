@@ -5,7 +5,7 @@
   "main": "./prod/bot.js",
   "scripts": {
     "prebuild": "rm -rf ./prod",
-    "build": "tsc",
+    "build": "tsc --outDir ./prod",
     "start": "node ./prod/bot.js",
     "dev": "nodemon -L ./src/bot.ts",
     "test": "echo \"Error: no test specified\" && exit 1",

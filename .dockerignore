@@ -1,1 +1,4 @@
 .env
+# tsconfig.json
+/prod/
+node_modules
