@@ -1,0 +1,8 @@
+global:
+  vault:
+    role: "6e2f55-nonprod"
+    subPath: "rockey-dev"
+  env:
+    "Env": "dev"
+apiImage:
+  tag: latest
