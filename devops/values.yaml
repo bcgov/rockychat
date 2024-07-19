@@ -1,7 +1,7 @@
 # values.yaml
 global:
   licenseplate: 6e2f55
-  environment: dev
+  environment: 
   vault:
     role: ""
     subPath: ""

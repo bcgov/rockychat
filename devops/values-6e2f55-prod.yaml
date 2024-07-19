@@ -1,0 +1,8 @@
+global:
+  vault:
+    role: "6e2f55-prod"
+    subPath: "rockey-prod"
+  environment: "prod"
+apiImage:
+  repository: image-registry.openshift-image-registry.svc:5000/6e2f55-prod/rockychat-api
+  tag: latest
