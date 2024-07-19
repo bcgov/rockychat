@@ -35,10 +35,6 @@ upgrade: check-image-tag
 upgrade:
 	@helm upgrade --install $(call arguments)
 
-.PHONY: upgrade-db
-upgrade-db: helm-dep
-upgrade-db:
-	@helm upgrade --reuse-values "${NAME}" . -n "${NAMESPACE}" --set app.migration.enabled=false
 
 .PHONY: lint
 lint: helm-dep

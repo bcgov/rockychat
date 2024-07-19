@@ -68,6 +68,7 @@ export const CommandHandler = async (
      if (!message.tmid) message.tmid = message._id;
     const threadId = message.tmid || '';
     const GCPsessionId = await getOrSetSessionId(threadId);
+    // debug
     console.log(`Using session ID: ${GCPsessionId} for thread ID: ${threadId}`);
     // check for predefined commands:
     for (const Command of CommandList) {
@@ -106,7 +107,7 @@ export const CommandHandler = async (
       const [response] = await client.detectIntent(request)
       for (const message of response?.queryResult?.responseMessages || []) {
         if (message.text) {
-          responseMsg.push (`${message.text.text}(current session: ${GCPsessionId}`|| 'Default Message')
+          responseMsg.push (`${message.text.text}`|| 'Default Message')
         }
         // Assuming message.payload.fields is of type { [k: string]: IValue; } and IValue can be any type
         // EXAMPLE payload:
@@ -141,29 +142,5 @@ export const CommandHandler = async (
     }
 
     detectIntentText();
-    // // if not, intake question (Gen AI integration here)
-    // const threadID = (message.tmid)? message.tmid : message._id;
-
-    // let responseMsg = 'placeholder';
-
-    // // 1. get the message ID and check for Gen AI conversation ID:
-    // const convoId = await redisClient.get(threadID);
-
-    // if (convoId) {
-    //   console.log('conversation exist, pass along the question here');
-    //   responseMsg = 'hi again, xxxx';
-    // }
-    // else {
-    //   console.log('conversation not exist yet, create one here');
-    //   const newConcoId = 'abc';
-    //   await redisClient.setNX(message.tmid, newConcoId);
-    //   responseMsg = 'hi again, xxxx';
-
-    // }
-
-    // 2. send question to Gen AI convo, create new if not yet exist
-
-    // 3. pass the response back to chat:
-
   }
 };
