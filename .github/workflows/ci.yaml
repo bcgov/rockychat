@@ -4,6 +4,7 @@ env:
   REPOSITORY_NAME: plat-gen-docker-local/rocky-chat
 
 on:
+  workflow_dispatch:
   pull_request:
     branches: 
       - main
