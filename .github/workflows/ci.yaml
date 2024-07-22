@@ -57,6 +57,6 @@ jobs:
         file: Dockerfile
         push: true
         platforms: linux/amd64,linux/arm64
-        tags: rocky-chat:dev
+        tags: ${{env.REGISTRY}}/${{ env.REPOSITORY_NAME }}:dev
         cache-from: type=gha
         cache-to: type=gha,mode=max
