@@ -53,7 +53,7 @@ jobs:
     - name: Build container
       uses: docker/build-push-action@v5
       with:
-        context: "{{defaultContext}}"
+        context: .
         file: Dockerfile
         push: true
         platforms: linux/amd64,linux/arm64
