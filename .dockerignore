@@ -2,3 +2,4 @@
 # tsconfig.json
 /prod/
 node_modules
+google-cloud-service-account.json

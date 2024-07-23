@@ -57,3 +57,5 @@ spec:
               key: redis-password
         ports:
         - containerPort: 3000
+      imagePullSecrets:
+        - name: artifacts-default-qaacfs

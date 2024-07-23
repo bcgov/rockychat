@@ -4,4 +4,5 @@ global:
     subPath: "rockey-dev"
   environment: "dev"
 apiImage:
-  tag: latest
+  repository: artifacts.developer.gov.bc.ca/plat-gen-docker-local/rocky-chat
+  tag: dev
