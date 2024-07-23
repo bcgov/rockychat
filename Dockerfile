@@ -20,7 +20,7 @@ RUN NODE_ENV=development npm i
 COPY . .
 
 
-ENV GOOGLE_APPLICATION_CREDENTIALS=./google-cloud-service-account.json
+ENV GOOGLE_APPLICATION_CREDENTIALS=/app/google-cloud-service-account.json
 
 # Build app
 RUN npm run build
