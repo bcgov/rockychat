@@ -23,7 +23,7 @@ jobs:
     - uses: actions/checkout@v4
     - name: Echo google cloud SA secret 
       run: |
-         echo -e '${{ secrets.GOOGLE_CLOUD_SERVICE_ACCOUNT }}' >> ./google-cloud-service-account.json
+         echo -e '${{ secrets.GOOGLE_CLOUD_SERVICE_ACCOUNT }}' >> google-cloud-service-account.json
 
     - name: Docker meta
       id: meta
