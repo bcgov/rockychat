@@ -9,7 +9,7 @@ COPY package*.json ./
 
 # Change config file path, because wedont have access to /npm
 # TODO, don't use npm in deployment. use stages. 
-RUN mkdir -m 777 -p /tmp/npm
+RUN mkdir -p /tmp/npm && chmod -R 777 /tmp/npm
 ENV npm_config_cache /tmp/npm
 
 # Install dependencies
