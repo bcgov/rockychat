@@ -21,10 +21,10 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - name: Echo google cloud SA secret 
-      run: |
-        secret_encoded=$(echo "${{ secrets.GOOGLE_CLOUD_SERVICE_ACCOUNT }}" | base64)
-        echo "$secret_encoded" > google-cloud-service-account.json
+    # - name: Echo google cloud SA secret 
+    #   run: |
+    #     secret_encoded=$(echo "${{ secrets.GOOGLE_CLOUD_SERVICE_ACCOUNT }}" | base64)
+    #     echo "$secret_encoded" > google-cloud-service-account.json
 
     - name: Docker meta
       id: meta
