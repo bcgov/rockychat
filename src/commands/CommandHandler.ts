@@ -8,8 +8,8 @@ Respond function of the chatbot:
 import { driver } from '@rocket.chat/sdk';
 import { CommandList } from './CommandList';
 import { ExtendedIMessage } from '../interfaces/CommandInt';
-import { ROCKETCHAT_USER, ROCKETCHAT_CHANNEL, AGENT_ID, LOCATION,PROJECT_ID } from '../constants';
-import {SessionsClient} from '@google-cloud/dialogflow-cx';
+import { ROCKETCHAT_USER, ROCKETCHAT_CHANNEL, AGENT_ID, LOCATION, PROJECT_ID, GCP_SERVICE_ACCOUNT_PRIVATE_KEY, GCP_SERVICE_ACCOUNT_EMAIL } from '../constants';
+import { SessionsClient } from '@google-cloud/dialogflow-cx';
 import redisClient from '../services/redis';
 import _ from 'lodash';
 // import redisClient from '../services/redis';
@@ -58,9 +58,14 @@ export const CommandHandler = async (
   const splitPoint = message.msg.indexOf(' ') + 1;
   const prefix = message.msg.substring(0, splitPoint).trim();
   const commandName = message.msg.substring(splitPoint).trim();
-  const client = new SessionsClient({apiEndpoint: `${LOCATION}-dialogflow.googleapis.com`})
   const query = commandName;
   const languageCode = 'en'
+  const client = new SessionsClient(
+    {
+      credentials: {
+        private_key: GCP_SERVICE_ACCOUNT_PRIVATE_KEY?.replace(/\\n/g, '\n'), 
+        client_email:GCP_SERVICE_ACCOUNT_EMAIL 
+      }, apiEndpoint: `${LOCATION}-dialogflow.googleapis.com`})
 
   // when calling rocky:
   if (prefix === '!Rocky') {
@@ -78,10 +83,6 @@ export const CommandHandler = async (
         return;
       }
     }
-
-
-
-
 
     async function detectIntentText() {
       let responseMsg = []

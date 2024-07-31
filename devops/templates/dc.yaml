@@ -32,6 +32,8 @@ spec:
           export PROJECT_ID='{{ .Data.data.GCP_PROJECT_ID }}'
           export LOCATION='{{ .Data.data.GCP_LOCATION }}'
           export AGENT_ID='{{ .Data.data.GCP_AGENT_ID }}'
+          export GCP_SERVICE_ACCOUNT_EMAIL='{{ .Data.data.GCP_SERVICE_ACCOUNT_EMAIL }}'
+          export GCP_SERVICE_ACCOUNT_PRIVATE_KEY='{{ .Data.data.GCP_SERVICE_ACCOUNT_PRIVATE_KEY }}'
           {{- end }}`}}
     spec:
       serviceAccountName: {{ default .Values.global.serviceAccountName .Values.serviceAccountName }}
