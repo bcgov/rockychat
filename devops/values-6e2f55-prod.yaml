@@ -4,5 +4,5 @@ global:
     subPath: "rockey-prod"
   environment: "prod"
 apiImage:
-  repository: image-registry.openshift-image-registry.svc:5000/6e2f55-prod/rockychat-api
-  tag: latest
+  repository: artifacts.developer.gov.bc.ca/plat-gen-docker-local/rocky-chat
+  tag: prod
