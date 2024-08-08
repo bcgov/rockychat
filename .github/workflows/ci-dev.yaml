@@ -1,4 +1,4 @@
-name: Api CI 
+name: Api CI DEV
 env:
   REGISTRY: artifacts.developer.gov.bc.ca
   REPOSITORY_NAME: plat-gen-docker-local/rocky-chat
