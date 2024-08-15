@@ -39,8 +39,7 @@ How to obtain the `STACKOVERFLOW_API_TOKEN`:
 
 The collected data will be chunked and used to create an Azure AI search index as part of the scripts, so a Service Principle (SP) is needed for Azure CLI authentication. Credentials are needed as `AZURE_*`.
 
-Follow these steps to create the SP:
-- create a Service Principle:
+Follow these steps to create the SP, refer to [the official doc](https://learn.microsoft.com/en-us/cli/azure/azure-cli-sp-tutorial-1?tabs=bash#create-a-service-principal-with-role-and-scope) if you need more info!
 ```bash
 # first login
 az login
