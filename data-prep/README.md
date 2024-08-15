@@ -64,6 +64,8 @@ AZURE_TENANT_ID=<tenant>
 AZURE_CLIENT_SECRET=<password>
 ```
 
+Last but not least, check that the URLs are still correct from the `config.json`.
+
 ### How to run the scripts to collect data:
 
 ```bash
