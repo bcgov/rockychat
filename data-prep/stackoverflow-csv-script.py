@@ -98,6 +98,10 @@ if __name__ == "__main__":
         print("Missing env var!")
         sys.exit(1)
 
+    # Fetch all questions from StackOverflow
+    print("Fetch all questions from StackOverflow")
     all_questions = get_all_questions(API_KEY)
 
+    # Save questions and answers to CSV file
+    print(f"Save questions and answers to CSV file at {output_file}")
     save_to_csv(API_KEY, all_questions, output_file)
