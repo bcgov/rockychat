@@ -1,6 +1,7 @@
 /node_modules/
 /prod/
 .env
+config.json
 /data-prep/output/*
 *.DS_Store*
 rockey-chat-secret.yaml
