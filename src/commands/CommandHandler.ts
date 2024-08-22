@@ -25,14 +25,55 @@ import redisClient from '../services/redis';
 import _ from 'lodash';
 import "@azure/openai/types"; 
 import { AzureOpenAI } from "openai";
-// import * as OpenAIModule from "@azure/openai"; 
-
-// import { OpenAIClient, AzureKeyCredential } from "@azure/openai";
 import { DefaultAzureCredential, getBearerTokenProvider } from "@azure/identity";
 import { setLogLevel } from "@azure/logger";
-import "@azure/openai/types";
 
 setLogLevel("info");
+
+
+
+// Function to handle Azure OpenAI integration
+async function handleOpenAiCommand(message: ExtendedIMessage, query: string) {
+  const scope = "https://rocky-test.openai.azure.com/.default";
+  // const azureADTokenProvider = getBearerTokenProvider(new DefaultAzureCredential(), scope);
+   const azureADTokenProvider = getBearerTokenProvider(new DefaultAzureCredential(), scope);
+  const deployment = "gpt-4";
+  const apiVersion = "2024-07-01-preview";
+   const client = new AzureOpenAI({ azureADTokenProvider, deployment, apiVersion });
+  const searchEndpoint = 'https://rockytest.search.windows.net'
+//  const client = new AzureOpenAI({ azureADTokenProvider, deployment, apiVersion, endpoint });
+
+  // const client = new AzureOpenAI({ endpoint:AZURE_OPENAI_ENDPOINT, apiKey:AZURE_API_KEY, apiVersion, deployment});
+
+
+  const result = await client.chat.completions.create({
+    stream: true,
+    messages: [
+      {
+        role: "user",
+        content: query,
+      },
+    ],
+    max_tokens: 128,
+    model: "",
+    data_sources: [
+      {
+        type: "azure_search",
+        parameters: {
+          endpoint: searchEndpoint,
+          index_name: 'rockytest',
+          authentication: {
+            type: "system_assigned_managed_identity",
+          },
+        },
+      },
+    ],
+  });
+
+  const responseMessages = result.choices.map(choice => choice?.message?.content);
+  console.log('let me see seee!  !!!!!!!',responseMessages);
+  await sendResponseToRocketChat(message, responseMessages.join('\n'));
+}
 
 //  console.log("what this this library", OpenAIModule);
 // Utility function to handle GCP Dialogflow session management
@@ -154,77 +195,6 @@ async function handleGcpCommand(message: ExtendedIMessage, query: string) {
   await sendResponseToRocketChat(message, responseMsg.join(' '));
 }
 
-// Function to handle Azure OpenAI integration
-async function handleOpenAiCommand(message: ExtendedIMessage, query: string) {
-  const scope = "https://rocky-test.openai.azure.com/.default";
-  // const azureADTokenProvider = getBearerTokenProvider(new DefaultAzureCredential(), scope);
-  const deployment = "gpt-4";
-  const apiVersion = "2024-07-01-preview";
-  console.log('step 11111111')
-const searchEndpoint = 'https://rockytest.search.windows.net'
-//  const client = new AzureOpenAI({ azureADTokenProvider, deployment, apiVersion, endpoint });
-
-  const client = new AzureOpenAI({ endpoint:AZURE_OPENAI_ENDPOINT, apiKey:AZURE_API_KEY, apiVersion, deployment});
-
-
-  const result = await client.chat.completions.create({
-    // stream: true,
-    messages: [
-      { role: "system", content: "You are a helpful assistant. You will talk like a pirate." },
-      { role: "user", content: query },
-    ],
-    model: "",
-    // data_sources:[
-    //   {
-    //     type: "azure_search",
-    //     key: AZURE_SEARCH_KEY,
-    //     parameters: {
-    //       endpoint: searchEndpoint,
-    //       index_name: 'rockytest',
-          
-    //     },
-    //   },
-    // ]
-  });
-
-    // ============================
-
-    // const searchEndpoint = 'https://rockytest.search.windows.net'
-    // const client = new OpenAIClient(endpoint, new AzureKeyCredential(apiKey));
-    // const messages = [
-    //     { role: "user", content: query },
-    //   ];
-    //   const events = await client.streamChatCompletions(deployment, messages, { 
-    //     maxTokens: 128,
-    //     azureExtensionOptions: {
-    //       extensions: [
-    //         {
-    //           type: "AzureCognitiveSearch",
-    //           endpoint: searchEndpoint,
-    //           key: 'AZURE_SEARCH_KEY',
-    //           indexName: 'rockytest',
-    //         },
-    //       ],
-    //     },
-    //   });
-    //   let response = "";
-    //   for await (const event of events) {
-    //     for (const choice of event.choices) {
-    //       const newText = choice.delta?.content;
-    //       if (!!newText) {
-    //         response += newText;
-    //         // To see streaming results as they arrive, uncomment line below
-    //         // console.log(newText);
-    //       }
-    //     }
-    //   }
-    //   console.log(response);
-    // ============================
-
-  const responseMessages = result.choices.map(choice => choice?.message?.content);
-  console.log('let me see seee!  !!!!!!!',responseMessages);
-  await sendResponseToRocketChat(message, responseMessages.join('\n'));
-}
 
 // Utility function to send response back to Rocket Chat
 async function sendResponseToRocketChat(message: ExtendedIMessage, response: string) {
