@@ -1,0 +1,27 @@
+[
+    {
+        "data_paths": [
+            {
+                "path": "output/digital-website",
+                "url_prefix": "https://digital.gov.bc.ca/"
+            },
+            {
+                "path": "output/platform-developer-docs/src/docs",
+                "url_prefix": "https://developer.gov.bc.ca/docs/default/component/platform-developer-docs/docs/"
+            },
+            {
+                "path": "output/stackoverflow-files",
+                "url_prefix": "https://stackoverflow.developer.gov.bc.ca/questions/"
+            }
+        ],
+        "location": "canadaeast",
+        "subscription_id": "",
+        "resource_group": "",
+        "search_service_name": "rocky",
+        "index_name": "rocky",
+        "chunk_size": 1024,
+        "token_overlap": 128,
+        "semantic_config_name": "default",
+        "language": "en"
+    }
+]

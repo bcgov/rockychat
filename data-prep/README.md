@@ -5,24 +5,25 @@ We need to create data stores with platform related knowledge base, which could 
 Here are the knowledge base exported and processed:
 - public technical doc website: https://docs.developer.gov.bc.ca/ -> indexed directly
 - private cloud website that requires authentication: https://digital.gov.bc.ca/cloud/services/private/ -> export HTML + metadata
-- BCGov stackoverflow: https://stackoverflow.developer.gov.bc.ca/ -> export questions and verified answers
+- BCGov StackOverflow: https://stackoverflow.developer.gov.bc.ca/ -> export questions and verified answers
 
 ### Public doc website
 
-To index a website, we need to [verify the domain](https://cloud.google.com/identity/docs/verify-domain). Once that's ready, just wait for the indexing process to complete.
+GCP: To index this website, we need to [verify the domain](https://cloud.google.com/identity/docs/verify-domain). Once that's ready, just wait for the indexing process to complete.
+
+Azure: It's better to use the markdown files from [the tech doc repo]() instead of sourcing the HTML files directly for data cleanness. This could be done by git cloning the repo and later match each markdown file to it's actual URL from the tech doc website.
 
 ### Private cloud website
 
 We use `wget` to obtain the html files from all website pages, including the internal resources that requires IDIR authentication.
 
 > Note that if you want to include the IDIR protected data, a login session token could be obtained from the browser -> developer settings -> cookies. The format is like `wordpress_logged_in_xxxx=xxx`.
-`
 
 ### BCGov StackOverflow:
 
 Use the StackOverflow API endpoint to export questions and answers, an API key generated from a user is required. [Docs for reference](https://api.stackexchange.com/docs).
 
-### How to run the scripts to collect data:
+### Preparation for the data collection scripts:
 
 You'll need the access tokens for both StackOverflow API and Digital website
 
@@ -36,6 +37,40 @@ How to obtain the `STACKOVERFLOW_API_TOKEN`:
 - Admin access is required
 - head to Admin settings -> API -> create new service key
 
+The collected data will be chunked and used to create an Azure AI search index as part of the scripts, so a Service Principle (SP) is needed for Azure CLI authentication. Credentials are needed as `AZURE_*`.
+
+Follow these steps to create the SP, refer to [the official doc](https://learn.microsoft.com/en-us/cli/azure/azure-cli-sp-tutorial-1?tabs=bash#create-a-service-principal-with-role-and-scope) if you need more info!
+```bash
+# first login
+az login
+# check for the SubscriptionId
+az account list --output table
+az account set --subscription <SubscriptionId>
+# check you are using the right subscription
+az account show
+# create a SP with access to manage Search Index in a specific subscription
+az ad sp create-for-rbac --name rockysp --role "Search Service Contributor" --scopes /subscriptions/<SubscriptionId>
+
+# this is the output you'll get:
+{
+  "appId": "xxx",
+  "displayName": "rockysp",
+  "password": "xxx",
+  "tenant": "xxx"
+}
+# make sure to match the value and put that into the .env file
+AZURE_CLIENT_ID=<appId>
+AZURE_TENANT_ID=<tenant>
+AZURE_CLIENT_SECRET=<password>
+
+# Side note: we'll also need another SP for RocketChat integration:
+az ad sp create-for-rbac --name rc-integration-sp --role "Cognitive Services OpenAI User" --scopes /subscriptions/<SubscriptionId>
+```
+
+Last but not least, check that the URLs are still correct from the `config.json`.
+
+### How to run the scripts to collect data:
+
 ```bash
 cd rockychat/data-prep
 
@@ -46,7 +81,7 @@ mkdir output
 # obtain all the credentials and configs to fill in .env file
 cp .env.sample .env
 
-# check in the dockerfile to make sure the right script is used
+# Note: if you only need to run partial of the scripts, check out all-scripts.sh
 
 # build the docker container:
 docker build -t data-prep .
@@ -58,7 +93,8 @@ docker run -v $(pwd)/output:/app/output -p 4000:80 --env-file .env data-prep
 Once the content has been exported locally, please check the format:
 - Stackoverflow output should have at least 300 items
 - Digital website JONSL file should contain a generate URI `gs://digital-website/cloud/services/private/intro/index.html`
-
+- Tech doc markdown files should exist in platform-developer-docs/src/docs
+- Azure Search Index should be created now
 
 ### How to upload the knowledge base to GCP Agent Builder:
 GCP Agent Builder uses datastores to automatically generate responses, here are the steps to upload the KB:
@@ -72,3 +108,12 @@ GCP Agent Builder uses datastores to automatically generate responses, here are 
   - `tech-doc-website` is website direct import of https://developer.gov.bc.ca/docs/default/component/platform-developer-docs
   - `metadata and stackoverflow csv` contains both the files from `stackoverflow-csv` and `digital-website-jsonl`
 - wait for the data import to complete, then add them to the agent from DialogFlow CX
+
+
+### How setup the Chatbot in Azure OpenAI Studio:
+
+After running the data collection scripts, there should be an Azure AI Search Index created already.
+- test Search Index with some private cloud keywords, such as `Emerald`. The search result should contains references from all three sources!
+- head over to OpenAI Studio. If you don't have any LLM deployed yet, pick a model and deploy it first.
+- head over to Chat playground, pick a deployment and config `add your data` to use the Search Index. Now you can interact with the chatbot from the playground!
+- for Rocky integration, get the source code and config from `View Code`
