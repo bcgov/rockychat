@@ -34,6 +34,13 @@ spec:
           export AGENT_ID='{{ .Data.data.GCP_AGENT_ID }}'
           export GCP_SERVICE_ACCOUNT_EMAIL='{{ .Data.data.GCP_SERVICE_ACCOUNT_EMAIL }}'
           export GCP_SERVICE_ACCOUNT_PRIVATE_KEY='{{ .Data.data.GCP_SERVICE_ACCOUNT_PRIVATE_KEY }}'
+          export AZURE_API_KEY='{{ .Data.data.AZURE_API_KEY }}'
+          export AZURE_API_VERSION='{{ .Data.data.AZURE_API_VERSION }}'
+          export AZURE_SEARCH_KEY='{{ .Data.data.AZURE_SEARCH_KEY }}'
+          export AZURE_OPENAI_ENDPOINT='{{ .Data.data.AZURE_OPENAI_ENDPOINT }}'
+          export AZURE_OPENAI_SEARCH_ENDPOINT='{{ .Data.data.AZURE_OPENAI_SEARCH_ENDPOINT }}'
+          export AZURE_OPENAI_SEARCH_INDEX_NAME='{{ .Data.data.AZURE_OPENAI_SEARCH_INDEX_NAME }}'
+          export AZURE_DEPLOYMENT='{{ .Data.data.AZURE_DEPLOYMENT }}'
           {{- end }}`}}
     spec:
       serviceAccountName: {{ default .Values.global.serviceAccountName .Values.serviceAccountName }}
