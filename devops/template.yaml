@@ -492,6 +492,13 @@ spec:
           export PROJECT_ID='{{ .Data.data.GCP_PROJECT_ID }}'
           export LOCATION='{{ .Data.data.GCP_LOCATION }}'
           export AGENT_ID='{{ .Data.data.GCP_AGENT_ID }}'
+          export AZURE_API_KEY='{{ .Data.data.AZURE_API_KEY }}'
+          export AZURE_API_VERSION='{{ .Data.data.AZURE_API_VERSION }}'
+          export AZURE_SEARCH_KEY='{{ .Data.data.AZURE_SEARCH_KEY }}'
+          export AZURE_OPENAI_ENDPOINT='{{ .Data.data.AZURE_OPENAI_ENDPOINT }}'
+          export AZURE_OPENAI_SEARCH_ENDPOINT='{{ .Data.data.AZURE_OPENAI_SEARCH_ENDPOINT }}'
+          export AZURE_OPENAI_SEARCH_INDEX_NAME='{{ .Data.data.AZURE_OPENAI_SEARCH_INDEX_NAME }}'
+          export AZURE_DEPLOYMENT='{{ .Data.data.AZURE_DEPLOYMENT }}'
           {{- end }}
     spec:
       serviceAccountName: 6e2f55-vault

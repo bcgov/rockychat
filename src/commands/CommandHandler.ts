@@ -6,7 +6,7 @@ Respond function of the chatbot:
 */
 
 import { driver } from '@rocket.chat/sdk';
-import { CommandList } from './CommandList';
+// import { CommandList } from './CommandList';
 import { ExtendedIMessage } from '../interfaces/CommandInt';
 import { 
   ROCKETCHAT_USER, 
@@ -18,36 +18,32 @@ import {
   GCP_SERVICE_ACCOUNT_EMAIL,
   AZURE_OPENAI_ENDPOINT,
   AZURE_API_KEY,
-  AZURE_SEARCH_KEY
+  AZURE_API_VERSION,
+  AZURE_OPENAI_SEARCH_ENDPOINT,
+  AZURE_DEPLOYMENT,
+  AZURE_OPENAI_SEARCH_INDEX_NAME
 } from '../constants';
 import { SessionsClient } from '@google-cloud/dialogflow-cx';
 import redisClient from '../services/redis';
 import _ from 'lodash';
 import "@azure/openai/types"; 
 import { AzureOpenAI } from "openai";
-import { DefaultAzureCredential, getBearerTokenProvider } from "@azure/identity";
-import { setLogLevel } from "@azure/logger";
 
-setLogLevel("info");
-
-
+// import { setLogLevel } from "@azure/logger";
+// setLogLevel("info");
 
 // Function to handle Azure OpenAI integration
 async function handleOpenAiCommand(message: ExtendedIMessage, query: string) {
-  const scope = "https://rocky-test.openai.azure.com/.default";
-  // const azureADTokenProvider = getBearerTokenProvider(new DefaultAzureCredential(), scope);
-   const azureADTokenProvider = getBearerTokenProvider(new DefaultAzureCredential(), scope);
-  const deployment = "gpt-4";
-  const apiVersion = "2024-07-01-preview";
-   const client = new AzureOpenAI({ azureADTokenProvider, deployment, apiVersion });
-  const searchEndpoint = 'https://rockytest.search.windows.net'
-//  const client = new AzureOpenAI({ azureADTokenProvider, deployment, apiVersion, endpoint });
+  // const scope = "https://rocky-test.openai.azure.com/.default";
 
-  // const client = new AzureOpenAI({ endpoint:AZURE_OPENAI_ENDPOINT, apiKey:AZURE_API_KEY, apiVersion, deployment});
+  const deployment = AZURE_DEPLOYMENT;
+  const apiVersion = AZURE_API_VERSION;
+
+  const client = new AzureOpenAI({ endpoint:AZURE_OPENAI_ENDPOINT, apiKey:AZURE_API_KEY, apiVersion, deployment});
 
 
-  const result = await client.chat.completions.create({
-    stream: true,
+  const events = await client.chat.completions.create({
+    stream: false,
     messages: [
       {
         role: "user",
@@ -60,22 +56,54 @@ async function handleOpenAiCommand(message: ExtendedIMessage, query: string) {
       {
         type: "azure_search",
         parameters: {
-          endpoint: searchEndpoint,
-          index_name: 'rockytest',
+          
+          // key: AZURE_SEARCH_KEY,
+          endpoint: AZURE_OPENAI_SEARCH_ENDPOINT || '',
+          index_name: AZURE_OPENAI_SEARCH_INDEX_NAME || '',
           authentication: {
             type: "system_assigned_managed_identity",
           },
+          top_n_documents: 2
         },
       },
     ],
   });
 
-  const responseMessages = result.choices.map(choice => choice?.message?.content);
-  console.log('let me see seee!  !!!!!!!',responseMessages);
-  await sendResponseToRocketChat(message, responseMessages.join('\n'));
+  let result = '';
+
+  // this is for stream = false
+  for (const choice of events.choices) {
+    result = formatContentWithCitations(choice.message.content || '', choice.message.context?.citations || [])
+  }
+
+  // this is for stream = true
+  // for await (const chunk of events) {
+  //   const content = chunk.choices[0]?.delta?.content || '';
+  //   result += content;  // Concatenate each piece of content to the full sentence
+  // }
+
+  await sendResponseToRocketChat(message, result);
 }
 
-//  console.log("what this this library", OpenAIModule);
+function formatContentWithCitations(content: string, citations: any[]): string {
+  // Replace placeholders with markdown citation links
+  let formattedContent = content.replace(/\[doc(\d+)\]/g, (match, index) => {
+    const citationIndex = parseInt(index) - 1;  // Adjust index because array is zero-based
+    if (citations[citationIndex]) {
+      return `[${citationIndex + 1}](${citations[citationIndex].url})`;
+    }
+    return match;  // Return the original string if no citation found
+  });
+
+  // Append citation URLs at the end
+  formattedContent += '\n\n';  // Ensure there are breaks before the citation list
+  citations.forEach((citation, index) => {
+    formattedContent += `[${index + 1}]: ${citation.url}\n`;
+  });
+
+  return formattedContent;
+}
+
 // Utility function to handle GCP Dialogflow session management
 async function getOrSetSessionId(threadId: string): Promise<string> {
   let sessionId = await redisClient.hget(threadId, 'sessionId');
@@ -120,7 +148,6 @@ export const CommandHandler = async (
   const splitPoint = message.msg.indexOf(' ') + 1;
   const prefix = message.msg.substring(0, splitPoint).trim();
   const commandName = message.msg.substring(splitPoint).trim();
-  console.log('step 00000000000000000000')
   if (prefix === '!Rocky') {
     // Existing GCP logic
     handleGcpCommand(message, commandName);
