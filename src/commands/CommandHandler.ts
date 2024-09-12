@@ -50,7 +50,7 @@ async function handleOpenAiCommand(message: ExtendedIMessage, query: string) {
         content: query,
       },
     ],
-    max_tokens: 128,
+    max_tokens: 800,
     model: "",
     data_sources: [
       {
