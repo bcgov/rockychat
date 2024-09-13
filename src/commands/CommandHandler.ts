@@ -86,22 +86,26 @@ async function handleOpenAiCommand(message: ExtendedIMessage, query: string) {
 }
 
 function formatContentWithCitations(content: string, citations: any[]): string {
+let usedCitations = new Set<number>(); // Set to track used citation indices
+
   // Replace placeholders with markdown citation links
   let formattedContent = content.replace(/\[doc(\d+)\]/g, (match, index) => {
     const citationIndex = parseInt(index) - 1;  // Adjust index because array is zero-based
     if (citations[citationIndex]) {
-      return `[${citationIndex + 1}](${citations[citationIndex].url})`;
+      usedCitations.add(citationIndex);  // Record that this citation is used
+      return `[${citationIndex + 1}](${citations[citationIndex].url})  `;
     }
     return match;  // Return the original string if no citation found
   });
 
-  // Append citation URLs at the end
-  formattedContent += '\n\n';  // Ensure there are breaks before the citation list
-  citations.forEach((citation, index) => {
-    formattedContent += `[${index + 1}]: ${citation.url}\n`;
-  });
-
-  return formattedContent;
+  // Append only used citation URLs at the end
+  if (usedCitations.size > 0) {
+    formattedContent += '\n\n';  // Ensure there are breaks before the citation list
+    usedCitations.forEach(index => {
+      formattedContent += `**${index + 1}**: [${citations[index].title}](${citations[index].url})\n`;
+    });
+  }
+    return formattedContent
 }
 
 // Utility function to handle GCP Dialogflow session management
