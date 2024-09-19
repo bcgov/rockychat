@@ -152,10 +152,10 @@ export const CommandHandler = async (
   const splitPoint = message.msg.indexOf(' ') + 1;
   const prefix = message.msg.substring(0, splitPoint).trim();
   const commandName = message.msg.substring(splitPoint).trim();
-  if (prefix === '!Rocky') {
+  if (prefix.toLowerCase() === '!rocky') {
     // Existing GCP logic
     handleGcpCommand(message, commandName);
-  } else if (prefix === '!OpenAI') {
+  } else if (prefix.toLowerCase() === '!openai') {
     // New OpenAI logic
     handleOpenAiCommand(message, commandName);
   }
