@@ -11,7 +11,7 @@ The **Generative AI model** is trained with the platform knowledge base, includi
 - BCGov StackOverflow
 - BCGov GitHub repos
     - public repos only
-    - covering `bcgov` and `BCDevOps` GitHub organizations
+    - covering `bcgov` GitHub organizations
 - ~existing Rocketchat channel chat history~ (not in MVP)
 
 The **Chatbot account** is able to provide an answer to a message with the specific prompt (i.e.: `!Rocky ...`). Here's the workflow:
@@ -37,16 +37,18 @@ The **Chatbot account** is able to provide an answer to a message with the speci
 
 We will be evaluating the following GenAI services:
 
-- Google Vertex AI: `Search and Conversation` and `customized model with fine tuning`
-- RedHat Openshift AI
+- Google Agent Builder with Dialogflow CX
+- Azure OpenAI GPT models
+- AWS Bedrock
 
 ### Evaluation Criteria:
 
 - Accuracy and Relevance: the model understands and responds correctly based on BCGov platform information, the response includes suggestions and reference link to the data source.
-- Customization: the service is able to perform grounding with BCGov specific knowledge from various sources and formats; the response is formatted with custom templates.
+- Customization: the service is able to perform grounding with BCGov specific knowledge from various sources and formats; the response is traceable with reference URLs to the knowledge base
 - Maintenance: the service is low-maintenance in contiguously feeding updated information
 - Cost-effectiveness: the service charges by usage with lowest price
 
 ### Testing:
 - randomly pick existing questions from the #devops-how-to channel as initial test scenarios
 - open up Rocky to small group of users for two weeks of testing and feedback
+- collect list of questions as test cases to further changes
