@@ -41,6 +41,7 @@ spec:
           export AZURE_OPENAI_SEARCH_ENDPOINT='{{ .Data.data.AZURE_OPENAI_SEARCH_ENDPOINT }}'
           export AZURE_OPENAI_SEARCH_INDEX_NAME='{{ .Data.data.AZURE_OPENAI_SEARCH_INDEX_NAME }}'
           export AZURE_DEPLOYMENT='{{ .Data.data.AZURE_DEPLOYMENT }}'
+          export AZURE_PROMPT_MSG='{{ .Data.data.AZURE_PROMPT_MSG }}'
           {{- end }}`}}
     spec:
       serviceAccountName: {{ default .Values.global.serviceAccountName .Values.serviceAccountName }}
