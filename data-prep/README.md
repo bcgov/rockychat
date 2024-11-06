@@ -104,7 +104,7 @@ Once the content has been exported locally, please check the format:
 - Stackoverflow output should have at least 300 items
 - Digital website JONSL file should contain a generate URI `gs://digital-website/cloud/services/private/intro/index.html`
 - Tech doc markdown files should exist in platform-developer-docs/src/docs
-- Azure Search Index should be created now
+- Azure Search Index should be created now, the total chunk should equal to the sum of all chunks from the different data paths
 
 ### How to upload the knowledge base to GCP Agent Builder:
 GCP Agent Builder uses datastores to automatically generate responses, here are the steps to upload the KB:
