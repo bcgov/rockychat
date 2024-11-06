@@ -58,6 +58,16 @@ az ad sp create-for-rbac --name rockysp --role "Search Service Contributor" --sc
   "password": "xxx",
   "tenant": "xxx"
 }
+
+# Now, add the Cognitive Services OpenAI Contributor role to the SP:
+# look for a specific role: https://learn.microsoft.com/en-us/azure/ai-services/openai/how-to/role-based-access-control
+az role definition list --query "[?roleName=='Cognitive Services OpenAI Contributor']"
+# To add a role to an existing SP:
+az ad sp list --display-name "rockysp" --query "[].appId" -o tsv
+az role assignment create --assignee <SP_ID> --role "Cognitive Services OpenAI Contributor" --scope /subscriptions/<SubscriptionId>
+# Check roles assigned to a SP:
+az role assignment list --assignee <SP_ID> --query "[].{Role:roleDefinitionName, Scope:scope}" -o table
+
 # make sure to match the value and put that into the .env file
 AZURE_CLIENT_ID=<appId>
 AZURE_TENANT_ID=<tenant>
