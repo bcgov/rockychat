@@ -17,4 +17,6 @@ az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET --tenan
 python3 azure-data-transformation-script.py output/stackoverflow-questions.csv output/stackoverflow-files
 
 # Step 4.2: Azure - chunk data and create index
-python3 data_preparation.py --config config.json --njobs=4
+python3 data_preparation.py --config config.json --njobs=4 \
+  --embedding-model-endpoint=$AZURE_EMBEDDING_MODEL_ENDPOINT \
+  --embedding-model-key=$AZURE_EMBEDDING_MODEL_KEY
