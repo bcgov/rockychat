@@ -69,7 +69,7 @@ async function handleOpenAiCommand(message: ExtendedIMessage, query: string) {
           authentication: {
             type: "system_assigned_managed_identity",
           },
-          top_n_documents: 3
+          top_n_documents: 2
         },
       },
     ],
