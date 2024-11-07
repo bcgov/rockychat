@@ -18,10 +18,11 @@
         "subscription_id": "",
         "resource_group": "",
         "search_service_name": "rocky",
-        "index_name": "rocky",
+        "index_name": "rocky01",
         "chunk_size": 1024,
         "token_overlap": 128,
         "semantic_config_name": "default",
+        "vector_config_name": "default",
         "language": "en"
     }
 ]

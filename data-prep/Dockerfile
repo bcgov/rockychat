@@ -1,11 +1,27 @@
-# Use an official Python runtime as a parent image
-FROM python:3
+# Use a Python base image
+FROM python:3.10
+
+# Install dependencies for Rust and Python (curl for Rust installation)
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends curl build-essential && \
+    rm -rf /var/lib/apt/lists/*
+
+# Install Rust using rustup (official installer)
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y && \
+    # Add Rust to PATH
+    echo 'source $HOME/.cargo/env' >> /etc/profile && \
+    # Install Rust dependencies globally
+    /root/.cargo/bin/rustup install stable
+
+# Add Rust to the current PATH
+ENV PATH="/root/.cargo/bin:${PATH}"
 
 # Set the working directory in the container
 WORKDIR /app
 
 # Install any needed packages specified in requirements.txt
 COPY requirements.txt /app
+RUN pip install --upgrade pip
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Install the Azure CLI

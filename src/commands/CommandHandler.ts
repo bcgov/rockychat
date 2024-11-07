@@ -21,7 +21,8 @@ import {
   AZURE_API_VERSION,
   AZURE_OPENAI_SEARCH_ENDPOINT,
   AZURE_DEPLOYMENT,
-  AZURE_OPENAI_SEARCH_INDEX_NAME
+  AZURE_OPENAI_SEARCH_INDEX_NAME,
+  AZURE_PROMPT_MSG
 } from '../constants';
 import { SessionsClient } from '@google-cloud/dialogflow-cx';
 import redisClient from '../services/redis';
@@ -38,13 +39,17 @@ async function handleOpenAiCommand(message: ExtendedIMessage, query: string) {
 
   const deployment = AZURE_DEPLOYMENT;
   const apiVersion = AZURE_API_VERSION;
+  const chatbotPrompt = AZURE_PROMPT_MSG || "You are an AI assistant that helps people find information, your name is Rocky, a GenAI chatbot developed by the Platform Services Team.";
 
   const client = new AzureOpenAI({ endpoint:AZURE_OPENAI_ENDPOINT, apiKey:AZURE_API_KEY, apiVersion, deployment});
-
 
   const events = await client.chat.completions.create({
     stream: false,
     messages: [
+      {
+        role: "system",
+        content: chatbotPrompt,
+      },
       {
         role: "user",
         content: query,
@@ -56,14 +61,12 @@ async function handleOpenAiCommand(message: ExtendedIMessage, query: string) {
       {
         type: "azure_search",
         parameters: {
-          
-          // key: AZURE_SEARCH_KEY,
           endpoint: AZURE_OPENAI_SEARCH_ENDPOINT || '',
           index_name: AZURE_OPENAI_SEARCH_INDEX_NAME || '',
           authentication: {
             type: "system_assigned_managed_identity",
           },
-          top_n_documents: 2
+          top_n_documents: 3,
         },
       },
     ],

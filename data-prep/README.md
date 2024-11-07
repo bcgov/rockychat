@@ -58,6 +58,16 @@ az ad sp create-for-rbac --name rockysp --role "Search Service Contributor" --sc
   "password": "xxx",
   "tenant": "xxx"
 }
+
+# Now, add the Cognitive Services OpenAI Contributor role to the SP:
+# look for a specific role: https://learn.microsoft.com/en-us/azure/ai-services/openai/how-to/role-based-access-control
+az role definition list --query "[?roleName=='Cognitive Services OpenAI Contributor']"
+# To add a role to an existing SP:
+az ad sp list --display-name "rockysp" --query "[].appId" -o tsv
+az role assignment create --assignee <SP_ID> --role "Cognitive Services OpenAI Contributor" --scope /subscriptions/<SubscriptionId>
+# Check roles assigned to a SP:
+az role assignment list --assignee <SP_ID> --query "[].{Role:roleDefinitionName, Scope:scope}" -o table
+
 # make sure to match the value and put that into the .env file
 AZURE_CLIENT_ID=<appId>
 AZURE_TENANT_ID=<tenant>
@@ -94,7 +104,7 @@ Once the content has been exported locally, please check the format:
 - Stackoverflow output should have at least 300 items
 - Digital website JONSL file should contain a generate URI `gs://digital-website/cloud/services/private/intro/index.html`
 - Tech doc markdown files should exist in platform-developer-docs/src/docs
-- Azure Search Index should be created now
+- Azure Search Index should be created now, the total chunk should equal to the sum of all chunks from the different data paths
 
 ### How to upload the knowledge base to GCP Agent Builder:
 GCP Agent Builder uses datastores to automatically generate responses, here are the steps to upload the KB:
