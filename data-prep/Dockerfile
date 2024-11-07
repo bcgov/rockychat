@@ -1,5 +1,5 @@
 # Use a Python base image
-FROM python:3.10-slim
+FROM python:3.10
 
 # Install dependencies for Rust and Python (curl for Rust installation)
 RUN apt-get update && \
