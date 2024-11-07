@@ -22,7 +22,6 @@ import {
   AZURE_OPENAI_SEARCH_ENDPOINT,
   AZURE_DEPLOYMENT,
   AZURE_OPENAI_SEARCH_INDEX_NAME,
-  // AZURE_EMBEDDING_MODEL,
   AZURE_PROMPT_MSG
 } from '../constants';
 import { SessionsClient } from '@google-cloud/dialogflow-cx';
@@ -44,9 +43,6 @@ async function handleOpenAiCommand(message: ExtendedIMessage, query: string) {
 
   const client = new AzureOpenAI({ endpoint:AZURE_OPENAI_ENDPOINT, apiKey:AZURE_API_KEY, apiVersion, deployment});
 
-  console.log("+++++++ prompt message: ++++++");
-  console.log(chatbotPrompt);
-
   const events = await client.chat.completions.create({
     stream: false,
     messages: [
@@ -65,21 +61,12 @@ async function handleOpenAiCommand(message: ExtendedIMessage, query: string) {
       {
         type: "azure_search",
         parameters: {
-          
-          // key: AZURE_SEARCH_KEY,
           endpoint: AZURE_OPENAI_SEARCH_ENDPOINT || '',
           index_name: AZURE_OPENAI_SEARCH_INDEX_NAME || '',
           authentication: {
             type: "system_assigned_managed_identity",
           },
           top_n_documents: 2,
-          // query_type: "vector_hybrid",
-          // // query_type: "vector_semantic_hybrid",
-          // embedding_dependency: {
-          //     type: "deployment_name",
-          //     deployment_name: AZURE_EMBEDDING_MODEL,
-          // },
-          // semantic_configuration: "mySemanticConfig",
         },
       },
     ],
