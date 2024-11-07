@@ -44,6 +44,7 @@ async function handleOpenAiCommand(message: ExtendedIMessage, query: string) {
 
   const client = new AzureOpenAI({ endpoint:AZURE_OPENAI_ENDPOINT, apiKey:AZURE_API_KEY, apiVersion, deployment});
 
+  console.log("+++++++ prompt message: ++++++");
   console.log(chatbotPrompt);
 
   const events = await client.chat.completions.create({
