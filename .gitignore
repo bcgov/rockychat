@@ -5,4 +5,3 @@ config.json
 /data-prep/output/*
 *.DS_Store*
 rockey-chat-secret.yaml
-google-cloud-service-account.json
