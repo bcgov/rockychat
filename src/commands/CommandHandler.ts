@@ -9,13 +9,8 @@ import { driver } from '@rocket.chat/sdk';
 // import { CommandList } from './CommandList';
 import { ExtendedIMessage } from '../interfaces/CommandInt';
 import { 
-  ROCKETCHAT_USER, 
-  ROCKETCHAT_CHANNEL, 
-  AGENT_ID, 
-  LOCATION, 
-  PROJECT_ID, 
-  GCP_SERVICE_ACCOUNT_PRIVATE_KEY, 
-  GCP_SERVICE_ACCOUNT_EMAIL,
+  ROCKETCHAT_USER,
+  ROCKETCHAT_CHANNEL,
   AZURE_OPENAI_ENDPOINT,
   AZURE_API_KEY,
   AZURE_API_VERSION,
@@ -24,7 +19,6 @@ import {
   AZURE_OPENAI_SEARCH_INDEX_NAME,
   AZURE_PROMPT_MSG
 } from '../constants';
-import { SessionsClient } from '@google-cloud/dialogflow-cx';
 import redisClient from '../services/redis';
 import _ from 'lodash';
 import "@azure/openai/types"; 
@@ -111,14 +105,14 @@ let usedCitations = new Set<number>(); // Set to track used citation indices
     return formattedContent
 }
 
-// Utility function to handle GCP Dialogflow session management
-async function getOrSetSessionId(threadId: string): Promise<string> {
+// Utility function to handle conversation session management
+async function getOrSetSessionId(threadId: string, platformId: string): Promise<string> {
   let sessionId = await redisClient.hget(threadId, 'sessionId');
   if (!sessionId) {
     // No session ID exists, create a new one and store it
     sessionId = threadId;  // Using threadId as the session ID for simplicity
     await redisClient.hset(threadId, 'sessionId', sessionId);
-    await redisClient.hset(threadId, 'platform', 'GCP'); // Assuming GCP as default platform
+    await redisClient.hset(threadId, 'platform', platformId);
   }
   return sessionId;
 }
@@ -158,80 +152,8 @@ export const CommandHandler = async (
   if (prefix.toLowerCase() === '!rocky') {
     // By default to OpenAI:
     handleOpenAiCommand(message, commandName);
-  } else if (prefix.toLowerCase() === '!rocky-openai') {
-    // OpenAI logic
-    handleOpenAiCommand(message, commandName);
-  } else if (prefix.toLowerCase() === '!rocky-gcp') {
-    // GCP logic
-    handleGcpCommand(message, commandName);
   }
 };
-
-// Function to handle GCP Dialogflow CX integration
-async function handleGcpCommand(message: ExtendedIMessage, query: string) {
-  const languageCode = 'en';
-  const client = new SessionsClient({
-    credentials: {
-      private_key: GCP_SERVICE_ACCOUNT_PRIVATE_KEY?.replace(/\\n/g, '\n'), 
-      client_email: GCP_SERVICE_ACCOUNT_EMAIL 
-    },
-    apiEndpoint: `${LOCATION}-dialogflow.googleapis.com`
-  });
-
-  if (!message.tmid) message.tmid = message._id;
-  const threadId = message.tmid || '';
-  const GCPsessionId = await getOrSetSessionId(threadId);
-
-  console.log(`Using session ID: ${GCPsessionId} for thread ID: ${threadId}`);
-
-  const sessionPath = client.projectLocationAgentSessionPath(
-    PROJECT_ID || '',
-    LOCATION || '',
-    AGENT_ID || '',
-    GCPsessionId
-  );
-  const request = {
-    session: sessionPath,
-    queryInput: {
-      text: {
-        text: query,
-      },
-      languageCode,
-    },
-  };
-
-  const [response] = await client.detectIntent(request);
-  const responseMsg = [];
-
-  for (const message of response?.queryResult?.responseMessages || []) {
-    if (message.text) {
-      responseMsg.push(`${message.text.text}` || 'Default Message');
-    }
-        // Assuming message.payload.fields is of type { [k: string]: IValue; } and IValue can be any type
-        // EXAMPLE payload:
-        // {
-        //   "richContent": 
-        //    [
-        //     [
-        //       {
-        //         "actionLink": "",
-        //         "type": "info",
-        //         "subtitle": "",
-        //         "title": ""
-        //       }
-        //     ]
-        //   ]
-        // }
-    if (message.payload?.fields?.richContent) {
-      const richContents = _.get(message, 'payload.fields.richContent');
-      const actionLink = _.get(richContents, 'listValue.values[0].listValue.values[0].structValue.fields.actionLink.stringValue');
-      responseMsg.push(actionLink);
-    }
-  }
-
-  await sendResponseToRocketChat(message, responseMsg.join(' '));
-}
-
 
 // Utility function to send response back to Rocket Chat
 async function sendResponseToRocketChat(message: ExtendedIMessage, response: string) {
