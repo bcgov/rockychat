@@ -40,7 +40,6 @@
     "@azure/identity": "^4.4.1",
     "@azure/logger": "^1.1.4",
     "@azure/openai": "^2.0.0-beta.1",
-    "@google-cloud/dialogflow-cx": "^4.7.0",
     "@rocket.chat/sdk": "^0.2.9-2",
     "dotenv": "^16.4.1",
     "lodash": "^4.17.21",
