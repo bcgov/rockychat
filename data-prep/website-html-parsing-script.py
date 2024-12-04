@@ -1,8 +1,6 @@
 # This is does the following:
 # - fetch HTML files from a website
 # - parse the html file and removes header footers and style blocks
-# - create metadata JSONL file, for the digital.gov.bc.ca website html exports
-# Reference: https://cloud.google.com/dialogflow/vertex/docs/concept/data-store#with-metadata
 
 import os
 import sys
@@ -125,13 +123,12 @@ def generate_json_lines(directory):
     return json_lines
 
 if __name__ == "__main__":
-    if len(sys.argv) != 4:
-        print("Usage: python website-html-parsing-script.py <download_directory> <output_directory> <output_metadata_file>")
+    if len(sys.argv) != 3:
+        print("Usage: python website-html-parsing-script.py <download_directory> <output_directory>")
         sys.exit(1)
     
     download_directory = sys.argv[1]
     output_directory = sys.argv[2]
-    output_metadata_file = sys.argv[3]
 
     # Access the environment variable
     if 'DIGITAL_WEBSITE_URL' in os.environ and 'DIGITAL_WEBSITE_SESSION_TOKEN' in os.environ:
@@ -152,10 +149,3 @@ if __name__ == "__main__":
     # Process the downloaded HTML files
     print(f"Parsing file from {download_directory}, output to {output_directory}")
     process_html_files(download_directory, output_directory)
-
-    # Create metadata file for the downloaded HTML files
-    print(f"sourcing file from {download_directory}, and output metadata to {output_metadata_file}")
-    json_lines = generate_json_lines(download_directory)
-
-    with open(output_metadata_file, "w") as f:
-        f.write('\n'.join(json_lines))
