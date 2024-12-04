@@ -1,7 +1,10 @@
 /node_modules/
 /prod/
 .env
+.env.public-cloud
+.env.private-cloud
 config.json
 /data-prep/output/*
 *.DS_Store*
 rockey-chat-secret.yaml
+google-cloud-service-account.json
