@@ -1,5 +1,4 @@
-# This is the script to create teh CSV file, containing questions and verified answers from BCGov StackOverflow
-# Reference:  https://cloud.google.com/dialogflow/vertex/docs/concept/data-store#structured
+# This is the script to create a CSV file, containing questions and verified answers from BCGov StackOverflow
 
 import requests
 import json
@@ -14,7 +13,7 @@ PAGE_NUMBER_TOTAL=4
 count = 0
 
 # Get questions via pagination:
-def get_all_questions(API_KEY):
+def get_all_questions(API_KEY, tag=None):
     all_questions = []
 
     # Collect all questions, looping through ~400 questions with pagination
@@ -22,6 +21,9 @@ def get_all_questions(API_KEY):
     
         # Set the API URL with page
         api_url = f"{API_BASE_URL}/questions?page={i}&pagesize={PAGE_SIZE}&key={API_KEY}"
+        # Check if the tag is not empty
+        if tag:
+            api_url += f"&tagged={tag}"
 
         # Fetch questions data from API
         response = requests.get(api_url)
@@ -88,9 +90,10 @@ def save_to_csv(API_KEY, questions, csv_filename):
 # main
 if __name__ == "__main__":
     # Access the environment variable
-    if 'STACKOVERFLOW_API_TOKEN' in os.environ and 'CSV_OUTPUT_PATH' in os.environ:
+    if 'STACKOVERFLOW_API_TOKEN' in os.environ and 'CSV_OUTPUT_PATH' in os.environ and 'STACKOVERFLOW_TAG' in os.environ:
         API_KEY = os.environ.get("STACKOVERFLOW_API_TOKEN")
         output_file = os.environ.get("CSV_OUTPUT_PATH")
+        question_tag = os.environ.get("STACKOVERFLOW_TAG")
 
         print(f"Output to {output_file}")
     
@@ -99,9 +102,13 @@ if __name__ == "__main__":
         sys.exit(1)
 
     # Fetch all questions from StackOverflow
-    print("Fetch all questions from StackOverflow")
-    all_questions = get_all_questions(API_KEY)
+    print(f"Fetch -{question_tag}- questions from StackOverflow")
 
+    if question_tag == "all":
+        all_questions = get_all_questions(API_KEY)
+    else:
+        all_questions = get_all_questions(API_KEY, question_tag)
+    
     print(f"Total questions captured: {len(all_questions)}")
 
     # Save questions and answers to CSV file
