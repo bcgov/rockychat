@@ -6,12 +6,16 @@ import sys
 import shutil
 
 if __name__ == "__main__":
-    if len(sys.argv) != 3:
-        print("Usage: python clone-tech-doc-repo.py <repo_url> <output_directory>")
-        sys.exit(1)
+    # Access the environment variable
+    if 'TECH_DOC_REPO' in os.environ and 'TECH_DOC_OUTPUT_PATH' in os.environ:
+        repo_url = os.environ.get("TECH_DOC_REPO")
+        output_directory = os.environ.get("TECH_DOC_OUTPUT_PATH")
+
+        print(f"Clone repo {repo_url}. Output to {output_directory}")
     
-    repo_url = sys.argv[1]
-    output_directory = sys.argv[2]
+    else:
+        print("Missing env var!")
+        sys.exit(1)
 
     # Check if the folder exists
     if os.path.exists(output_directory):
