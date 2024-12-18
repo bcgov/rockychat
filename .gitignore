@@ -4,6 +4,8 @@
 .env.public-cloud
 .env.private-cloud
 config.json
+config-public-cloud.json
+config-private-cloud.json
 /data-prep/output/*
 *.DS_Store*
 rockey-chat-secret.yaml
