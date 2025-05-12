@@ -1,9 +1,8 @@
 /node_modules/
 /prod/
 .env
-.env.public-cloud
-.env.private-cloud
 config.json
+config-chefs.json
 config-public-cloud.json
 config-private-cloud.json
 /data-prep/output/*
