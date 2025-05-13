@@ -73,11 +73,13 @@ AZURE_CLIENT_ID=<appId>
 AZURE_TENANT_ID=<tenant>
 AZURE_CLIENT_SECRET=<password>
 
-# Side note: we'll also need another SP for RocketChat integration:
-az ad sp create-for-rbac --name rc-integration-sp --role "Cognitive Services OpenAI User" --scopes /subscriptions/<SubscriptionId>
-```
+# This client cred expires every year, there is a calendar reminder for the team to update it each year!
 
-Last but not least, check that the URLs are still correct from the `config.json`.
+# Side note: we'll also need another SP for RocketChat hubot integration: (TBD - switch to use API key)
+az ad sp create-for-rbac --name rc-integration-sp --role "Cognitive Services OpenAI User" --scopes /subscriptions/<SubscriptionId>
+
+# Last but not least, check that the URLs are still correct from the `config.json`.
+```
 
 ### How to run the scripts to collect data:
 
