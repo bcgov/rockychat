@@ -129,3 +129,17 @@ After running the data collection scripts, there should be an Azure AI Search In
 - head over to OpenAI Studio. If you don't have any LLM deployed yet, pick a model and deploy it first.
 - head over to Chat playground, pick a deployment and config `add your data` to use the Search Index. Now you can interact with the chatbot from the playground!
 - for Rocky integration, get the source code and config from `View Code`
+
+## How to update the Azure Client credential:
+
+Azure Portal: <https://portal.azure.com/> (under Azure Active Directory)
+
+Required Values:
+
+```console
+AZURE_CLIENT_ID - App Registration (left menu) -> rockysp -> Application ID
+AZURE_TENANT_ID - same spot as above, but Directory ID instead of App ID
+AZURE_CLIENT_SECRET - Certificates and secrets (left menu) and generate a new one, with name and creation date `vault-client-credential-yyyy-mm-dd` and 12 months expiration period. Make sure to take a copy of the secret value before closing!
+```
+
+Once you obtained the new cred, update it in the Vault space for Rocky and where the data-prep uses it.
