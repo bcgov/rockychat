@@ -139,4 +139,4 @@ AZURE_TENANT_ID - same spot as above, but Directory ID instead of App ID
 AZURE_CLIENT_SECRET - Certificates and secrets (left menu) and generate a new one, with name and creation date `vault-client-credential-yyyy-mm-dd` and 12 months expiration period. Make sure to take a copy of the secret value before closing!
 ```
 
-Once you obtained the new cred, update it in the Vault space for Rocky and where the data-prep uses it.
+Once you obtained the new cred, update it in the Vault space (secret name `data-prep-sp-cred`) for Rocky and where the data-prep uses it.
