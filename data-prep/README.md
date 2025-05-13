@@ -3,7 +3,7 @@
 We need to create data stores with platform related knowledge base, which could be fed to the LLM for Retrieval Augmented Generation (RAG).
 
 Here are the knowledge base exported and processed:
-- public technical doc website: https://docs.developer.gov.bc.ca/ -> indexed directly
+- public technical doc website: https://developer.gov.bc.ca/docs/default/component/platform-developer-docs -> backstage app, markdown files from a GitHub repo
 - private cloud website that requires authentication: https://digital.gov.bc.ca/cloud/services/private/ -> export HTML + metadata
 - BCGov StackOverflow: https://stackoverflow.developer.gov.bc.ca/ -> export questions and verified answers
 
@@ -11,13 +11,11 @@ Here are the knowledge base exported and processed:
 
 GCP: To index this website, we need to [verify the domain](https://cloud.google.com/identity/docs/verify-domain). Once that's ready, just wait for the indexing process to complete.
 
-Azure: It's better to use the markdown files from [the tech doc repo]() instead of sourcing the HTML files directly for data cleanness. This could be done by git cloning the repo and later match each markdown file to it's actual URL from the tech doc website.
+Azure: It's better to use the markdown files from [the tech doc repo](https://github.com/bcgov/platform-developer-docs) instead of sourcing the HTML files directly for data cleanness. This could be done by git cloning the repo and later match each markdown file to it's actual URL from the tech doc website.
 
 ### Private cloud website
 
 We use `wget` to obtain the html files from all website pages, including the internal resources that requires IDIR authentication.
-
-> Note that if you want to include the IDIR protected data, a login session token could be obtained from the browser -> developer settings -> cookies. The format is like `wordpress_logged_in_xxxx=xxx`.
 
 ### BCGov StackOverflow:
 
@@ -28,18 +26,18 @@ Use the StackOverflow API endpoint to export questions and answers, an API key g
 You'll need the access tokens for both StackOverflow API and Digital website
 
 How to obtain the `DIGITAL_WEBSITE_SESSION_TOKEN`:
+- an IDIR account is needed to obtain the "Internal Resources" from the website
 - head to the internal resources section: https://digital.gov.bc.ca/cloud/services/private/internal-resources/
 - login with your account
 - open the developer mode -> Application -> find the website Cookies
 - copy paste the cookie key and value as `<wordpress_logged_in_xxx>=<value>`
 
 How to obtain the `STACKOVERFLOW_API_TOKEN`:
-- Admin access is required
+- stackoverflow Admin access is required
 - head to Admin settings -> API -> create new service key
 
-The collected data will be chunked and used to create an Azure AI search index as part of the scripts, so a Service Principle (SP) is needed for Azure CLI authentication. Credentials are needed as `AZURE_*`.
+The collected data will be chunked and used to create an Azure AI search index as part of the scripts, so a Service Principle (SP) is needed for Azure CLI authentication. Following are steps on how to create and prepare the SP (refer to [the official doc](https://learn.microsoft.com/en-us/cli/azure/azure-cli-sp-tutorial-1?tabs=bash#create-a-service-principal-with-role-and-scope) if you need more info!):
 
-Follow these steps to create the SP, refer to [the official doc](https://learn.microsoft.com/en-us/cli/azure/azure-cli-sp-tutorial-1?tabs=bash#create-a-service-principal-with-role-and-scope) if you need more info!
 ```bash
 # first login
 az login
@@ -68,7 +66,7 @@ az role assignment create --assignee <SP_ID> --role "Cognitive Services OpenAI C
 # Check roles assigned to a SP:
 az role assignment list --assignee <SP_ID> --query "[].{Role:roleDefinitionName, Scope:scope}" -o table
 
-# make sure to match the value and put that into the .env file
+# make sure to match the value and put that into the .env file (more details in the following section "How to update the Azure Client credential")
 AZURE_CLIENT_ID=<appId>
 AZURE_TENANT_ID=<tenant>
 AZURE_CLIENT_SECRET=<password>
@@ -121,12 +119,11 @@ GCP Agent Builder uses datastores to automatically generate responses, here are 
   - `metadata and stackoverflow csv` contains both the files from `stackoverflow-csv` and `digital-website-jsonl`
 - wait for the data import to complete, then add them to the agent from DialogFlow CX
 
-
-### How setup the Chatbot in Azure OpenAI Studio:
+### How setup the Chatbot in Azure OpenAI Foundry:
 
 After running the data collection scripts, there should be an Azure AI Search Index created already.
 - test Search Index with some private cloud keywords, such as `Emerald`. The search result should contains references from all three sources!
-- head over to OpenAI Studio. If you don't have any LLM deployed yet, pick a model and deploy it first.
+- head over to OpenAI Foundry. If you don't have any LLM deployed yet, pick a model and deploy it first.
 - head over to Chat playground, pick a deployment and config `add your data` to use the Search Index. Now you can interact with the chatbot from the playground!
 - for Rocky integration, get the source code and config from `View Code`
 
