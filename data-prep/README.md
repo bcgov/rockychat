@@ -141,3 +141,8 @@ AZURE_CLIENT_SECRET - Certificates and secrets (left menu) and generate a new on
 ```
 
 Once you obtained the new cred, update it in the Vault space (secret name `data-prep-sp-cred`) for Rocky and where the data-prep uses it.
+
+
+## Azure user management:
+
+Team member access management is scoped under the subscription. To create/update someone's role assignment, follow the steps [here](https://developer.gov.bc.ca/docs/default/component/public-cloud-techdocs/azure/design-build-deploy/user-management/).
