@@ -4,7 +4,7 @@ We need to create data stores with platform related knowledge base, which could 
 
 Here are the knowledge base exported and processed:
 - public technical doc website: https://developer.gov.bc.ca/docs/default/component/platform-developer-docs -> backstage app, markdown files from a GitHub repo
-- private cloud website that requires authentication: https://digital.gov.bc.ca/cloud/services/private/ -> export HTML + metadata
+- private cloud website that requires authentication: https://digital.gov.bc.ca/technology/cloud/private/ -> export HTML + metadata
 - BCGov StackOverflow: https://stackoverflow.developer.gov.bc.ca/ -> export questions and verified answers
 
 ### Public doc website
@@ -27,7 +27,7 @@ You'll need the access tokens for both StackOverflow API and Digital website
 
 How to obtain the `DIGITAL_WEBSITE_SESSION_TOKEN`:
 - an IDIR account is needed to obtain the "Internal Resources" from the website
-- head to the internal resources section: https://digital.gov.bc.ca/cloud/services/private/internal-resources/
+- head to the internal resources section: https://digital.gov.bc.ca/technology/cloud/private/internal-resources/
 - login with your account
 - open the developer mode -> Application -> find the website Cookies
 - copy paste the cookie key and value as `<wordpress_logged_in_xxx>=<value>`
@@ -36,7 +36,7 @@ How to obtain the `STACKOVERFLOW_API_TOKEN`:
 - stackoverflow Admin access is required
 - head to Admin settings -> API -> create new service key
 
-The collected data will be chunked and used to create an Azure AI search index as part of the scripts, so a Service Principle (SP) is needed for Azure CLI authentication. Following are steps on how to create and prepare the SP (refer to [the official doc](https://learn.microsoft.com/en-us/cli/azure/azure-cli-sp-tutorial-1?tabs=bash#create-a-service-principal-with-role-and-scope) if you need more info!):
+The collected data will be chunked and used to create an Azure AI search index as part of the scripts, so a Service Principle (SP) is needed for [Azure CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest) authentication. Following are steps on how to create and prepare the SP (refer to [the official doc](https://learn.microsoft.com/en-us/cli/azure/azure-cli-sp-tutorial-1?tabs=bash#create-a-service-principal-with-role-and-scope) if you need more info!):
 
 ```bash
 # first login
@@ -75,14 +75,12 @@ AZURE_CLIENT_SECRET=<password>
 
 # Side note: we'll also need another SP for RocketChat hubot integration: (TBD - switch to use API key)
 az ad sp create-for-rbac --name rc-integration-sp --role "Cognitive Services OpenAI User" --scopes /subscriptions/<SubscriptionId>
-
-# Last but not least, check that the URLs are still correct from the `config.json`.
 ```
 
 ### How to run the scripts to collect data:
 
 ```bash
-cd rockychat/data-prep
+cd data-prep
 
 # quick clean up of the output folder
 rm -rf output
@@ -90,6 +88,9 @@ mkdir output
 
 # obtain all the credentials and configs to fill in .env file
 cp .env.sample .env
+
+# update the info needed from the config.json file and update the index_name with current date
+cp config.json.sample config.json
 
 # Note: if you only need to run partial of the scripts, check out all-scripts.sh
 
@@ -102,7 +103,7 @@ docker run -v $(pwd)/output:/app/output -p 4000:80 --env-file .env data-prep
 
 Once the content has been exported locally, please check the format:
 - Stackoverflow output should have at least 300 items
-- Digital website JONSL file should contain a generate URI `gs://digital-website/cloud/services/private/intro/index.html`
+- Digital website JONSL file should contain a generate URI `gs://digital-website/cloud/services/private/intro/index.html` (for GCP)
 - Tech doc markdown files should exist in platform-developer-docs/src/docs
 - Azure Search Index should be created now, the total chunk should equal to the sum of all chunks from the different data paths
 
@@ -140,3 +141,8 @@ AZURE_CLIENT_SECRET - Certificates and secrets (left menu) and generate a new on
 ```
 
 Once you obtained the new cred, update it in the Vault space (secret name `data-prep-sp-cred`) for Rocky and where the data-prep uses it.
+
+
+## Azure user management:
+
+Team member access management is scoped under the subscription. To create/update someone's role assignment, follow the steps [here](https://developer.gov.bc.ca/docs/default/component/public-cloud-techdocs/azure/design-build-deploy/user-management/).

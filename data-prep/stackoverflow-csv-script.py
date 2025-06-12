@@ -5,12 +5,18 @@ import json
 import sys
 import csv
 import os
+import time
 
 # Declare global variables:
 API_BASE_URL="https://stackoverflow.developer.gov.bc.ca/api/2.3"
 PAGE_SIZE=100
 PAGE_NUMBER_TOTAL=4
 count = 0
+
+# Stackoverflow API requirements, allows 10000 request per day
+HEADER = {
+    "User-Agent": "rockyGenAIChatbot/1.0"
+}
 
 # Get questions via pagination:
 def get_all_questions(API_KEY, tag=None):
@@ -26,7 +32,14 @@ def get_all_questions(API_KEY, tag=None):
             api_url += f"&tagged={tag}"
 
         # Fetch questions data from API
-        response = requests.get(api_url)
+        while True:
+            response = requests.get(api_url, headers=HEADER)
+            if response.status_code == 429:
+                print("-------rate limit-------")
+                time.sleep(10)
+            else:
+                break
+
         questions_data = response.json()["items"]
         
         all_questions.extend(questions_data)
@@ -41,9 +54,16 @@ def get_question_details(API_KEY, q_id):
     q_api_url = f"{API_BASE_URL}/questions/{q_id}?filter=withbody&key={API_KEY}"
     a_api_url = f"{API_BASE_URL}/questions/{q_id}/answers?filter=withbody&key={API_KEY}"
 
-    q_response = requests.get(q_api_url)
-    a_response = requests.get(a_api_url)
-    
+    while True:
+        q_response = requests.get(q_api_url, headers=HEADER)
+        a_response = requests.get(q_api_url, headers=HEADER)
+
+        if q_response.status_code == 429 or a_response.status_code == 429:
+            print("-------rate limit-------")
+            time.sleep(10)
+        else:
+            break
+
     if q_response.status_code == 200 and a_response.status_code == 200:
         try:
             # Assuming the response contains JSON data, body container HTML
@@ -63,10 +83,10 @@ def get_question_details(API_KEY, q_id):
             return [q_processed, a_verified]
 
         except json.JSONDecodeError:
-          print(f"Failed to decode JSON response for question {question_id}")
+          print(f"Failed to decode JSON response for question {q_id}")
 
     else:
-        print(f"Failed to fetch answers for question {question_id}. Status code: {response.status_code}")
+        print(f"Failed to fetch answers for question {q_id}. Status code: Q-{q_response.status_code} A-{a_response.status_code}")
 
 
 def save_to_csv(API_KEY, questions, csv_filename):
