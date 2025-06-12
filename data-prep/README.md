@@ -4,7 +4,7 @@ We need to create data stores with platform related knowledge base, which could 
 
 Here are the knowledge base exported and processed:
 - public technical doc website: https://developer.gov.bc.ca/docs/default/component/platform-developer-docs -> backstage app, markdown files from a GitHub repo
-- private cloud website that requires authentication: https://digital.gov.bc.ca/cloud/services/private/ -> export HTML + metadata
+- private cloud website that requires authentication: https://digital.gov.bc.ca/technology/cloud/private/ -> export HTML + metadata
 - BCGov StackOverflow: https://stackoverflow.developer.gov.bc.ca/ -> export questions and verified answers
 
 ### Public doc website
@@ -27,7 +27,7 @@ You'll need the access tokens for both StackOverflow API and Digital website
 
 How to obtain the `DIGITAL_WEBSITE_SESSION_TOKEN`:
 - an IDIR account is needed to obtain the "Internal Resources" from the website
-- head to the internal resources section: https://digital.gov.bc.ca/cloud/services/private/internal-resources/
+- head to the internal resources section: https://digital.gov.bc.ca/technology/cloud/private/internal-resources/
 - login with your account
 - open the developer mode -> Application -> find the website Cookies
 - copy paste the cookie key and value as `<wordpress_logged_in_xxx>=<value>`
