@@ -22,7 +22,7 @@
         "chunk_size": 1024,
         "token_overlap": 128,
         "semantic_config_name": "default",
-        "vector_config_name": "default",
+        // "vector_config_name": "default",
         "language": "en"
     }
 ]

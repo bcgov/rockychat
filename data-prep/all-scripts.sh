@@ -16,7 +16,11 @@ python3 clone-tech-doc-repo.py
 az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET --tenant $AZURE_TENANT_ID
 
 # Step 4.2: Azure - chunk data and create index
+
+# using an embedding model:
 # python3 data_preparation.py --config config.json --njobs=4 \
 #   --embedding-model-endpoint=$AZURE_EMBEDDING_MODEL_ENDPOINT \
 #   --embedding-model-key=$AZURE_EMBEDDING_MODEL_KEY
+
+# simple keyword matching index:
 python3 data_preparation.py --config config.json --njobs=4
