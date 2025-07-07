@@ -130,17 +130,25 @@ After running the data collection scripts, there should be an Azure AI Search In
 
 ## How to update the Azure Client credential:
 
-Azure Portal: <https://portal.azure.com/> (under Azure Active Directory)
+There are two Azure clients used:
+- `rockysp` for the data-prep script authentication to create search index
+- `rc-integration-sp` for the chatbot integration with Azure AI service
 
-Required Values:
+The credentials will expire every 6 months, and a manual process is involved to update them!
 
-```console
-AZURE_CLIENT_ID - App Registration (left menu) -> rockysp -> Application ID
-AZURE_TENANT_ID - same spot as above, but Directory ID instead of App ID
-AZURE_CLIENT_SECRET - Certificates and secrets (left menu) and generate a new one, with name and creation date `vault-client-credential-yyyy-mm-dd` and 12 months expiration period. Make sure to take a copy of the secret value before closing!
-```
-
-Once you obtained the new cred, update it in the Vault space (secret name `data-prep-sp-cred`) for Rocky and where the data-prep uses it.
+To find the credentials:
+- Head to Azure Portal: https://portal.azure.com/
+- Search for `App Registration`, you'll see both of the clients listed
+- Click open them, and look for `Certificates & secrets` from the left hand side menu
+- You won't be able to update an existing secret, so create a new one!
+- Here are the values you'll need:
+    ```console
+    AZURE_CLIENT_ID - App Registration (left menu) -> rockysp -> Application ID
+    AZURE_TENANT_ID - same spot as above, but Directory ID instead of App ID
+    AZURE_CLIENT_SECRET - Certificates and secrets (left menu) and generate a new one, with name and creation date `vault-client-credential-yyyy-mm-dd` and 6 months expiration period.
+    ```
+- Once you created the new secret, make sure to take a copy of the secret value before closing!
+- Then update it in the corresponding Vault space (secret name `data-prep-sp-cred`) for Rocky and the `.env` for data-prep usage. Make sure to restart the running pods in OpenShift for them to pick up the new values.
 
 
 ## Azure user management:
