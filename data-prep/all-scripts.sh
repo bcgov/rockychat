@@ -3,11 +3,8 @@
 # Step 1: generate website export of Digital.gov.bc.ca
 python3 website-html-parsing-script.py output/digital-website-original/ output/digital-website
 
-# Step 2: export StackOverflow content here
-python3 stackoverflow-csv-script.py
-
-# Step 2.1: Azure - transform StackOverflow content into files
-python3 azure-data-transformation-script.py output/stackoverflow-questions.csv output/stackoverflow-files
+# Step 2: export GH Discussion content
+python3 gh-discussion-script.py
 
 # Step 3: clone tech doc repo
 python3 clone-tech-doc-repo.py
