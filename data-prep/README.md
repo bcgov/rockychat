@@ -21,9 +21,13 @@ We use `wget` to obtain the html files from all website pages, including the int
 
 Use the StackOverflow API endpoint to export questions and answers, an API key generated from a user is required. [Docs for reference](https://api.stackexchange.com/docs).
 
+### BCGov GitHub Discussion:
+
+Use GitHub GraphQL API to fetch Discussions from a repo. [Docs for reference](https://docs.github.com/en/graphql/guides/using-the-graphql-api-for-discussions).
+
 ### Preparation for the data collection scripts:
 
-You'll need the access tokens for both StackOverflow API and Digital website
+You'll need the access tokens for the GH-discussion repo, StackOverflow API and Digital website
 
 How to obtain the `DIGITAL_WEBSITE_SESSION_TOKEN`:
 - an IDIR account is needed to obtain the "Internal Resources" from the website
@@ -35,6 +39,17 @@ How to obtain the `DIGITAL_WEBSITE_SESSION_TOKEN`:
 How to obtain the `STACKOVERFLOW_API_TOKEN`:
 - stackoverflow Admin access is required
 - head to Admin settings -> API -> create new service key
+
+How to create a `GITHUB_TOKEN`:
+- Create a classic developer token is needed for individual repo access if you are not the owner of it: https://github.com/settings/tokens
+- Click `Generate new token (classic)`
+- Under Scopes, check only:
+  - repo (for private repo usage)
+  - read:discussion (for reading discussions only, no need for write)
+- Enable SSO config for the token
+- Don't forget to set a reminder to renew the token before it expires!
+
+> Note that when the discussion repo changes, you'll also need to update the URL link in `config.json` to match the new repo name!
 
 The collected data will be chunked and used to create an Azure AI search index as part of the scripts, so a Service Principle (SP) is needed for [Azure CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest) authentication. Following are steps on how to create and prepare the SP (refer to [the official doc](https://learn.microsoft.com/en-us/cli/azure/azure-cli-sp-tutorial-1?tabs=bash#create-a-service-principal-with-role-and-scope) if you need more info!):
 
