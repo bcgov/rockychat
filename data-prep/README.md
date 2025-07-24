@@ -81,18 +81,21 @@ az role assignment create --assignee <SP_ID> --role "Cognitive Services OpenAI C
 # Check roles assigned to a SP:
 az role assignment list --assignee <SP_ID> --query "[].{Role:roleDefinitionName, Scope:scope}" -o table
 
-# make sure to match the value and put that into the .env file (more details in the following section "How to update the Azure Client credential")
+# make sure to match the value and put that into the .env file
+# NOTE: If you just need to fetch an existing SP info, follow the same steps from the section below - "How to update the Azure Client credential"
 AZURE_CLIENT_ID=<appId>
 AZURE_TENANT_ID=<tenant>
 AZURE_CLIENT_SECRET=<password>
 
-# This client cred expires every year, there is a calendar reminder for the team to update it each year!
+# This client cred expires every 6 months, there is a calendar reminder for the team to update it before expiration time!
 
-# Side note: we'll also need another SP for RocketChat hubot integration: (TBD - switch to use API key)
+# Side note: we'll also need another SP for RocketChat hubot integration: (Not needed anymore - switch to use API key)
 az ad sp create-for-rbac --name rc-integration-sp --role "Cognitive Services OpenAI User" --scopes /subscriptions/<SubscriptionId>
 ```
 
 ### How to run the scripts to collect data:
+
+Step 1 - Get the environment config ready:
 
 ```bash
 cd data-prep
@@ -106,7 +109,41 @@ cp .env.sample .env
 
 # update the info needed from the config.json file and update the index_name with current date
 cp config.json.sample config.json
+```
 
+Step 2 - Fetch the config values from Azure:
+```bash
+# You'll need the following information to put into the .env file
+AZURE_CLIENT_ID=<appId>
+AZURE_TENANT_ID=<tenant>
+AZURE_CLIENT_SECRET=<password>
+
+# Get the SP info:
+az ad sp list --display-name "rockysp" -o tsv
+
+# First ID is AZURE_CLIENT_ID and second is AZURE_TENANT_ID
+# If you are using an existing SP, follow the steps from the section below "How to update the Azure Client credential" to get the `AZURE_CLIENT_SECRET`.
+```
+
+```bash
+# You'll need the following information to put into the config.json file
+"subscription_id": "",
+"resource_group": "",
+"search_service_name": "rockytest",
+"index_name": "rocky-<purpose>-<timestamp>",
+
+# Search for `AI Search` from Azure console, you'll see the enabled AI search services. Pick the right one and click open
+# You'll see the Essentials information right here, including:
+  # - Resource group for resource_group
+  # - Subscription ID for subscription_id
+  # - search_service_name at the top left corner for the AI Search service you picked
+```
+
+Step 3 - Fill in the other information you gathered from the `Preparation for the data collection scripts` section to `.env`
+
+Step 4 - Run the Docker Container
+
+```bash
 # Note: if you only need to run partial of the scripts, check out all-scripts.sh
 
 # build the docker container:
