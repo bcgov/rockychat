@@ -1,0 +1,88 @@
+{{- if .Values.redisBackup.enabled }}
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ include "rockychat.fullname" . }}-redis-backup
+  namespace: {{ .Values.global.licenseplate }}-{{ .Values.global.environment }}
+  labels:
+    {{- include "rockychat.labels" . | nindent 4 }}
+    app.kubernetes.io/component: redis-backup
+spec:
+  schedule: "{{ .Values.redisBackup.schedule }}"
+  successfulJobsHistoryLimit: {{ .Values.redisBackup.successfulJobsHistoryLimit }}
+  failedJobsHistoryLimit: {{ .Values.redisBackup.failedJobsHistoryLimit }}
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            {{- include "rockychat.selectorLabels" . | nindent 12 }}
+            app.kubernetes.io/component: redis-backup
+            parent: redis-backup-cron
+        spec:
+          restartPolicy: OnFailure
+          containers:
+          - name: backup
+            image: {{ .Values.redisBackup.image.repository }}:{{ .Values.redisBackup.image.tag }}
+            imagePullPolicy: {{ .Values.redisBackup.image.pullPolicy }}
+            command:
+            - /bin/sh
+            - -c
+            - |
+              set -e
+              echo "Starting Redis backup at $(date)"
+              
+              # Get Redis password from secret
+              REDIS_PASSWORD=$(cat /redis-secret/redis-password)
+              
+              # Redis connection details
+              REDIS_HOST="{{ .Release.Name }}-redis-master"
+              REDIS_PORT="6379"
+              
+              # Create backup file with timestamp
+              BACKUP_FILE="/backups/dump.rdb.$(date +%F-%H%M%S)"
+              
+              echo "Connecting to Redis at $REDIS_HOST:$REDIS_PORT..."
+              
+              # Use redis-cli to dump the database over the network (no PVC mount needed!)
+              redis-cli -h "$REDIS_HOST" -p "$REDIS_PORT" -a "$REDIS_PASSWORD" --no-auth-warning --rdb "$BACKUP_FILE"
+              
+              if [ -f "$BACKUP_FILE" ]; then
+                echo "Backup created: $BACKUP_FILE ($(du -h $BACKUP_FILE | cut -f1))"
+              else
+                echo "Error: Backup file was not created"
+                exit 1
+              fi
+              
+              {{- if gt (int .Values.redisBackup.retention) 0 }}
+              # Clean up old backups (keep last N backups as per retention policy)
+              echo "Cleaning up old backups (keeping last {{ .Values.redisBackup.retention }} backups)..."
+              ls -t /backups/dump.rdb.* 2>/dev/null | tail -n +$(({{ .Values.redisBackup.retention }} + 1)) | xargs -r rm -f
+              {{- else }}
+              echo "Retention set to 0 - skipping cleanup"
+              {{- end }}
+              
+              echo "Redis backup completed successfully at $(date)"
+              echo "Current backups:"
+              ls -lht /backups/dump.rdb.* 2>/dev/null || echo "No backups found"
+            env:
+            - name: TZ
+              value: "America/Vancouver"
+            volumeMounts:
+            - name: redis-secret
+              mountPath: /redis-secret
+              readOnly: true
+            - name: backup-storage
+              mountPath: /backups
+            resources:
+              {{- toYaml .Values.redisBackup.resources | nindent 14 }}
+          volumes:
+          - name: redis-secret
+            secret:
+              secretName: {{ .Values.redis.auth.existingSecret }}
+          - name: backup-storage
+            persistentVolumeClaim:
+              claimName: {{ include "rockychat.fullname" . }}-redis-backup-pvc
+{{- end }}
+

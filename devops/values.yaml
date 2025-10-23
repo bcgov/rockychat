@@ -81,13 +81,12 @@ service:
 redis:
   enabled: true
   replica:
-    replicaCount: 3
-  # image: redis
-  # tag: 7.2.4
-  # pullPolicy: IfNotPresent
-  # port: 6379
-  # storage:
-  #   size: 200Mi
+    replicaCount: 1
+  # By default, uses Bitnami Redis chart's default image
+  # image:
+  #   registry: docker.io
+  #   repository: bitnami/redis
+  #   tag: 7.2.5-debian-12-r0
 
   auth:
     existingSecret: rockychat-devops-redis-secret
@@ -117,3 +116,25 @@ networkPolicy:
     enabled: true
   allowFromIngress:
     enabled: true
+
+# Redis Backup Configuration
+redisBackup:
+  enabled: true
+  schedule: "00 1 * * *"  # Daily at 1:00 AM
+  image:
+    repository: redis
+    tag: "7.2.4"
+    pullPolicy: IfNotPresent
+  resources:
+    limits:
+      cpu: 100m
+      memory: 128Mi
+    requests:
+      cpu: 50m
+      memory: 64Mi
+  storage:
+    size: 4Gi
+    storageClass: netapp-file-standard
+  retention: 3  # Keep last N backups (set to 0 to disable cleanup)
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 1
