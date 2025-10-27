@@ -1,0 +1,18 @@
+{{- if .Values.redisBackup.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "rockychat.fullname" . }}-redis-backup-pvc
+  namespace: {{ .Values.global.licenseplate }}-{{ .Values.global.environment }}
+  labels:
+    {{- include "rockychat.labels" . | nindent 4 }}
+    app.kubernetes.io/component: redis-backup
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: {{ .Values.redisBackup.storage.storageClass }}
+  resources:
+    requests:
+      storage: {{ .Values.redisBackup.storage.size }}
+{{- end }}
+

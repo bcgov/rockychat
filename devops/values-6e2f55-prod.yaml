@@ -6,3 +6,9 @@ global:
 apiImage:
   repository: artifacts.developer.gov.bc.ca/plat-gen-docker-local/rocky-chat
   tag: prod
+
+# Redis Backup Configuration for Production
+redisBackup:
+  retention: 3  # Keep last 3 backups for production
+  storage:
+    size: 4Gi  # Storage for production backups
