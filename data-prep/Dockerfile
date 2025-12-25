@@ -30,8 +30,8 @@ RUN apt-get update && \
     curl -sL https://aka.ms/InstallAzureCLIDeb | bash
 
 # Copy the current directory contents into the container at /app
-COPY stackoverflow-csv-script.py website-html-parsing-script.py clone-tech-doc-repo.py /app
-COPY azure-data-transformation-script.py /app
+COPY website-html-parsing-script.py clone-tech-doc-repo.py /app
+COPY gh-discussion-script.py /app
 COPY data_preparation.py data_utils.py config.json /app
 COPY all-scripts.sh /app
 

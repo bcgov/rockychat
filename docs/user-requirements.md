@@ -8,7 +8,7 @@ The **Generative AI model** is trained with the platform knowledge base, includi
 - documentation websites
     - public information
     - IDIR protected pages
-- BCGov StackOverflow
+- BCGov ~StackOverflow~ GH Discussions
 - BCGov GitHub repos
     - public repos only
     - covering `bcgov` GitHub organizations

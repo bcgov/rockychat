@@ -21,9 +21,13 @@ We use `wget` to obtain the html files from all website pages, including the int
 
 Use the StackOverflow API endpoint to export questions and answers, an API key generated from a user is required. [Docs for reference](https://api.stackexchange.com/docs).
 
+### BCGov GitHub Discussion:
+
+Use GitHub GraphQL API to fetch Discussions from a repo. [Docs for reference](https://docs.github.com/en/graphql/guides/using-the-graphql-api-for-discussions).
+
 ### Preparation for the data collection scripts:
 
-You'll need the access tokens for both StackOverflow API and Digital website
+You'll need the access tokens for the GH-discussion repo, StackOverflow API and Digital website
 
 How to obtain the `DIGITAL_WEBSITE_SESSION_TOKEN`:
 - an IDIR account is needed to obtain the "Internal Resources" from the website
@@ -35,6 +39,17 @@ How to obtain the `DIGITAL_WEBSITE_SESSION_TOKEN`:
 How to obtain the `STACKOVERFLOW_API_TOKEN`:
 - stackoverflow Admin access is required
 - head to Admin settings -> API -> create new service key
+
+How to create a `GITHUB_TOKEN`:
+- Create a classic developer token is needed for individual repo access if you are not the owner of it: https://github.com/settings/tokens
+- Click `Generate new token (classic)`
+- Under Scopes, check only:
+  - repo (for private repo usage)
+  - read:discussion (for reading discussions only, no need for write)
+- Enable SSO config for the token
+- Don't forget to set a reminder to renew the token before it expires!
+
+> Note that when the discussion repo changes, you'll also need to update the URL link in `config.json` to match the new repo name!
 
 The collected data will be chunked and used to create an Azure AI search index as part of the scripts, so a Service Principle (SP) is needed for [Azure CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest) authentication. Following are steps on how to create and prepare the SP (refer to [the official doc](https://learn.microsoft.com/en-us/cli/azure/azure-cli-sp-tutorial-1?tabs=bash#create-a-service-principal-with-role-and-scope) if you need more info!):
 
@@ -66,18 +81,21 @@ az role assignment create --assignee <SP_ID> --role "Cognitive Services OpenAI C
 # Check roles assigned to a SP:
 az role assignment list --assignee <SP_ID> --query "[].{Role:roleDefinitionName, Scope:scope}" -o table
 
-# make sure to match the value and put that into the .env file (more details in the following section "How to update the Azure Client credential")
+# make sure to match the value and put that into the .env file
+# NOTE: If you just need to fetch an existing SP info, follow the same steps from the section below - "How to update the Azure Client credential"
 AZURE_CLIENT_ID=<appId>
 AZURE_TENANT_ID=<tenant>
 AZURE_CLIENT_SECRET=<password>
 
-# This client cred expires every year, there is a calendar reminder for the team to update it each year!
+# This client cred expires every 6 months, there is a calendar reminder for the team to update it before expiration time!
 
-# Side note: we'll also need another SP for RocketChat hubot integration: (TBD - switch to use API key)
+# Side note: we'll also need another SP for RocketChat hubot integration: (Not needed anymore - switch to use API key)
 az ad sp create-for-rbac --name rc-integration-sp --role "Cognitive Services OpenAI User" --scopes /subscriptions/<SubscriptionId>
 ```
 
 ### How to run the scripts to collect data:
+
+Step 1 - Get the environment config ready:
 
 ```bash
 cd data-prep
@@ -91,7 +109,41 @@ cp .env.sample .env
 
 # update the info needed from the config.json file and update the index_name with current date
 cp config.json.sample config.json
+```
 
+Step 2 - Fetch the config values from Azure:
+```bash
+# You'll need the following information to put into the .env file
+AZURE_CLIENT_ID=<appId>
+AZURE_TENANT_ID=<tenant>
+AZURE_CLIENT_SECRET=<password>
+
+# Get the SP info:
+az ad sp list --display-name "rockysp" -o tsv
+
+# First ID is AZURE_CLIENT_ID and second is AZURE_TENANT_ID
+# If you are using an existing SP, follow the steps from the section below "How to update the Azure Client credential" to get the `AZURE_CLIENT_SECRET`.
+```
+
+```bash
+# You'll need the following information to put into the config.json file
+"subscription_id": "",
+"resource_group": "",
+"search_service_name": "rockytest",
+"index_name": "rocky-<purpose>-<timestamp>",
+
+# Search for `AI Search` from Azure console, you'll see the enabled AI search services. Pick the right one and click open
+# You'll see the Essentials information right here, including:
+  # - Resource group for resource_group
+  # - Subscription ID for subscription_id
+  # - search_service_name at the top left corner for the AI Search service you picked
+```
+
+Step 3 - Fill in the other information you gathered from the `Preparation for the data collection scripts` section to `.env`
+
+Step 4 - Run the Docker Container
+
+```bash
 # Note: if you only need to run partial of the scripts, check out all-scripts.sh
 
 # build the docker container:
@@ -130,18 +182,21 @@ After running the data collection scripts, there should be an Azure AI Search In
 
 ## How to update the Azure Client credential:
 
-Azure Portal: <https://portal.azure.com/> (under Azure Active Directory)
+Data-prep script uses a Azure Service Principle `rockysp` to authenticate az cli and create search index. The credentials will expire every 6 months, and a manual process is involved to update them!
 
-Required Values:
-
-```console
-AZURE_CLIENT_ID - App Registration (left menu) -> rockysp -> Application ID
-AZURE_TENANT_ID - same spot as above, but Directory ID instead of App ID
-AZURE_CLIENT_SECRET - Certificates and secrets (left menu) and generate a new one, with name and creation date `vault-client-credential-yyyy-mm-dd` and 12 months expiration period. Make sure to take a copy of the secret value before closing!
-```
-
-Once you obtained the new cred, update it in the Vault space (secret name `data-prep-sp-cred`) for Rocky and where the data-prep uses it.
-
+To find the credentials:
+- Head to Azure Portal: https://portal.azure.com/
+- Search for `App Registration`, you'll see both of the clients listed. The one you are looking for is called `rockysp`
+- Click open them, and look for `Certificates & secrets` from the left hand side menu
+- You won't be able to update an existing secret, so create a new one!
+- Here are the values you'll need:
+    ```console
+    AZURE_CLIENT_ID - App Registration (left menu) -> rockysp -> Application ID
+    AZURE_TENANT_ID - same spot as above, but Directory ID instead of App ID
+    AZURE_CLIENT_SECRET - Certificates and secrets (left menu) and generate a new one, with name and creation date `rbac-yyyy-mm-dd` and 6 months expiration period.
+    ```
+- Once you created the new secret, make sure to take a copy of the secret value before closing!
+- Then update it in the corresponding Vault space (secret name `data-prep-sp-cred`) for Rocky and the `.env` for data-prep usage.
 
 ## Azure user management:
 
