@@ -1,0 +1,3982 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "accounts_rockey_openai_test_name": {
+      "type": "String"
+    },
+    "bastionHosts_a7009d_test_vwan_spoke_bastion_name": {
+      "type": "String"
+    },
+    "networkInterfaces_rockyjumpbox503_z1_name": {
+      "type": "String"
+    },
+    "networkSecurityGroups_nsg_apim_name": {
+      "type": "String"
+    },
+    "networkSecurityGroups_nsg_bastion_name": {
+      "type": "String"
+    },
+    "networkSecurityGroups_nsg_private_endpoints_name": {
+      "type": "String"
+    },
+    "privateEndpoints_Azure_Openai_Private_Endpoint_name": {
+      "type": "String"
+    },
+    "privateEndpoints_rocky_search_private_endpoint_name": {
+      "type": "String"
+    },
+    "publicIPAddresses_a7009d_test_vwan_spoke_ip_name": {
+      "type": "String"
+    },
+    "searchServices_rocky_search_test_name": {
+      "type": "String"
+    },
+    "service_rocky_apim_test_2_name": {
+      "type": "String"
+    },
+    "sshPublicKeys_rockyjumpbox_key_name": {
+      "type": "String"
+    },
+    "subscriptions_68756f5bd5619c0075070001_displayName": {
+      "type": "SecureString"
+    },
+    "subscriptions_68756f5bd5619c0075070002_displayName": {
+      "type": "SecureString"
+    },
+    "users_1_lastName": {
+      "type": "SecureString"
+    },
+    "virtualMachines_rockyjumpbox_name": {
+      "type": "String"
+    },
+    "virtualNetworks_a7009d_test_vwan_spoke_name": {
+      "type": "String"
+    }
+  },
+  "resources": [
+    {
+      "apiVersion": "2024-06-01-preview",
+      "identity": {
+        "type": "SystemAssigned"
+      },
+      "location": "Canada Central",
+      "name": "[parameters('service_rocky_apim_test_2_name')]",
+      "properties": {
+        "apiVersionConstraint": {},
+        "customProperties": {
+          "Microsoft.WindowsAzure.ApiManagement.Gateway.Protocols.Server.Http2": "False",
+          "Microsoft.WindowsAzure.ApiManagement.Gateway.Security.Backend.Protocols.Ssl30": "False",
+          "Microsoft.WindowsAzure.ApiManagement.Gateway.Security.Backend.Protocols.Tls10": "False",
+          "Microsoft.WindowsAzure.ApiManagement.Gateway.Security.Backend.Protocols.Tls11": "False",
+          "Microsoft.WindowsAzure.ApiManagement.Gateway.Security.Ciphers.TripleDes168": "False",
+          "Microsoft.WindowsAzure.ApiManagement.Gateway.Security.Protocols.Ssl30": "False",
+          "Microsoft.WindowsAzure.ApiManagement.Gateway.Security.Protocols.Tls10": "False",
+          "Microsoft.WindowsAzure.ApiManagement.Gateway.Security.Protocols.Tls11": "False"
+        },
+        "developerPortalStatus": "Enabled",
+        "disableGateway": false,
+        "hostnameConfigurations": [
+          {
+            "certificateSource": "BuiltIn",
+            "defaultSslBinding": true,
+            "hostName": "[concat(parameters('service_rocky_apim_test_2_name'), '.azure-api.net')]",
+            "negotiateClientCertificate": false,
+            "type": "Proxy"
+          }
+        ],
+        "legacyPortalStatus": "Disabled",
+        "natGatewayState": "Unsupported",
+        "notificationSenderEmail": "apimgmt-noreply@mail.windowsazure.com",
+        "publicNetworkAccess": "Enabled",
+        "publisherEmail": "billy.li@gov.bc.ca",
+        "publisherName": "bcgov",
+        "releaseChannel": "Preview",
+        "virtualNetworkType": "None"
+      },
+      "sku": {
+        "capacity": 1,
+        "name": "Developer"
+      },
+      "type": "Microsoft.ApiManagement/service"
+    },
+    {
+      "apiVersion": "2025-06-01",
+      "kind": "OpenAI",
+      "location": "canadacentral",
+      "name": "[parameters('accounts_rockey_openai_test_name')]",
+      "properties": {
+        "allowProjectManagement": false,
+        "apiProperties": {},
+        "customSubDomainName": "[parameters('accounts_rockey_openai_test_name')]",
+        "networkAcls": {
+          "defaultAction": "Allow",
+          "ipRules": [],
+          "virtualNetworkRules": []
+        },
+        "publicNetworkAccess": "Disabled"
+      },
+      "sku": {
+        "name": "S0"
+      },
+      "tags": {
+        "billing_group": "a7009d",
+        "ministry_name": "CITZ"
+      },
+      "type": "Microsoft.CognitiveServices/accounts"
+    },
+    {
+      "apiVersion": "2024-11-01",
+      "location": "canadacentral",
+      "name": "[parameters('sshPublicKeys_rockyjumpbox_key_name')]",
+      "properties": {
+        "publicKey": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDcBOIsnvLGnq8sG4r6kvYdAtxJyaAf4AYf2Akb8h5AYU091veg4AD7Z8LCtpIBxc3dq0BYsKjjmfNGIJIElN9yI6lv2gHr5VnjrTT6i/quln/o/ksT5UdojUpyrtjV/wtS0QS1w0dT3t4qdbny+6AK9LV4KeRT64kbrm0JsFgyiwYeTRJ50ODBhEoSt1gCplLgIS579rgxzkFOuG+MezHKkfo7YO3xM5ixpzctddJ24qOUuR9XuxB213k6Ph3uqhm9FH2sGWbvonsjNpbnPp8xtcrYe6CztBBvl3LGvoRMvRw0Fdpzd6poeSkcURhJ5ecb2VGZ/4B56pLHR5LPPrpKMg79mDTLeoptYCuN0n3G1bhsQErb8It5Mte02UaELabVpfADditJ/bYLWeoytFaAczuC/5GbCimHyIrP0PR6wso8ZpjWiiBKuuREpJ+oo45r1xxZbrrW50zk+SwPNhll7l9fgWt+mngQt6Os1OgellHrkzbJ9e6qvqqdw6lmXhk= generated-by-azure"
+      },
+      "tags": {
+        "billing_group": "a7009d",
+        "ministry_name": "CITZ"
+      },
+      "type": "Microsoft.Compute/sshPublicKeys"
+    },
+    {
+      "apiVersion": "2024-07-01",
+      "location": "canadacentral",
+      "name": "[parameters('networkSecurityGroups_nsg_apim_name')]",
+      "properties": {
+        "securityRules": [
+          {
+            "id": "[resourceId('Microsoft.Network/networkSecurityGroups/securityRules', parameters('networkSecurityGroups_nsg_apim_name'), 'Allow-APIM-Client')]",
+            "name": "Allow-APIM-Client",
+            "properties": {
+              "access": "Allow",
+              "destinationAddressPrefix": "VirtualNetwork",
+              "destinationAddressPrefixes": [],
+              "destinationPortRanges": [
+                "80",
+                "443"
+              ],
+              "direction": "Inbound",
+              "priority": 100,
+              "protocol": "TCP",
+              "sourceAddressPrefix": "Internet",
+              "sourceAddressPrefixes": [],
+              "sourcePortRange": "*",
+              "sourcePortRanges": []
+            },
+            "type": "Microsoft.Network/networkSecurityGroups/securityRules"
+          },
+          {
+            "id": "[resourceId('Microsoft.Network/networkSecurityGroups/securityRules', parameters('networkSecurityGroups_nsg_apim_name'), 'Allow-Portal-Management')]",
+            "name": "Allow-Portal-Management",
+            "properties": {
+              "access": "Allow",
+              "description": "Enables portal, portal REST API, PowerShell, CLI on APIM management plane\n",
+              "destinationAddressPrefix": "VirtualNetwork",
+              "destinationAddressPrefixes": [],
+              "destinationPortRange": "3443",
+              "destinationPortRanges": [],
+              "direction": "Inbound",
+              "priority": 110,
+              "protocol": "TCP",
+              "sourceAddressPrefix": "ApiManagement",
+              "sourceAddressPrefixes": [],
+              "sourcePortRange": "*",
+              "sourcePortRanges": []
+            },
+            "type": "Microsoft.Network/networkSecurityGroups/securityRules"
+          },
+          {
+            "id": "[resourceId('Microsoft.Network/networkSecurityGroups/securityRules', parameters('networkSecurityGroups_nsg_apim_name'), 'Allow-LB-Health-Probe')]",
+            "name": "Allow-LB-Health-Probe",
+            "properties": {
+              "access": "Allow",
+              "destinationAddressPrefix": "VirtualNetwork",
+              "destinationAddressPrefixes": [],
+              "destinationPortRange": "*",
+              "destinationPortRanges": [],
+              "direction": "Inbound",
+              "priority": 120,
+              "protocol": "TCP",
+              "sourceAddressPrefix": "AzureLoadBalancer",
+              "sourceAddressPrefixes": [],
+              "sourcePortRange": "*",
+              "sourcePortRanges": []
+            },
+            "type": "Microsoft.Network/networkSecurityGroups/securityRules"
+          },
+          {
+            "id": "[resourceId('Microsoft.Network/networkSecurityGroups/securityRules', parameters('networkSecurityGroups_nsg_apim_name'), 'TrafficManager')]",
+            "name": "TrafficManager",
+            "properties": {
+              "access": "Allow",
+              "description": "Needed only for multi-region APIM deployments",
+              "destinationAddressPrefix": "VirtualNetwork",
+              "destinationAddressPrefixes": [],
+              "destinationPortRange": "443",
+              "destinationPortRanges": [],
+              "direction": "Inbound",
+              "priority": 130,
+              "protocol": "TCP",
+              "sourceAddressPrefix": "AzureTrafficManager",
+              "sourceAddressPrefixes": [],
+              "sourcePortRange": "*",
+              "sourcePortRanges": []
+            },
+            "type": "Microsoft.Network/networkSecurityGroups/securityRules"
+          },
+          {
+            "id": "[resourceId('Microsoft.Network/networkSecurityGroups/securityRules', parameters('networkSecurityGroups_nsg_apim_name'), 'Allow-Out-Storage')]",
+            "name": "Allow-Out-Storage",
+            "properties": {
+              "access": "Allow",
+              "description": "allow APIM to access storage",
+              "destinationAddressPrefix": "Storage",
+              "destinationAddressPrefixes": [],
+              "destinationPortRange": "*",
+              "destinationPortRanges": [],
+              "direction": "Outbound",
+              "priority": 100,
+              "protocol": "TCP",
+              "sourceAddressPrefix": "VirtualNetwork",
+              "sourceAddressPrefixes": [],
+              "sourcePortRange": "*",
+              "sourcePortRanges": []
+            },
+            "type": "Microsoft.Network/networkSecurityGroups/securityRules"
+          }
+        ]
+      },
+      "type": "Microsoft.Network/networkSecurityGroups"
+    },
+    {
+      "apiVersion": "2024-07-01",
+      "location": "canadacentral",
+      "name": "[parameters('networkSecurityGroups_nsg_bastion_name')]",
+      "properties": {
+        "securityRules": [
+          {
+            "id": "[resourceId('Microsoft.Network/networkSecurityGroups/securityRules', parameters('networkSecurityGroups_nsg_bastion_name'), 'AllowTagHTTPSInbound')]",
+            "name": "AllowTagHTTPSInbound",
+            "properties": {
+              "access": "Allow",
+              "destinationAddressPrefix": "*",
+              "destinationAddressPrefixes": [],
+              "destinationPortRange": "443",
+              "destinationPortRanges": [],
+              "direction": "Inbound",
+              "priority": 1000,
+              "protocol": "TCP",
+              "sourceAddressPrefix": "Internet",
+              "sourceAddressPrefixes": [],
+              "sourcePortRange": "*",
+              "sourcePortRanges": []
+            },
+            "type": "Microsoft.Network/networkSecurityGroups/securityRules"
+          },
+          {
+            "id": "[resourceId('Microsoft.Network/networkSecurityGroups/securityRules', parameters('networkSecurityGroups_nsg_bastion_name'), 'AllowAnyHTTPSInbound')]",
+            "name": "AllowAnyHTTPSInbound",
+            "properties": {
+              "access": "Allow",
+              "destinationAddressPrefix": "*",
+              "destinationAddressPrefixes": [],
+              "destinationPortRange": "443",
+              "destinationPortRanges": [],
+              "direction": "Inbound",
+              "priority": 1010,
+              "protocol": "TCP",
+              "sourceAddressPrefix": "AzureLoadBalancer",
+              "sourceAddressPrefixes": [],
+              "sourcePortRange": "*",
+              "sourcePortRanges": []
+            },
+            "type": "Microsoft.Network/networkSecurityGroups/securityRules"
+          },
+          {
+            "id": "[resourceId('Microsoft.Network/networkSecurityGroups/securityRules', parameters('networkSecurityGroups_nsg_bastion_name'), 'AllowBastionHostCommunication')]",
+            "name": "AllowBastionHostCommunication",
+            "properties": {
+              "access": "Allow",
+              "destinationAddressPrefix": "VirtualNetwork",
+              "destinationAddressPrefixes": [],
+              "destinationPortRanges": [
+                "8080",
+                "5701"
+              ],
+              "direction": "Inbound",
+              "priority": 1020,
+              "protocol": "*",
+              "sourceAddressPrefix": "VirtualNetwork",
+              "sourceAddressPrefixes": [],
+              "sourcePortRange": "*",
+              "sourcePortRanges": []
+            },
+            "type": "Microsoft.Network/networkSecurityGroups/securityRules"
+          },
+          {
+            "id": "[resourceId('Microsoft.Network/networkSecurityGroups/securityRules', parameters('networkSecurityGroups_nsg_bastion_name'), 'allowGatewayManagerInbound')]",
+            "name": "allowGatewayManagerInbound",
+            "properties": {
+              "access": "Allow",
+              "destinationAddressPrefix": "*",
+              "destinationAddressPrefixes": [],
+              "destinationPortRange": "443",
+              "destinationPortRanges": [],
+              "direction": "Inbound",
+              "priority": 1030,
+              "protocol": "TCP",
+              "sourceAddressPrefix": "GatewayManager",
+              "sourceAddressPrefixes": [],
+              "sourcePortRange": "*",
+              "sourcePortRanges": []
+            },
+            "type": "Microsoft.Network/networkSecurityGroups/securityRules"
+          },
+          {
+            "id": "[resourceId('Microsoft.Network/networkSecurityGroups/securityRules', parameters('networkSecurityGroups_nsg_bastion_name'), 'AllowSshRdpOutbound')]",
+            "name": "AllowSshRdpOutbound",
+            "properties": {
+              "access": "Allow",
+              "destinationAddressPrefix": "VirtualNetwork",
+              "destinationAddressPrefixes": [],
+              "destinationPortRanges": [
+                "22",
+                "3389"
+              ],
+              "direction": "Outbound",
+              "priority": 1040,
+              "protocol": "*",
+              "sourceAddressPrefix": "*",
+              "sourceAddressPrefixes": [],
+              "sourcePortRange": "*",
+              "sourcePortRanges": []
+            },
+            "type": "Microsoft.Network/networkSecurityGroups/securityRules"
+          },
+          {
+            "id": "[resourceId('Microsoft.Network/networkSecurityGroups/securityRules', parameters('networkSecurityGroups_nsg_bastion_name'), 'AllowAnyCustom443Outbound')]",
+            "name": "AllowAnyCustom443Outbound",
+            "properties": {
+              "access": "Allow",
+              "destinationAddressPrefix": "AzureCloud",
+              "destinationAddressPrefixes": [],
+              "destinationPortRange": "443",
+              "destinationPortRanges": [],
+              "direction": "Outbound",
+              "priority": 1050,
+              "protocol": "*",
+              "sourceAddressPrefix": "*",
+              "sourceAddressPrefixes": [],
+              "sourcePortRange": "*",
+              "sourcePortRanges": []
+            },
+            "type": "Microsoft.Network/networkSecurityGroups/securityRules"
+          },
+          {
+            "id": "[resourceId('Microsoft.Network/networkSecurityGroups/securityRules', parameters('networkSecurityGroups_nsg_bastion_name'), 'AllowBastionCommunication')]",
+            "name": "AllowBastionCommunication",
+            "properties": {
+              "access": "Allow",
+              "destinationAddressPrefix": "VirtualNetwork",
+              "destinationAddressPrefixes": [],
+              "destinationPortRanges": [
+                "8080",
+                "5701"
+              ],
+              "direction": "Outbound",
+              "priority": 1060,
+              "protocol": "*",
+              "sourceAddressPrefix": "*",
+              "sourceAddressPrefixes": [],
+              "sourcePortRange": "*",
+              "sourcePortRanges": []
+            },
+            "type": "Microsoft.Network/networkSecurityGroups/securityRules"
+          },
+          {
+            "id": "[resourceId('Microsoft.Network/networkSecurityGroups/securityRules', parameters('networkSecurityGroups_nsg_bastion_name'), 'AllowAnyHTTPOutbound')]",
+            "name": "AllowAnyHTTPOutbound",
+            "properties": {
+              "access": "Allow",
+              "destinationAddressPrefix": "Internet",
+              "destinationAddressPrefixes": [],
+              "destinationPortRange": "80",
+              "destinationPortRanges": [],
+              "direction": "Outbound",
+              "priority": 1070,
+              "protocol": "*",
+              "sourceAddressPrefix": "*",
+              "sourceAddressPrefixes": [],
+              "sourcePortRange": "*",
+              "sourcePortRanges": []
+            },
+            "type": "Microsoft.Network/networkSecurityGroups/securityRules"
+          }
+        ]
+      },
+      "tags": {
+        "billing_group": "a7009d",
+        "ministry_name": "CITZ"
+      },
+      "type": "Microsoft.Network/networkSecurityGroups"
+    },
+    {
+      "apiVersion": "2024-07-01",
+      "location": "canadacentral",
+      "name": "[parameters('networkSecurityGroups_nsg_private_endpoints_name')]",
+      "properties": {
+        "securityRules": [
+          {
+            "id": "[resourceId('Microsoft.Network/networkSecurityGroups/securityRules', parameters('networkSecurityGroups_nsg_private_endpoints_name'), 'AllowSSHInbound')]",
+            "name": "AllowSSHInbound",
+            "properties": {
+              "access": "Allow",
+              "destinationAddressPrefix": "*",
+              "destinationAddressPrefixes": [],
+              "destinationPortRanges": [
+                "22",
+                "3389"
+              ],
+              "direction": "Inbound",
+              "priority": 1000,
+              "protocol": "*",
+              "sourceAddressPrefix": "VirtualNetwork",
+              "sourceAddressPrefixes": [],
+              "sourcePortRange": "*",
+              "sourcePortRanges": []
+            },
+            "type": "Microsoft.Network/networkSecurityGroups/securityRules"
+          }
+        ]
+      },
+      "tags": {
+        "billing_group": "a7009d",
+        "ministry_name": "CITZ"
+      },
+      "type": "Microsoft.Network/networkSecurityGroups"
+    },
+    {
+      "apiVersion": "2024-07-01",
+      "location": "canadacentral",
+      "name": "[parameters('publicIPAddresses_a7009d_test_vwan_spoke_ip_name')]",
+      "properties": {
+        "idleTimeoutInMinutes": 4,
+        "ipAddress": "4.206.161.180",
+        "ipTags": [],
+        "publicIPAddressVersion": "IPv4",
+        "publicIPAllocationMethod": "Static"
+      },
+      "sku": {
+        "name": "Standard",
+        "tier": "Regional"
+      },
+      "tags": {
+        "billing_group": "a7009d",
+        "ministry_name": "CITZ"
+      },
+      "type": "Microsoft.Network/publicIPAddresses"
+    },
+    {
+      "apiVersion": "2025-05-01",
+      "location": "Canada Central",
+      "name": "[parameters('searchServices_rocky_search_test_name')]",
+      "properties": {
+        "authOptions": {
+          "apiKeyOnly": {}
+        },
+        "computeType": "Default",
+        "dataExfiltrationProtections": [],
+        "disableLocalAuth": false,
+        "encryptionWithCmk": {
+          "enforcement": "Unspecified"
+        },
+        "endpoint": "[concat('https://', parameters('searchServices_rocky_search_test_name'), '.search.windows.net')]",
+        "hostingMode": "Default",
+        "networkRuleSet": {
+          "bypass": "None",
+          "ipRules": []
+        },
+        "partitionCount": 1,
+        "publicNetworkAccess": "Disabled",
+        "replicaCount": 1,
+        "semanticSearch": "free",
+        "upgradeAvailable": "notAvailable"
+      },
+      "sku": {
+        "name": "standard"
+      },
+      "tags": {
+        "billing_group": "a7009d",
+        "ministry_name": "CITZ"
+      },
+      "type": "Microsoft.Search/searchServices"
+    },
+    {
+      "apiVersion": "2024-06-01-preview",
+      "dependsOn": [
+        "[resourceId('Microsoft.ApiManagement/service', parameters('service_rocky_apim_test_2_name'))]"
+      ],
+      "name": "[concat(parameters('service_rocky_apim_test_2_name'), '/echo-api')]",
+      "properties": {
+        "apiRevision": "1",
+        "authenticationSettings": {
+          "oAuth2AuthenticationSettings": [],
+          "openidAuthenticationSettings": []
+        },
+        "displayName": "Echo API",
+        "isCurrent": true,
+        "path": "echo",
+        "protocols": [
+          "https"
+        ],
+        "serviceUrl": "https://echo.playground.azure-api.net/api",
+        "subscriptionKeyParameterNames": {
+          "header": "Ocp-Apim-Subscription-Key",
+          "query": "subscription-key"
+        },
+        "subscriptionRequired": true
+      },
+      "type": "Microsoft.ApiManagement/service/apis"
+    },
+    {
+      "apiVersion": "2024-06-01-preview",
+      "dependsOn": [
+        "[resourceId('Microsoft.ApiManagement/service', parameters('service_rocky_apim_test_2_name'))]"
+      ],
+      "name": "[concat(parameters('service_rocky_apim_test_2_name'), '/rocky-chat-api')]",
+      "properties": {
+        "apiRevision": "1",
+        "authenticationSettings": {
+          "oAuth2AuthenticationSettings": [],
+          "openidAuthenticationSettings": []
+        },
+        "description": "Azure OpenAI APIs for completions and search",
+        "displayName": "Rocky Chat API",
+        "isCurrent": true,
+        "path": "rocky-chat-api/openai",
+        "protocols": [
+          "https"
+        ],
+        "serviceUrl": "https://rockey-openai-test.openai.azure.com/openai",
+        "subscriptionKeyParameterNames": {
+          "header": "api-key",
+          "query": "subscription-key"
+        },
+        "subscriptionRequired": true
+      },
+      "type": "Microsoft.ApiManagement/service/apis"
+    },
+    {
+      "apiVersion": "2024-06-01-preview",
+      "dependsOn": [
+        "[resourceId('Microsoft.ApiManagement/service', parameters('service_rocky_apim_test_2_name'))]"
+      ],
+      "name": "[concat(parameters('service_rocky_apim_test_2_name'), '/rocky-chat-api-openai-endpoint')]",
+      "properties": {
+        "credentials": {},
+        "protocol": "http",
+        "url": "https://rockey-openai-test.openai.azure.com/openai"
+      },
+      "type": "Microsoft.ApiManagement/service/backends"
+    },
+    {
+      "apiVersion": "2024-06-01-preview",
+      "dependsOn": [
+        "[resourceId('Microsoft.ApiManagement/service', parameters('service_rocky_apim_test_2_name'))]"
+      ],
+      "name": "[concat(parameters('service_rocky_apim_test_2_name'), '/rocky-openai-api-backend')]",
+      "properties": {
+        "credentials": {
+          "header": {},
+          "query": {}
+        },
+        "protocol": "http",
+        "tls": {
+          "validateCertificateChain": true,
+          "validateCertificateName": true
+        },
+        "type": "Single",
+        "url": "https://rockey-openai-test.openai.azure.com/openai"
+      },
+      "type": "Microsoft.ApiManagement/service/backends"
+    },
+    {
+      "apiVersion": "2024-06-01-preview",
+      "dependsOn": [
+        "[resourceId('Microsoft.ApiManagement/service', parameters('service_rocky_apim_test_2_name'))]"
+      ],
+      "name": "[concat(parameters('service_rocky_apim_test_2_name'), '/administrators')]",
+      "properties": {
+        "description": "Administrators is a built-in group containing the admin email account provided at the time of service creation. Its membership is managed by the system.",
+        "displayName": "Administrators",
+        "type": "system"
+      },
+      "type": "Microsoft.ApiManagement/service/groups"
+    },
+    {
+      "apiVersion": "2024-06-01-preview",
+      "dependsOn": [
+        "[resourceId('Microsoft.ApiManagement/service', parameters('service_rocky_apim_test_2_name'))]"
+      ],
+      "name": "[concat(parameters('service_rocky_apim_test_2_name'), '/developers')]",
+      "properties": {
+        "description": "Developers is a built-in group. Its membership is managed by the system. Signed-in users fall into this group.",
+        "displayName": "Developers",
+        "type": "system"
+      },
+      "type": "Microsoft.ApiManagement/service/groups"
+    },
+    {
+      "apiVersion": "2024-06-01-preview",
+      "dependsOn": [
+        "[resourceId('Microsoft.ApiManagement/service', parameters('service_rocky_apim_test_2_name'))]"
+      ],
+      "name": "[concat(parameters('service_rocky_apim_test_2_name'), '/guests')]",
+      "properties": {
+        "description": "Guests is a built-in group. Its membership is managed by the system. Unauthenticated users visiting the developer portal fall into this group.",
+        "displayName": "Guests",
+        "type": "system"
+      },
+      "type": "Microsoft.ApiManagement/service/groups"
+    },
+    {
+      "apiVersion": "2024-06-01-preview",
+      "dependsOn": [
+        "[resourceId('Microsoft.ApiManagement/service', parameters('service_rocky_apim_test_2_name'))]"
+      ],
+      "name": "[concat(parameters('service_rocky_apim_test_2_name'), '/azuremonitor')]",
+      "properties": {
+        "isBuffered": true,
+        "loggerType": "azureMonitor"
+      },
+      "type": "Microsoft.ApiManagement/service/loggers"
+    },
+    {
+      "apiVersion": "2024-06-01-preview",
+      "dependsOn": [
+        "[resourceId('Microsoft.ApiManagement/service', parameters('service_rocky_apim_test_2_name'))]"
+      ],
+      "name": "[concat(parameters('service_rocky_apim_test_2_name'), '/AccountClosedPublisher')]",
+      "type": "Microsoft.ApiManagement/service/notifications"
+    },
+    {
+      "apiVersion": "2024-06-01-preview",
+      "dependsOn": [
+        "[resourceId('Microsoft.ApiManagement/service', parameters('service_rocky_apim_test_2_name'))]"
+      ],
+      "name": "[concat(parameters('service_rocky_apim_test_2_name'), '/BCC')]",
+      "type": "Microsoft.ApiManagement/service/notifications"
+    },
+    {
+      "apiVersion": "2024-06-01-preview",
+      "dependsOn": [
+        "[resourceId('Microsoft.ApiManagement/service', parameters('service_rocky_apim_test_2_name'))]"
+      ],
+      "name": "[concat(parameters('service_rocky_apim_test_2_name'), '/NewApplicationNotificationMessage')]",
+      "type": "Microsoft.ApiManagement/service/notifications"
+    },
+    {
+      "apiVersion": "2024-06-01-preview",
+      "dependsOn": [
+        "[resourceId('Microsoft.ApiManagement/service', parameters('service_rocky_apim_test_2_name'))]"
+      ],
+      "name": "[concat(parameters('service_rocky_apim_test_2_name'), '/NewIssuePublisherNotificationMessage')]",
+      "type": "Microsoft.ApiManagement/service/notifications"
+    },
+    {
+      "apiVersion": "2024-06-01-preview",
+      "dependsOn": [
+        "[resourceId('Microsoft.ApiManagement/service', parameters('service_rocky_apim_test_2_name'))]"
+      ],
+      "name": "[concat(parameters('service_rocky_apim_test_2_name'), '/PurchasePublisherNotificationMessage')]",
+      "type": "Microsoft.ApiManagement/service/notifications"
+    },
+    {
+      "apiVersion": "2024-06-01-preview",
+      "dependsOn": [
+        "[resourceId('Microsoft.ApiManagement/service', parameters('service_rocky_apim_test_2_name'))]"
+      ],
+      "name": "[concat(parameters('service_rocky_apim_test_2_name'), '/QuotaLimitApproachingPublisherNotificationMessage')]",
+      "type": "Microsoft.ApiManagement/service/notifications"
+    },
+    {
+      "apiVersion": "2024-06-01-preview",
+      "dependsOn": [
+        "[resourceId('Microsoft.ApiManagement/service', parameters('service_rocky_apim_test_2_name'))]"
+      ],
+      "name": "[concat(parameters('service_rocky_apim_test_2_name'), '/RequestPublisherNotificationMessage')]",
+      "type": "Microsoft.ApiManagement/service/notifications"
+    },
+    {
+      "apiVersion": "2024-06-01-preview",
+      "dependsOn": [
+        "[resourceId('Microsoft.ApiManagement/service', parameters('service_rocky_apim_test_2_name'))]"
+      ],
+      "name": "[concat(parameters('service_rocky_apim_test_2_name'), '/policy')]",
+      "properties": {
+        "format": "xml",
+        "value": "<!--\r\n    IMPORTANT:\r\n    - Policy elements can appear only within the <inbound>, <outbound>, <backend> section elements.\r\n    - Only the <forward-request> policy element can appear within the <backend> section element.\r\n    - To apply a policy to the incoming request (before it is forwarded to the backend service), place a corresponding policy element within the <inbound> section element.\r\n    - To apply a policy to the outgoing response (before it is sent back to the caller), place a corresponding policy element within the <outbound> section element.\r\n    - To add a policy position the cursor at the desired insertion point and click on the round button associated with the policy.\r\n    - To remove a policy, delete the corresponding policy statement from the policy document.\r\n    - Policies are applied in the order of their appearance, from the top down.\r\n-->\r\n<policies>\r\n  <inbound />\r\n  <backend>\r\n    <forward-request />\r\n  </backend>\r\n  <outbound />\r\n</policies>"
+      },
+      "type": "Microsoft.ApiManagement/service/policies"
+    },
+    {
+      "apiVersion": "2024-06-01-preview",
+      "dependsOn": [
+        "[resourceId('Microsoft.ApiManagement/service', parameters('service_rocky_apim_test_2_name'))]"
+      ],
+      "name": "[concat(parameters('service_rocky_apim_test_2_name'), '/default')]",
+      "properties": {
+        "cors": {
+          "allowedOrigins": []
+        },
+        "csp": {
+          "allowedSources": [],
+          "mode": "disabled",
+          "reportUri": []
+        },
+        "delegation": {
+          "delegateRegistration": false,
+          "delegateSubscription": false
+        },
+        "enableBasicAuth": true,
+        "signin": {
+          "require": false
+        },
+        "signup": {
+          "termsOfService": {
+            "requireConsent": false
+          }
+        }
+      },
+      "type": "Microsoft.ApiManagement/service/portalconfigs"
+    },
+    {
+      "apiVersion": "2024-06-01-preview",
+      "dependsOn": [
+        "[resourceId('Microsoft.ApiManagement/service', parameters('service_rocky_apim_test_2_name'))]"
+      ],
+      "name": "[concat(parameters('service_rocky_apim_test_2_name'), '/delegation')]",
+      "properties": {
+        "subscriptions": {
+          "enabled": false
+        },
+        "userRegistration": {
+          "enabled": false
+        }
+      },
+      "type": "Microsoft.ApiManagement/service/portalsettings"
+    },
+    {
+      "apiVersion": "2024-06-01-preview",
+      "dependsOn": [
+        "[resourceId('Microsoft.ApiManagement/service', parameters('service_rocky_apim_test_2_name'))]"
+      ],
+      "name": "[concat(parameters('service_rocky_apim_test_2_name'), '/signin')]",
+      "properties": {
+        "enabled": false
+      },
+      "type": "Microsoft.ApiManagement/service/portalsettings"
+    },
+    {
+      "apiVersion": "2024-06-01-preview",
+      "dependsOn": [
+        "[resourceId('Microsoft.ApiManagement/service', parameters('service_rocky_apim_test_2_name'))]"
+      ],
+      "name": "[concat(parameters('service_rocky_apim_test_2_name'), '/signup')]",
+      "properties": {
+        "enabled": true,
+        "termsOfService": {
+          "consentRequired": false,
+          "enabled": false
+        }
+      },
+      "type": "Microsoft.ApiManagement/service/portalsettings"
+    },
+    {
+      "apiVersion": "2024-06-01-preview",
+      "dependsOn": [
+        "[resourceId('Microsoft.ApiManagement/service', parameters('service_rocky_apim_test_2_name'))]"
+      ],
+      "name": "[concat(parameters('service_rocky_apim_test_2_name'), '/starter')]",
+      "properties": {
+        "approvalRequired": false,
+        "description": "Subscribers will be able to run 5 calls/minute up to a maximum of 100 calls/week.",
+        "displayName": "Starter",
+        "state": "published",
+        "subscriptionRequired": true,
+        "subscriptionsLimit": 1
+      },
+      "type": "Microsoft.ApiManagement/service/products"
+    },
+    {
+      "apiVersion": "2024-06-01-preview",
+      "dependsOn": [
+        "[resourceId('Microsoft.ApiManagement/service', parameters('service_rocky_apim_test_2_name'))]"
+      ],
+      "name": "[concat(parameters('service_rocky_apim_test_2_name'), '/unlimited')]",
+      "properties": {
+        "approvalRequired": true,
+        "description": "Subscribers have completely unlimited access to the API. Administrator approval is required.",
+        "displayName": "Unlimited",
+        "state": "published",
+        "subscriptionRequired": true,
+        "subscriptionsLimit": 1
+      },
+      "type": "Microsoft.ApiManagement/service/products"
+    },
+    {
+      "apiVersion": "2024-06-01-preview",
+      "dependsOn": [
+        "[resourceId('Microsoft.ApiManagement/service', parameters('service_rocky_apim_test_2_name'))]"
+      ],
+      "name": "[concat(parameters('service_rocky_apim_test_2_name'), '/master')]",
+      "properties": {
+        "allowTracing": false,
+        "displayName": "Built-in all-access subscription",
+        "scope": "[concat(resourceId('Microsoft.ApiManagement/service', parameters('service_rocky_apim_test_2_name')), '/')]",
+        "state": "active"
+      },
+      "type": "Microsoft.ApiManagement/service/subscriptions"
+    },
+    {
+      "apiVersion": "2024-06-01-preview",
+      "dependsOn": [
+        "[resourceId('Microsoft.ApiManagement/service', parameters('service_rocky_apim_test_2_name'))]"
+      ],
+      "name": "[concat(parameters('service_rocky_apim_test_2_name'), '/AccountClosedDeveloper')]",
+      "properties": {
+        "body": "<!DOCTYPE html >\r\n<html>\r\n  <head />\r\n  <body>\r\n    <p style=\"font-size:12pt;font-family:'Segoe UI'\">Dear $DevFirstName $DevLastName,</p>\r\n    <p style=\"font-size:12pt;font-family:'Segoe UI'\">\r\n          On behalf of $OrganizationName and our customers we thank you for giving us a try. Your $OrganizationName API account is now closed.\r\n        </p>\r\n    <p style=\"font-size:12pt;font-family:'Segoe UI'\">Thank you,</p>\r\n    <p style=\"font-size:12pt;font-family:'Segoe UI'\">Your $OrganizationName Team</p>\r\n    <a href=\"$DevPortalUrl\">$DevPortalUrl</a>\r\n    <p />\r\n  </body>\r\n</html>",
+        "description": "Developers receive this farewell email after they close their account.",
+        "parameters": [
+          {
+            "name": "DevFirstName",
+            "title": "Developer first name"
+          },
+          {
+            "name": "DevLastName",
+            "title": "Developer last name"
+          },
+          {
+            "name": "OrganizationName",
+            "title": "Organization name"
+          },
+          {
+            "name": "DevPortalUrl",
+            "title": "Developer portal URL"
+          }
+        ],
+        "subject": "Thank you for using the $OrganizationName API!",
+        "title": "Developer farewell letter"
+      },
+      "type": "Microsoft.ApiManagement/service/templates"
+    },
+    {
+      "apiVersion": "2024-06-01-preview",
+      "dependsOn": [
+        "[resourceId('Microsoft.ApiManagement/service', parameters('service_rocky_apim_test_2_name'))]"
+      ],
+      "name": "[concat(parameters('service_rocky_apim_test_2_name'), '/ApplicationApprovedNotificationMessage')]",
+      "properties": {
+        "body": "<!DOCTYPE html >\r\n<html>\r\n  <head />\r\n  <body>\r\n    <p style=\"font-size:12pt;font-family:'Segoe UI'\">Dear $DevFirstName $DevLastName,</p>\r\n    <p style=\"font-size:12pt;font-family:'Segoe UI'\">\r\n          We are happy to let you know that your request to publish the $AppName application in the application gallery has been approved. Your application has been published and can be viewed <a href=\"http://$DevPortalUrl/Applications/Details/$AppId\">here</a>.\r\n        </p>\r\n    <p style=\"font-size:12pt;font-family:'Segoe UI'\">Best,</p>\r\n    <p style=\"font-size:12pt;font-family:'Segoe UI'\">The $OrganizationName API Team</p>\r\n  </body>\r\n</html>",
+        "description": "Developers who submitted their application for publication in the application gallery on the developer portal receive this email after their submission is approved.",
+        "parameters": [
+          {
+            "name": "AppId",
+            "title": "Application id"
+          },
+          {
+            "name": "AppName",
+            "title": "Application name"
+          },
+          {
+            "name": "DevFirstName",
+            "title": "Developer first name"
+          },
+          {
+            "name": "DevLastName",
+            "title": "Developer last name"
+          },
+          {
+            "name": "OrganizationName",
+            "title": "Organization name"
+          },
+          {
+            "name": "DevPortalUrl",
+            "title": "Developer portal URL"
+          }
+        ],
+        "subject": "Your application $AppName is published in the application gallery",
+        "title": "Application gallery submission approved (deprecated)"
+      },
+      "type": "Microsoft.ApiManagement/service/templates"
+    },
+    {
+      "apiVersion": "2024-06-01-preview",
+      "dependsOn": [
+        "[resourceId('Microsoft.ApiManagement/service', parameters('service_rocky_apim_test_2_name'))]"
+      ],
+      "name": "[concat(parameters('service_rocky_apim_test_2_name'), '/ConfirmSignUpIdentityDefault')]",
+      "properties": {
+        "body": "<!DOCTYPE html >\r\n<html>\r\n  <head>\r\n    <meta charset=\"UTF-8\" />\r\n    <title>Letter</title>\r\n  </head>\r\n  <body>\r\n    <table width=\"100%\">\r\n      <tr>\r\n        <td>\r\n          <p style=\"font-size:12pt;font-family:'Segoe UI'\">Dear $DevFirstName $DevLastName,</p>\r\n          <p style=\"font-size:12pt;font-family:'Segoe UI'\"></p>\r\n          <p style=\"font-size:12pt;font-family:'Segoe UI'\">Thank you for joining the $OrganizationName API program! We host a growing number of cool APIs and strive to provide an awesome experience for API developers.</p>\r\n          <p style=\"font-size:12pt;font-family:'Segoe UI'\">First order of business is to activate your account and get you going. To that end, please click on the following link:</p>\r\n          <p style=\"font-size:12pt;font-family:'Segoe UI'\">\r\n            <a id=\"confirmUrl\" href=\"$ConfirmUrl\" style=\"text-decoration:none\">\r\n              <strong>$ConfirmUrl</strong>\r\n            </a>\r\n          </p>\r\n          <p style=\"font-size:12pt;font-family:'Segoe UI'\">If clicking the link does not work, please copy-and-paste or re-type it into your browser's address bar and hit \"Enter\".</p>\r\n          <p style=\"font-size:12pt;font-family:'Segoe UI'\">Thank you,</p>\r\n          <p style=\"font-size:12pt;font-family:'Segoe UI'\">$OrganizationName API Team</p>\r\n          <p style=\"font-size:12pt;font-family:'Segoe UI'\">\r\n            <a href=\"$DevPortalUrl\">$DevPortalUrl</a>\r\n          </p>\r\n        </td>\r\n      </tr>\r\n    </table>\r\n  </body>\r\n</html>",
+        "description": "Developers receive this email to confirm their e-mail address after they sign up for a new account.",
+        "parameters": [
+          {
+            "name": "DevFirstName",
+            "title": "Developer first name"
+          },
+          {
+            "name": "DevLastName",
+            "title": "Developer last name"
+          },
+          {
+            "name": "OrganizationName",
+            "title": "Organization name"
+          },
+          {
+            "name": "DevPortalUrl",
+            "title": "Developer portal URL"
+          },
+          {
+            "name": "ConfirmUrl",
+            "title": "Developer activation URL"
+          },
+          {
+            "name": "DevPortalHost",
+            "title": "Developer portal hostname"
+          },
+          {
+            "name": "ConfirmQuery",
+            "title": "Query string part of the activation URL"
+          }
+        ],
+        "subject": "Please confirm your new $OrganizationName API account",
+        "title": "New developer account confirmation"
+      },
+      "type": "Microsoft.ApiManagement/service/templates"
+    },
+    {
+      "apiVersion": "2024-06-01-preview",
+      "dependsOn": [
+        "[resourceId('Microsoft.ApiManagement/service', parameters('service_rocky_apim_test_2_name'))]"
+      ],
+      "name": "[concat(parameters('service_rocky_apim_test_2_name'), '/EmailChangeIdentityDefault')]",
+      "properties": {
+        "body": "<!DOCTYPE html >\r\n<html>\r\n  <head>\r\n    <meta charset=\"UTF-8\" />\r\n    <title>Letter</title>\r\n  </head>\r\n  <body>\r\n    <table width=\"100%\">\r\n      <tr>\r\n        <td>\r\n          <p style=\"font-size:12pt;font-family:'Segoe UI'\">Dear $DevFirstName $DevLastName,</p>\r\n          <p style=\"font-size:12pt;font-family:'Segoe UI'\"></p>\r\n          <p style=\"font-size:12pt;font-family:'Segoe UI'\">You are receiving this email because you made a change to the email address on your $OrganizationName API account.</p>\r\n          <p style=\"font-size:12pt;font-family:'Segoe UI'\">Please click on the following link to confirm the change:</p>\r\n          <p style=\"font-size:12pt;font-family:'Segoe UI'\">\r\n            <a id=\"confirmUrl\" href=\"$ConfirmUrl\" style=\"text-decoration:none\">\r\n              <strong>$ConfirmUrl</strong>\r\n            </a>\r\n          </p>\r\n          <p style=\"font-size:12pt;font-family:'Segoe UI'\">If clicking the link does not work, please copy-and-paste or re-type it into your browser's address bar and hit \"Enter\".</p>\r\n          <p style=\"font-size:12pt;font-family:'Segoe UI'\">Thank you,</p>\r\n          <p style=\"font-size:12pt;font-family:'Segoe UI'\">$OrganizationName API Team</p>\r\n          <p style=\"font-size:12pt;font-family:'Segoe UI'\">\r\n            <a href=\"$DevPortalUrl\">$DevPortalUrl</a>\r\n          </p>\r\n        </td>\r\n      </tr>\r\n    </table>\r\n  </body>\r\n</html>",
+        "description": "Developers receive this email to confirm a new e-mail address after they change their existing one associated with their account.",
+        "parameters": [
+          {
+            "name": "DevFirstName",
+            "title": "Developer first name"
+          },
+          {
+            "name": "DevLastName",
+            "title": "Developer last name"
+          },
+          {
+            "name": "OrganizationName",
+            "title": "Organization name"
+          },
+          {
+            "name": "DevPortalUrl",
+            "title": "Developer portal URL"
+          },
+          {
+            "name": "ConfirmUrl",
+            "title": "Developer confirmation URL"
+          },
+          {
+            "name": "DevPortalHost",
+            "title": "Developer portal hostname"
+          },
+          {
+            "name": "ConfirmQuery",
+            "title": "Query string part of the confirmation URL"
+          }
+        ],
+        "subject": "Please confirm the new email associated with your $OrganizationName API account",
+        "title": "Email change confirmation"
+      },
+      "type": "Microsoft.ApiManagement/service/templates"
+    },
+    {
+      "apiVersion": "2024-06-01-preview",
+      "dependsOn": [
+        "[resourceId('Microsoft.ApiManagement/service', parameters('service_rocky_apim_test_2_name'))]"
+      ],
+      "name": "[concat(parameters('service_rocky_apim_test_2_name'), '/InviteUserNotificationMessage')]",
+      "properties": {
+        "body": "<!DOCTYPE html >\r\n<html>\r\n  <head />\r\n  <body>\r\n    <p style=\"font-size:12pt;font-family:'Segoe UI'\">Dear $DevFirstName $DevLastName,</p>\r\n    <p style=\"font-size:12pt;font-family:'Segoe UI'\">\r\n          Your account has been created. Please follow the link below to visit the $OrganizationName developer portal and claim it:\r\n        </p>\r\n    <p style=\"font-size:12pt;font-family:'Segoe UI'\">\r\n      <a href=\"$ConfirmUrl\">$ConfirmUrl</a>\r\n    </p>\r\n    <p style=\"font-size:12pt;font-family:'Segoe UI'\">Best,</p>\r\n    <p style=\"font-size:12pt;font-family:'Segoe UI'\">The $OrganizationName API Team</p>\r\n  </body>\r\n</html>",
+        "description": "An e-mail invitation to create an account, sent on request by API publishers.",
+        "parameters": [
+          {
+            "name": "OrganizationName",
+            "title": "Organization name"
+          },
+          {
+            "name": "DevFirstName",
+            "title": "Developer first name"
+          },
+          {
+            "name": "DevLastName",
+            "title": "Developer last name"
+          },
+          {
+            "name": "ConfirmUrl",
+            "title": "Confirmation link"
+          },
+          {
+            "name": "DevPortalHost",
+            "title": "Developer portal hostname"
+          },
+          {
+            "name": "ConfirmQuery",
+            "title": "Query string part of the confirmation link"
+          }
+        ],
+        "subject": "You are invited to join the $OrganizationName developer network",
+        "title": "Invite user"
+      },
+      "type": "Microsoft.ApiManagement/service/templates"
+    },
+    {
+      "apiVersion": "2024-06-01-preview",
+      "dependsOn": [
+        "[resourceId('Microsoft.ApiManagement/service', parameters('service_rocky_apim_test_2_name'))]"
+      ],
+      "name": "[concat(parameters('service_rocky_apim_test_2_name'), '/NewCommentNotificationMessage')]",
+      "properties": {
+        "body": "<!DOCTYPE html >\r\n<html>\r\n  <head />\r\n  <body>\r\n    <p style=\"font-size:12pt;font-family:'Segoe UI'\">Dear $DevFirstName $DevLastName,</p>\r\n    <p style=\"font-size:12pt;font-family:'Segoe UI'\">This is a brief note to let you know that $CommenterFirstName $CommenterLastName made the following comment on the issue $IssueName you created:</p>\r\n    <p style=\"font-size:12pt;font-family:'Segoe UI'\">$CommentText</p>\r\n    <p style=\"font-size:12pt;font-family:'Segoe UI'\">\r\n          To view the issue on the developer portal click <a href=\"http://$DevPortalUrl/issues/$IssueId\">here</a>.\r\n        </p>\r\n    <p style=\"font-size:12pt;font-family:'Segoe UI'\">Best,</p>\r\n    <p style=\"font-size:12pt;font-family:'Segoe UI'\">The $OrganizationName API Team</p>\r\n  </body>\r\n</html>",
+        "description": "Developers receive this email when someone comments on the issue they created on the Issues page of the developer portal.",
+        "parameters": [
+          {
+            "name": "DevFirstName",
+            "title": "Developer first name"
+          },
+          {
+            "name": "DevLastName",
+            "title": "Developer last name"
+          },
+          {
+            "name": "CommenterFirstName",
+            "title": "Commenter first name"
+          },
+          {
+            "name": "CommenterLastName",
+            "title": "Commenter last name"
+          },
+          {
+            "name": "IssueId",
+            "title": "Issue id"
+          },
+          {
+            "name": "IssueName",
+            "title": "Issue name"
+          },
+          {
+            "name": "CommentText",
+            "title": "Comment text"
+          },
+          {
+            "name": "OrganizationName",
+            "title": "Organization name"
+          },
+          {
+            "name": "DevPortalUrl",
+            "title": "Developer portal URL"
+          }
+        ],
+        "subject": "$IssueName issue has a new comment",
+        "title": "New comment added to an issue (deprecated)"
+      },
+      "type": "Microsoft.ApiManagement/service/templates"
+    },
+    {
+      "apiVersion": "2024-06-01-preview",
+      "dependsOn": [
+        "[resourceId('Microsoft.ApiManagement/service', parameters('service_rocky_apim_test_2_name'))]"
+      ],
+      "name": "[concat(parameters('service_rocky_apim_test_2_name'), '/NewDeveloperNotificationMessage')]",
+      "properties": {
+        "body": "<!DOCTYPE html >\r\n<html>\r\n  <head>\r\n    <meta charset=\"UTF-8\" />\r\n    <title>Letter</title>\r\n  </head>\r\n  <body>\r\n    <h1 style=\"color:#000505;font-size:18pt;font-family:'Segoe UI'\">\r\n          Welcome to <span style=\"color:#003363\">$OrganizationName API!</span></h1>\r\n    <p style=\"font-size:12pt;font-family:'Segoe UI'\">Dear $DevFirstName $DevLastName,</p>\r\n    <p style=\"font-size:12pt;font-family:'Segoe UI'\">Your $OrganizationName API program registration is completed and we are thrilled to have you as a customer. Here are a few important bits of information for your reference:</p>\r\n    <table width=\"100%\" style=\"margin:20px 0\">\r\n      <tr>\r\n            #if ($IdentityProvider == \"Basic\")\r\n            <td width=\"50%\" style=\"height:40px;vertical-align:top;font-family:'Segoe UI';font-size:12pt\">\r\n              Please use the following <strong>username</strong> when signing into any of the ${OrganizationName}-hosted developer portals:\r\n            </td><td style=\"vertical-align:top;font-family:'Segoe UI';font-size:12pt\"><strong>$DevUsername</strong></td>\r\n            #else\r\n            <td width=\"50%\" style=\"height:40px;vertical-align:top;font-family:'Segoe UI';font-size:12pt\">\r\n              Please use the following <strong>$IdentityProvider account</strong> when signing into any of the ${OrganizationName}-hosted developer portals:\r\n            </td><td style=\"vertical-align:top;font-family:'Segoe UI';font-size:12pt\"><strong>$DevUsername</strong></td>            \r\n            #end\r\n          </tr>\r\n      <tr>\r\n        <td style=\"height:40px;vertical-align:top;font-family:'Segoe UI';font-size:12pt\">\r\n              We will direct all communications to the following <strong>email address</strong>:\r\n            </td>\r\n        <td style=\"vertical-align:top;font-family:'Segoe UI';font-size:12pt\">\r\n          <a href=\"mailto:$DevEmail\" style=\"text-decoration:none\">\r\n            <strong>$DevEmail</strong>\r\n          </a>\r\n        </td>\r\n      </tr>\r\n    </table>\r\n    <p style=\"font-size:12pt;font-family:'Segoe UI'\">Best of luck in your API pursuits!</p>\r\n    <p style=\"font-size:12pt;font-family:'Segoe UI'\">$OrganizationName API Team</p>\r\n    <p style=\"font-size:12pt;font-family:'Segoe UI'\">\r\n      <a href=\"http://$DevPortalUrl\">$DevPortalUrl</a>\r\n    </p>\r\n  </body>\r\n</html>",
+        "description": "Developers receive this “welcome” email after they confirm their new account.",
+        "parameters": [
+          {
+            "name": "DevFirstName",
+            "title": "Developer first name"
+          },
+          {
+            "name": "DevLastName",
+            "title": "Developer last name"
+          },
+          {
+            "name": "DevUsername",
+            "title": "Developer user name"
+          },
+          {
+            "name": "DevEmail",
+            "title": "Developer email"
+          },
+          {
+            "name": "OrganizationName",
+            "title": "Organization name"
+          },
+          {
+            "name": "DevPortalUrl",
+            "title": "Developer portal URL"
+          },
+          {
+            "name": "IdentityProvider",
+            "title": "Identity Provider selected by Organization"
+          }
+        ],
+        "subject": "Welcome to the $OrganizationName API!",
+        "title": "Developer welcome letter"
+      },
+      "type": "Microsoft.ApiManagement/service/templates"
+    },
+    {
+      "apiVersion": "2024-06-01-preview",
+      "dependsOn": [
+        "[resourceId('Microsoft.ApiManagement/service', parameters('service_rocky_apim_test_2_name'))]"
+      ],
+      "name": "[concat(parameters('service_rocky_apim_test_2_name'), '/NewIssueNotificationMessage')]",
+      "properties": {
+        "body": "<!DOCTYPE html >\r\n<html>\r\n  <head />\r\n  <body>\r\n    <p style=\"font-size:12pt;font-family:'Segoe UI'\">Dear $DevFirstName $DevLastName,</p>\r\n    <p style=\"font-size:12pt;font-family:'Segoe UI'\">Thank you for contacting us. Our API team will review your issue and get back to you soon.</p>\r\n    <p style=\"font-size:12pt;font-family:'Segoe UI'\">\r\n          Click this <a href=\"http://$DevPortalUrl/issues/$IssueId\">link</a> to view or edit your request.\r\n        </p>\r\n    <p style=\"font-size:12pt;font-family:'Segoe UI'\">Best,</p>\r\n    <p style=\"font-size:12pt;font-family:'Segoe UI'\">The $OrganizationName API Team</p>\r\n  </body>\r\n</html>",
+        "description": "This email is sent to developers after they create a new topic on the Issues page of the developer portal.",
+        "parameters": [
+          {
+            "name": "DevFirstName",
+            "title": "Developer first name"
+          },
+          {
+            "name": "DevLastName",
+            "title": "Developer last name"
+          },
+          {
+            "name": "IssueId",
+            "title": "Issue id"
+          },
+          {
+            "name": "IssueName",
+            "title": "Issue name"
+          },
+          {
+            "name": "OrganizationName",
+            "title": "Organization name"
+          },
+          {
+            "name": "DevPortalUrl",
+            "title": "Developer portal URL"
+          }
+        ],
+        "subject": "Your request $IssueName was received",
+        "title": "New issue received (deprecated)"
+      },
+      "type": "Microsoft.ApiManagement/service/templates"
+    },
+    {
+      "apiVersion": "2024-06-01-preview",
+      "dependsOn": [
+        "[resourceId('Microsoft.ApiManagement/service', parameters('service_rocky_apim_test_2_name'))]"
+      ],
+      "name": "[concat(parameters('service_rocky_apim_test_2_name'), '/PasswordResetByAdminNotificationMessage')]",
+      "properties": {
+        "body": "<!DOCTYPE html >\r\n<html>\r\n  <head />\r\n  <body>\r\n    <table width=\"100%\">\r\n      <tr>\r\n        <td>\r\n          <p style=\"font-size:12pt;font-family:'Segoe UI'\">Dear $DevFirstName $DevLastName,</p>\r\n          <p style=\"font-size:12pt;font-family:'Segoe UI'\"></p>\r\n          <p style=\"font-size:12pt;font-family:'Segoe UI'\">The password of your $OrganizationName API account has been reset, per your request.</p>\r\n          <p style=\"font-size:12pt;font-family:'Segoe UI'\">\r\n                Your new password is: <strong>$DevPassword</strong></p>\r\n          <p style=\"font-size:12pt;font-family:'Segoe UI'\">Please make sure to change it next time you sign in.</p>\r\n          <p style=\"font-size:12pt;font-family:'Segoe UI'\">Thank you,</p>\r\n          <p style=\"font-size:12pt;font-family:'Segoe UI'\">$OrganizationName API Team</p>\r\n          <p style=\"font-size:12pt;font-family:'Segoe UI'\">\r\n            <a href=\"$DevPortalUrl\">$DevPortalUrl</a>\r\n          </p>\r\n        </td>\r\n      </tr>\r\n    </table>\r\n  </body>\r\n</html>",
+        "description": "Developers receive this email when the publisher resets their password.",
+        "parameters": [
+          {
+            "name": "DevFirstName",
+            "title": "Developer first name"
+          },
+          {
+            "name": "DevLastName",
+            "title": "Developer last name"
+          },
+          {
+            "name": "DevPassword",
+            "title": "New Developer password"
+          },
+          {
+            "name": "OrganizationName",
+            "title": "Organization name"
+          },
+          {
+            "name": "DevPortalUrl",
+            "title": "Developer portal URL"
+          }
+        ],
+        "subject": "Your password was reset",
+        "title": "Password reset by publisher notification (Password reset by admin)"
+      },
+      "type": "Microsoft.ApiManagement/service/templates"
+    },
+    {
+      "apiVersion": "2024-06-01-preview",
+      "dependsOn": [
+        "[resourceId('Microsoft.ApiManagement/service', parameters('service_rocky_apim_test_2_name'))]"
+      ],
+      "name": "[concat(parameters('service_rocky_apim_test_2_name'), '/PasswordResetIdentityDefault')]",
+      "properties": {
+        "body": "<!DOCTYPE html >\r\n<html>\r\n  <head>\r\n    <meta charset=\"UTF-8\" />\r\n    <title>Letter</title>\r\n  </head>\r\n  <body>\r\n    <table width=\"100%\">\r\n      <tr>\r\n        <td>\r\n          <p style=\"font-size:12pt;font-family:'Segoe UI'\">Dear $DevFirstName $DevLastName,</p>\r\n          <p style=\"font-size:12pt;font-family:'Segoe UI'\"></p>\r\n          <p style=\"font-size:12pt;font-family:'Segoe UI'\">You are receiving this email because you requested to change the password on your $OrganizationName API account.</p>\r\n          <p style=\"font-size:12pt;font-family:'Segoe UI'\">Please click on the link below and follow instructions to create your new password:</p>\r\n          <p style=\"font-size:12pt;font-family:'Segoe UI'\">\r\n            <a id=\"resetUrl\" href=\"$ConfirmUrl\" style=\"text-decoration:none\">\r\n              <strong>$ConfirmUrl</strong>\r\n            </a>\r\n          </p>\r\n          <p style=\"font-size:12pt;font-family:'Segoe UI'\">If clicking the link does not work, please copy-and-paste or re-type it into your browser's address bar and hit \"Enter\".</p>\r\n          <p style=\"font-size:12pt;font-family:'Segoe UI'\">Thank you,</p>\r\n          <p style=\"font-size:12pt;font-family:'Segoe UI'\">$OrganizationName API Team</p>\r\n          <p style=\"font-size:12pt;font-family:'Segoe UI'\">\r\n            <a href=\"$DevPortalUrl\">$DevPortalUrl</a>\r\n          </p>\r\n        </td>\r\n      </tr>\r\n    </table>\r\n  </body>\r\n</html>",
+        "description": "Developers receive this email when they request a password change of their account. The purpose of the email is to verify that the account owner made the request and to provide a one-time perishable URL for changing the password.",
+        "parameters": [
+          {
+            "name": "DevFirstName",
+            "title": "Developer first name"
+          },
+          {
+            "name": "DevLastName",
+            "title": "Developer last name"
+          },
+          {
+            "name": "OrganizationName",
+            "title": "Organization name"
+          },
+          {
+            "name": "DevPortalUrl",
+            "title": "Developer portal URL"
+          },
+          {
+            "name": "ConfirmUrl",
+            "title": "Developer new password instruction URL"
+          },
+          {
+            "name": "DevPortalHost",
+            "title": "Developer portal hostname"
+          },
+          {
+            "name": "ConfirmQuery",
+            "title": "Query string part of the instruction URL"
+          }
+        ],
+        "subject": "Your password change request",
+        "title": "Password change confirmation"
+      },
+      "type": "Microsoft.ApiManagement/service/templates"
+    },
+    {
+      "apiVersion": "2024-06-01-preview",
+      "dependsOn": [
+        "[resourceId('Microsoft.ApiManagement/service', parameters('service_rocky_apim_test_2_name'))]"
+      ],
+      "name": "[concat(parameters('service_rocky_apim_test_2_name'), '/PurchaseDeveloperNotificationMessage')]",
+      "properties": {
+        "body": "<!DOCTYPE html >\r\n<html>\r\n  <head />\r\n  <body>\r\n    <p style=\"font-size:12pt;font-family:'Segoe UI'\">Greetings $DevFirstName $DevLastName!</p>\r\n    <p style=\"font-size:12pt;font-family:'Segoe UI'\">\r\n          Thank you for subscribing to the <a href=\"http://$DevPortalUrl/products/$ProdId\"><strong>$ProdName</strong></a> and welcome to the $OrganizationName developer community. We are delighted to have you as part of the team and are looking forward to the amazing applications you will build using our API!\r\n        </p>\r\n    <p style=\"font-size:12pt;font-family:'Segoe UI'\">Below are a few subscription details for your reference:</p>\r\n    <p style=\"font-size:12pt;font-family:'Segoe UI'\">\r\n      <ul>\r\n            #if ($SubStartDate != \"\")\r\n            <li style=\"font-size:12pt;font-family:'Segoe UI'\">Start date: $SubStartDate</li>\r\n            #end\r\n            \r\n            #if ($SubTerm != \"\")\r\n            <li style=\"font-size:12pt;font-family:'Segoe UI'\">Subscription term: $SubTerm</li>\r\n            #end\r\n          </ul>\r\n    </p>\r\n    <p style=\"font-size:12pt;font-family:'Segoe UI'\">\r\n            Visit the developer <a href=\"http://$DevPortalUrl/developer\">profile area</a> to manage your subscription and subscription keys\r\n        </p>\r\n    <p style=\"font-size:12pt;font-family:'Segoe UI'\">A couple of pointers to help get you started:</p>\r\n    <p style=\"font-size:12pt;font-family:'Segoe UI'\">\r\n      <strong>\r\n        <a href=\"http://$DevPortalUrl/docs/services?product=$ProdId\">Learn about the API</a>\r\n      </strong>\r\n    </p>\r\n    <p style=\"font-size:12pt;font-family:'Segoe UI'\">The API documentation provides all information necessary to make a request and to process a response. Code samples are provided per API operation in a variety of languages. Moreover, an interactive console allows making API calls directly from the developer portal without writing any code.</p>\r\n    <p style=\"font-size:12pt;font-family:'Segoe UI'\">\r\n      <strong>\r\n        <a href=\"http://$DevPortalUrl/applications\">Feature your app in the app gallery</a>\r\n      </strong>\r\n    </p>\r\n    <p style=\"font-size:12pt;font-family:'Segoe UI'\">You can publish your application on our gallery for increased visibility to potential new users.</p>\r\n    <p style=\"font-size:12pt;font-family:'Segoe UI'\">\r\n      <strong>\r\n        <a href=\"http://$DevPortalUrl/issues\">Stay in touch</a>\r\n      </strong>\r\n    </p>\r\n    <p style=\"font-size:12pt;font-family:'Segoe UI'\">\r\n          If you have an issue, a question, a suggestion, a request, or if you just want to tell us something, go to the <a href=\"http://$DevPortalUrl/issues\">Issues</a> page on the developer portal and create a new topic.\r\n        </p>\r\n    <p style=\"font-size:12pt;font-family:'Segoe UI'\">Happy hacking,</p>\r\n    <p style=\"font-size:12pt;font-family:'Segoe UI'\">The $OrganizationName API Team</p>\r\n    <a style=\"font-size:12pt;font-family:'Segoe UI'\" href=\"http://$DevPortalUrl\">$DevPortalUrl</a>\r\n  </body>\r\n</html>",
+        "description": "Developers receive this acknowledgement email after subscribing to a product.",
+        "parameters": [
+          {
+            "name": "DevFirstName",
+            "title": "Developer first name"
+          },
+          {
+            "name": "DevLastName",
+            "title": "Developer last name"
+          },
+          {
+            "name": "ProdId",
+            "title": "Product ID"
+          },
+          {
+            "name": "ProdName",
+            "title": "Product name"
+          },
+          {
+            "name": "OrganizationName",
+            "title": "Organization name"
+          },
+          {
+            "name": "SubStartDate",
+            "title": "Subscription start date"
+          },
+          {
+            "name": "SubTerm",
+            "title": "Subscription term"
+          },
+          {
+            "name": "DevPortalUrl",
+            "title": "Developer portal URL"
+          }
+        ],
+        "subject": "Your subscription to the $ProdName",
+        "title": "New subscription activated"
+      },
+      "type": "Microsoft.ApiManagement/service/templates"
+    },
+    {
+      "apiVersion": "2024-06-01-preview",
+      "dependsOn": [
+        "[resourceId('Microsoft.ApiManagement/service', parameters('service_rocky_apim_test_2_name'))]"
+      ],
+      "name": "[concat(parameters('service_rocky_apim_test_2_name'), '/QuotaLimitApproachingDeveloperNotificationMessage')]",
+      "properties": {
+        "body": "<!DOCTYPE html >\r\n<html>\r\n  <head>\r\n    <style>\r\n          body {font-size:12pt; font-family:\"Segoe UI\",\"Segoe WP\",\"Tahoma\",\"Arial\",\"sans-serif\";}\r\n          .alert { color: red; }\r\n          .child1 { padding-left: 20px; }\r\n          .child2 { padding-left: 40px; }\r\n          .number { text-align: right; }\r\n          .text { text-align: left; }\r\n          th, td { padding: 4px 10px; min-width: 100px; }\r\n          th { background-color: #DDDDDD;}\r\n        </style>\r\n  </head>\r\n  <body>\r\n    <p>Greetings $DevFirstName $DevLastName!</p>\r\n    <p>\r\n          You are approaching the quota limit on you subscription to the <strong>$ProdName</strong> product (primary key $SubPrimaryKey).\r\n          #if ($QuotaResetDate != \"\")\r\n          This quota will be renewed on $QuotaResetDate.\r\n          #else\r\n          This quota will not be renewed.\r\n          #end\r\n        </p>\r\n    <p>Below are details on quota usage for the subscription:</p>\r\n    <p>\r\n      <table>\r\n        <thead>\r\n          <th class=\"text\">Quota Scope</th>\r\n          <th class=\"number\">Calls</th>\r\n          <th class=\"number\">Call Quota</th>\r\n          <th class=\"number\">Bandwidth</th>\r\n          <th class=\"number\">Bandwidth Quota</th>\r\n        </thead>\r\n        <tbody>\r\n          <tr>\r\n            <td class=\"text\">Subscription</td>\r\n            <td class=\"number\">\r\n                  #if ($CallsAlert == true)\r\n                  <span class=\"alert\">$Calls</span>\r\n                  #else\r\n                  $Calls\r\n                  #end\r\n                </td>\r\n            <td class=\"number\">$CallQuota</td>\r\n            <td class=\"number\">\r\n                  #if ($BandwidthAlert == true)\r\n                  <span class=\"alert\">$Bandwidth</span>\r\n                  #else\r\n                  $Bandwidth\r\n                  #end\r\n                </td>\r\n            <td class=\"number\">$BandwidthQuota</td>\r\n          </tr>\r\n              #foreach ($api in $Apis)\r\n              <tr><td class=\"child1 text\">API: $api.Name</td><td class=\"number\">\r\n                  #if ($api.CallsAlert == true)\r\n                  <span class=\"alert\">$api.Calls</span>\r\n                  #else\r\n                  $api.Calls\r\n                  #end\r\n                </td><td class=\"number\">$api.CallQuota</td><td class=\"number\">\r\n                  #if ($api.BandwidthAlert == true)\r\n                  <span class=\"alert\">$api.Bandwidth</span>\r\n                  #else\r\n                  $api.Bandwidth\r\n                  #end\r\n                </td><td class=\"number\">$api.BandwidthQuota</td></tr>\r\n              #foreach ($operation in $api.Operations)\r\n              <tr><td class=\"child2 text\">Operation: $operation.Name</td><td class=\"number\">\r\n                  #if ($operation.CallsAlert == true)\r\n                  <span class=\"alert\">$operation.Calls</span>\r\n                  #else\r\n                  $operation.Calls\r\n                  #end\r\n                </td><td class=\"number\">$operation.CallQuota</td><td class=\"number\">\r\n                  #if ($operation.BandwidthAlert == true)\r\n                  <span class=\"alert\">$operation.Bandwidth</span>\r\n                  #else\r\n                  $operation.Bandwidth\r\n                  #end\r\n                </td><td class=\"number\">$operation.BandwidthQuota</td></tr>\r\n              #end\r\n              #end\r\n            </tbody>\r\n      </table>\r\n    </p>\r\n    <p>Thank you,</p>\r\n    <p>$OrganizationName API Team</p>\r\n    <a href=\"$DevPortalUrl\">$DevPortalUrl</a>\r\n    <p />\r\n  </body>\r\n</html>",
+        "description": "Developers receive this email to alert them when they are approaching a quota limit.",
+        "parameters": [
+          {
+            "name": "DevFirstName",
+            "title": "Developer first name"
+          },
+          {
+            "name": "DevLastName",
+            "title": "Developer last name"
+          },
+          {
+            "name": "ProdName",
+            "title": "Product name"
+          },
+          {
+            "name": "OrganizationName",
+            "title": "Organization name"
+          },
+          {
+            "name": "SubPrimaryKey",
+            "title": "Primary Subscription key"
+          },
+          {
+            "name": "DevPortalUrl",
+            "title": "Developer portal URL"
+          },
+          {
+            "name": "QuotaResetDate",
+            "title": "Quota reset date"
+          }
+        ],
+        "subject": "You are approaching an API quota limit",
+        "title": "Developer quota limit approaching notification"
+      },
+      "type": "Microsoft.ApiManagement/service/templates"
+    },
+    {
+      "apiVersion": "2024-06-01-preview",
+      "dependsOn": [
+        "[resourceId('Microsoft.ApiManagement/service', parameters('service_rocky_apim_test_2_name'))]"
+      ],
+      "name": "[concat(parameters('service_rocky_apim_test_2_name'), '/RejectDeveloperNotificationMessage')]",
+      "properties": {
+        "body": "<!DOCTYPE html >\r\n<html>\r\n  <head />\r\n  <body>\r\n    <p style=\"font-size:12pt;font-family:'Segoe UI'\">Dear $DevFirstName $DevLastName,</p>\r\n    <p style=\"font-size:12pt;font-family:'Segoe UI'\">\r\n          We would like to inform you that we reviewed your subscription request for the <strong>$ProdName</strong>.\r\n        </p>\r\n        #if ($SubDeclineReason == \"\")\r\n        <p style=\"font-size:12pt;font-family:'Segoe UI'\">Regretfully, we were unable to approve it, as subscriptions are temporarily suspended at this time.</p>\r\n        #else\r\n        <p style=\"font-size:12pt;font-family:'Segoe UI'\">\r\n          Regretfully, we were unable to approve it at this time for the following reason:\r\n          <div style=\"margin-left: 1.5em;\"> $SubDeclineReason </div></p>\r\n        #end\r\n        <p style=\"font-size:12pt;font-family:'Segoe UI'\"> We truly appreciate your interest. </p><p style=\"font-size:12pt;font-family:'Segoe UI'\">All the best,</p><p style=\"font-size:12pt;font-family:'Segoe UI'\">The $OrganizationName API Team</p><a style=\"font-size:12pt;font-family:'Segoe UI'\" href=\"http://$DevPortalUrl\">$DevPortalUrl</a></body>\r\n</html>",
+        "description": "This email is sent to developers when their subscription requests for products requiring publisher approval is declined.",
+        "parameters": [
+          {
+            "name": "DevFirstName",
+            "title": "Developer first name"
+          },
+          {
+            "name": "DevLastName",
+            "title": "Developer last name"
+          },
+          {
+            "name": "SubDeclineReason",
+            "title": "Reason for declining subscription"
+          },
+          {
+            "name": "ProdName",
+            "title": "Product name"
+          },
+          {
+            "name": "OrganizationName",
+            "title": "Organization name"
+          },
+          {
+            "name": "DevPortalUrl",
+            "title": "Developer portal URL"
+          }
+        ],
+        "subject": "Your subscription request for the $ProdName",
+        "title": "Subscription request declined"
+      },
+      "type": "Microsoft.ApiManagement/service/templates"
+    },
+    {
+      "apiVersion": "2024-06-01-preview",
+      "dependsOn": [
+        "[resourceId('Microsoft.ApiManagement/service', parameters('service_rocky_apim_test_2_name'))]"
+      ],
+      "name": "[concat(parameters('service_rocky_apim_test_2_name'), '/RequestDeveloperNotificationMessage')]",
+      "properties": {
+        "body": "<!DOCTYPE html >\r\n<html>\r\n  <head />\r\n  <body>\r\n    <p style=\"font-size:12pt;font-family:'Segoe UI'\">Dear $DevFirstName $DevLastName,</p>\r\n    <p style=\"font-size:12pt;font-family:'Segoe UI'\">\r\n          Thank you for your interest in our <strong>$ProdName</strong> API product!\r\n        </p>\r\n    <p style=\"font-size:12pt;font-family:'Segoe UI'\">\r\n          We were delighted to receive your subscription request. We will promptly review it and get back to you at <strong>$DevEmail</strong>.\r\n        </p>\r\n    <p style=\"font-size:12pt;font-family:'Segoe UI'\">Thank you,</p>\r\n    <p style=\"font-size:12pt;font-family:'Segoe UI'\">The $OrganizationName API Team</p>\r\n    <a style=\"font-size:12pt;font-family:'Segoe UI'\" href=\"http://$DevPortalUrl\">$DevPortalUrl</a>\r\n  </body>\r\n</html>",
+        "description": "This email is sent to developers to acknowledge receipt of their subscription requests for products requiring publisher approval.",
+        "parameters": [
+          {
+            "name": "DevFirstName",
+            "title": "Developer first name"
+          },
+          {
+            "name": "DevLastName",
+            "title": "Developer last name"
+          },
+          {
+            "name": "DevEmail",
+            "title": "Developer email"
+          },
+          {
+            "name": "ProdName",
+            "title": "Product name"
+          },
+          {
+            "name": "OrganizationName",
+            "title": "Organization name"
+          },
+          {
+            "name": "DevPortalUrl",
+            "title": "Developer portal URL"
+          }
+        ],
+        "subject": "Your subscription request for the $ProdName",
+        "title": "Subscription request received"
+      },
+      "type": "Microsoft.ApiManagement/service/templates"
+    },
+    {
+      "apiVersion": "2024-06-01-preview",
+      "dependsOn": [
+        "[resourceId('Microsoft.ApiManagement/service', parameters('service_rocky_apim_test_2_name'))]"
+      ],
+      "name": "[concat(parameters('service_rocky_apim_test_2_name'), '/1')]",
+      "properties": {
+        "email": "billy.li@gov.bc.ca",
+        "firstName": "Administrator",
+        "identities": [
+          {
+            "id": "billy.li@gov.bc.ca",
+            "provider": "Azure"
+          }
+        ],
+        "lastName": "[parameters('users_1_lastName')]",
+        "state": "active"
+      },
+      "type": "Microsoft.ApiManagement/service/users"
+    },
+    {
+      "apiVersion": "2025-06-01",
+      "dependsOn": [
+        "[resourceId('Microsoft.CognitiveServices/accounts', parameters('accounts_rockey_openai_test_name'))]"
+      ],
+      "location": "canadacentral",
+      "name": "[concat(parameters('accounts_rockey_openai_test_name'), '/Azure_Openai_Private_Endpoint.aae51225-c7f1-4076-a0e6-44b261c7e77a')]",
+      "properties": {
+        "groupIds": [
+          "account"
+        ],
+        "privateEndpoint": {},
+        "privateLinkServiceConnectionState": {
+          "actionsRequired": "None",
+          "description": "Approved",
+          "status": "Approved"
+        }
+      },
+      "type": "Microsoft.CognitiveServices/accounts/privateEndpointConnections"
+    },
+    {
+      "apiVersion": "2024-11-01",
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/networkInterfaces', parameters('networkInterfaces_rockyjumpbox503_z1_name'))]"
+      ],
+      "identity": {
+        "type": "SystemAssigned, UserAssigned",
+        "userAssignedIdentities": {
+          "/subscriptions/40e13180-2fb8-4399-8931-f0c3eefb3e14/resourceGroups/bcgov-managed-lz-live-mgmt/providers/Microsoft.ManagedIdentity/userAssignedIdentities/bcgov-managed-lz-live-uami": {}
+        }
+      },
+      "location": "canadacentral",
+      "name": "[parameters('virtualMachines_rockyjumpbox_name')]",
+      "properties": {
+        "additionalCapabilities": {
+          "hibernationEnabled": false
+        },
+        "diagnosticsProfile": {
+          "bootDiagnostics": {
+            "enabled": true
+          }
+        },
+        "hardwareProfile": {
+          "vmSize": "Standard_B2s"
+        },
+        "networkProfile": {
+          "networkInterfaces": [
+            {
+              "id": "[resourceId('Microsoft.Network/networkInterfaces', parameters('networkInterfaces_rockyjumpbox503_z1_name'))]",
+              "properties": {
+                "deleteOption": "Detach"
+              }
+            }
+          ]
+        },
+        "osProfile": {
+          "adminUsername": "azureuser",
+          "allowExtensionOperations": true,
+          "computerName": "[parameters('virtualMachines_rockyjumpbox_name')]",
+          "linuxConfiguration": {
+            "disablePasswordAuthentication": true,
+            "patchSettings": {
+              "assessmentMode": "AutomaticByPlatform",
+              "automaticByPlatformSettings": {
+                "rebootSetting": "IfRequired"
+              },
+              "patchMode": "AutomaticByPlatform"
+            },
+            "provisionVMAgent": true,
+            "ssh": {
+              "publicKeys": [
+                {
+                  "keyData": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDcBOIsnvLGnq8sG4r6kvYdAtxJyaAf4AYf2Akb8h5AYU091veg4AD7Z8LCtpIBxc3dq0BYsKjjmfNGIJIElN9yI6lv2gHr5VnjrTT6i/quln/o/ksT5UdojUpyrtjV/wtS0QS1w0dT3t4qdbny+6AK9LV4KeRT64kbrm0JsFgyiwYeTRJ50ODBhEoSt1gCplLgIS579rgxzkFOuG+MezHKkfo7YO3xM5ixpzctddJ24qOUuR9XuxB213k6Ph3uqhm9FH2sGWbvonsjNpbnPp8xtcrYe6CztBBvl3LGvoRMvRw0Fdpzd6poeSkcURhJ5ecb2VGZ/4B56pLHR5LPPrpKMg79mDTLeoptYCuN0n3G1bhsQErb8It5Mte02UaELabVpfADditJ/bYLWeoytFaAczuC/5GbCimHyIrP0PR6wso8ZpjWiiBKuuREpJ+oo45r1xxZbrrW50zk+SwPNhll7l9fgWt+mngQt6Os1OgellHrkzbJ9e6qvqqdw6lmXhk= generated-by-azure",
+                  "path": "/home/azureuser/.ssh/authorized_keys"
+                }
+              ]
+            }
+          },
+          "requireGuestProvisionSignal": true,
+          "secrets": []
+        },
+        "storageProfile": {
+          "dataDisks": [],
+          "diskControllerType": "SCSI",
+          "imageReference": {
+            "offer": "0001-com-ubuntu-server-jammy",
+            "publisher": "canonical",
+            "sku": "22_04-lts-gen2",
+            "version": "latest"
+          },
+          "osDisk": {
+            "caching": "ReadWrite",
+            "createOption": "FromImage",
+            "deleteOption": "Delete",
+            "diskSizeGB": 30,
+            "managedDisk": {
+              "id": "[resourceId('Microsoft.Compute/disks', concat(parameters('virtualMachines_rockyjumpbox_name'), '_OsDisk_1_ef415e6cebf945968763ebace4c6b408'))]",
+              "storageAccountType": "Premium_LRS"
+            },
+            "name": "[concat(parameters('virtualMachines_rockyjumpbox_name'), '_OsDisk_1_ef415e6cebf945968763ebace4c6b408')]",
+            "osType": "Linux"
+          }
+        }
+      },
+      "tags": {
+        "billing_group": "a7009d",
+        "ministry_name": "CITZ"
+      },
+      "type": "Microsoft.Compute/virtualMachines",
+      "zones": [
+        "1"
+      ]
+    },
+    {
+      "apiVersion": "2024-07-01",
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_a7009d_test_vwan_spoke_name'), 'private-endpoints-subnet')]"
+      ],
+      "kind": "Regular",
+      "location": "canadacentral",
+      "name": "[parameters('networkInterfaces_rockyjumpbox503_z1_name')]",
+      "properties": {
+        "auxiliaryMode": "None",
+        "auxiliarySku": "None",
+        "disableTcpStateTracking": false,
+        "dnsSettings": {
+          "dnsServers": []
+        },
+        "enableAcceleratedNetworking": false,
+        "enableIPForwarding": false,
+        "ipConfigurations": [
+          {
+            "id": "[concat(resourceId('Microsoft.Network/networkInterfaces', parameters('networkInterfaces_rockyjumpbox503_z1_name')), '/ipConfigurations/ipconfig1')]",
+            "name": "ipconfig1",
+            "properties": {
+              "primary": true,
+              "privateIPAddress": "10.46.72.4",
+              "privateIPAddressVersion": "IPv4",
+              "privateIPAllocationMethod": "Dynamic",
+              "subnet": {
+                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_a7009d_test_vwan_spoke_name'), 'private-endpoints-subnet')]"
+              }
+            },
+            "type": "Microsoft.Network/networkInterfaces/ipConfigurations"
+          }
+        ],
+        "nicType": "Standard"
+      },
+      "tags": {
+        "billing_group": "a7009d",
+        "ministry_name": "CITZ"
+      },
+      "type": "Microsoft.Network/networkInterfaces"
+    },
+    {
+      "apiVersion": "2024-07-01",
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_nsg_bastion_name'))]"
+      ],
+      "name": "[concat(parameters('networkSecurityGroups_nsg_bastion_name'), '/AllowAnyCustom443Outbound')]",
+      "properties": {
+        "access": "Allow",
+        "destinationAddressPrefix": "AzureCloud",
+        "destinationAddressPrefixes": [],
+        "destinationPortRange": "443",
+        "destinationPortRanges": [],
+        "direction": "Outbound",
+        "priority": 1050,
+        "protocol": "*",
+        "sourceAddressPrefix": "*",
+        "sourceAddressPrefixes": [],
+        "sourcePortRange": "*",
+        "sourcePortRanges": []
+      },
+      "type": "Microsoft.Network/networkSecurityGroups/securityRules"
+    },
+    {
+      "apiVersion": "2024-07-01",
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_nsg_bastion_name'))]"
+      ],
+      "name": "[concat(parameters('networkSecurityGroups_nsg_bastion_name'), '/AllowAnyHTTPOutbound')]",
+      "properties": {
+        "access": "Allow",
+        "destinationAddressPrefix": "Internet",
+        "destinationAddressPrefixes": [],
+        "destinationPortRange": "80",
+        "destinationPortRanges": [],
+        "direction": "Outbound",
+        "priority": 1070,
+        "protocol": "*",
+        "sourceAddressPrefix": "*",
+        "sourceAddressPrefixes": [],
+        "sourcePortRange": "*",
+        "sourcePortRanges": []
+      },
+      "type": "Microsoft.Network/networkSecurityGroups/securityRules"
+    },
+    {
+      "apiVersion": "2024-07-01",
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_nsg_bastion_name'))]"
+      ],
+      "name": "[concat(parameters('networkSecurityGroups_nsg_bastion_name'), '/AllowAnyHTTPSInbound')]",
+      "properties": {
+        "access": "Allow",
+        "destinationAddressPrefix": "*",
+        "destinationAddressPrefixes": [],
+        "destinationPortRange": "443",
+        "destinationPortRanges": [],
+        "direction": "Inbound",
+        "priority": 1010,
+        "protocol": "TCP",
+        "sourceAddressPrefix": "AzureLoadBalancer",
+        "sourceAddressPrefixes": [],
+        "sourcePortRange": "*",
+        "sourcePortRanges": []
+      },
+      "type": "Microsoft.Network/networkSecurityGroups/securityRules"
+    },
+    {
+      "apiVersion": "2024-07-01",
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_nsg_apim_name'))]"
+      ],
+      "name": "[concat(parameters('networkSecurityGroups_nsg_apim_name'), '/Allow-APIM-Client')]",
+      "properties": {
+        "access": "Allow",
+        "destinationAddressPrefix": "VirtualNetwork",
+        "destinationAddressPrefixes": [],
+        "destinationPortRanges": [
+          "80",
+          "443"
+        ],
+        "direction": "Inbound",
+        "priority": 100,
+        "protocol": "TCP",
+        "sourceAddressPrefix": "Internet",
+        "sourceAddressPrefixes": [],
+        "sourcePortRange": "*",
+        "sourcePortRanges": []
+      },
+      "type": "Microsoft.Network/networkSecurityGroups/securityRules"
+    },
+    {
+      "apiVersion": "2024-07-01",
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_nsg_bastion_name'))]"
+      ],
+      "name": "[concat(parameters('networkSecurityGroups_nsg_bastion_name'), '/AllowBastionCommunication')]",
+      "properties": {
+        "access": "Allow",
+        "destinationAddressPrefix": "VirtualNetwork",
+        "destinationAddressPrefixes": [],
+        "destinationPortRanges": [
+          "8080",
+          "5701"
+        ],
+        "direction": "Outbound",
+        "priority": 1060,
+        "protocol": "*",
+        "sourceAddressPrefix": "*",
+        "sourceAddressPrefixes": [],
+        "sourcePortRange": "*",
+        "sourcePortRanges": []
+      },
+      "type": "Microsoft.Network/networkSecurityGroups/securityRules"
+    },
+    {
+      "apiVersion": "2024-07-01",
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_nsg_bastion_name'))]"
+      ],
+      "name": "[concat(parameters('networkSecurityGroups_nsg_bastion_name'), '/AllowBastionHostCommunication')]",
+      "properties": {
+        "access": "Allow",
+        "destinationAddressPrefix": "VirtualNetwork",
+        "destinationAddressPrefixes": [],
+        "destinationPortRanges": [
+          "8080",
+          "5701"
+        ],
+        "direction": "Inbound",
+        "priority": 1020,
+        "protocol": "*",
+        "sourceAddressPrefix": "VirtualNetwork",
+        "sourceAddressPrefixes": [],
+        "sourcePortRange": "*",
+        "sourcePortRanges": []
+      },
+      "type": "Microsoft.Network/networkSecurityGroups/securityRules"
+    },
+    {
+      "apiVersion": "2024-07-01",
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_nsg_bastion_name'))]"
+      ],
+      "name": "[concat(parameters('networkSecurityGroups_nsg_bastion_name'), '/allowGatewayManagerInbound')]",
+      "properties": {
+        "access": "Allow",
+        "destinationAddressPrefix": "*",
+        "destinationAddressPrefixes": [],
+        "destinationPortRange": "443",
+        "destinationPortRanges": [],
+        "direction": "Inbound",
+        "priority": 1030,
+        "protocol": "TCP",
+        "sourceAddressPrefix": "GatewayManager",
+        "sourceAddressPrefixes": [],
+        "sourcePortRange": "*",
+        "sourcePortRanges": []
+      },
+      "type": "Microsoft.Network/networkSecurityGroups/securityRules"
+    },
+    {
+      "apiVersion": "2024-07-01",
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_nsg_apim_name'))]"
+      ],
+      "name": "[concat(parameters('networkSecurityGroups_nsg_apim_name'), '/Allow-LB-Health-Probe')]",
+      "properties": {
+        "access": "Allow",
+        "destinationAddressPrefix": "VirtualNetwork",
+        "destinationAddressPrefixes": [],
+        "destinationPortRange": "*",
+        "destinationPortRanges": [],
+        "direction": "Inbound",
+        "priority": 120,
+        "protocol": "TCP",
+        "sourceAddressPrefix": "AzureLoadBalancer",
+        "sourceAddressPrefixes": [],
+        "sourcePortRange": "*",
+        "sourcePortRanges": []
+      },
+      "type": "Microsoft.Network/networkSecurityGroups/securityRules"
+    },
+    {
+      "apiVersion": "2024-07-01",
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_nsg_apim_name'))]"
+      ],
+      "name": "[concat(parameters('networkSecurityGroups_nsg_apim_name'), '/Allow-Out-Storage')]",
+      "properties": {
+        "access": "Allow",
+        "description": "allow APIM to access storage",
+        "destinationAddressPrefix": "Storage",
+        "destinationAddressPrefixes": [],
+        "destinationPortRange": "*",
+        "destinationPortRanges": [],
+        "direction": "Outbound",
+        "priority": 100,
+        "protocol": "TCP",
+        "sourceAddressPrefix": "VirtualNetwork",
+        "sourceAddressPrefixes": [],
+        "sourcePortRange": "*",
+        "sourcePortRanges": []
+      },
+      "type": "Microsoft.Network/networkSecurityGroups/securityRules"
+    },
+    {
+      "apiVersion": "2024-07-01",
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_nsg_apim_name'))]"
+      ],
+      "name": "[concat(parameters('networkSecurityGroups_nsg_apim_name'), '/Allow-Portal-Management')]",
+      "properties": {
+        "access": "Allow",
+        "description": "Enables portal, portal REST API, PowerShell, CLI on APIM management plane\n",
+        "destinationAddressPrefix": "VirtualNetwork",
+        "destinationAddressPrefixes": [],
+        "destinationPortRange": "3443",
+        "destinationPortRanges": [],
+        "direction": "Inbound",
+        "priority": 110,
+        "protocol": "TCP",
+        "sourceAddressPrefix": "ApiManagement",
+        "sourceAddressPrefixes": [],
+        "sourcePortRange": "*",
+        "sourcePortRanges": []
+      },
+      "type": "Microsoft.Network/networkSecurityGroups/securityRules"
+    },
+    {
+      "apiVersion": "2024-07-01",
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_nsg_private_endpoints_name'))]"
+      ],
+      "name": "[concat(parameters('networkSecurityGroups_nsg_private_endpoints_name'), '/AllowSSHInbound')]",
+      "properties": {
+        "access": "Allow",
+        "destinationAddressPrefix": "*",
+        "destinationAddressPrefixes": [],
+        "destinationPortRanges": [
+          "22",
+          "3389"
+        ],
+        "direction": "Inbound",
+        "priority": 1000,
+        "protocol": "*",
+        "sourceAddressPrefix": "VirtualNetwork",
+        "sourceAddressPrefixes": [],
+        "sourcePortRange": "*",
+        "sourcePortRanges": []
+      },
+      "type": "Microsoft.Network/networkSecurityGroups/securityRules"
+    },
+    {
+      "apiVersion": "2024-07-01",
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_nsg_bastion_name'))]"
+      ],
+      "name": "[concat(parameters('networkSecurityGroups_nsg_bastion_name'), '/AllowSshRdpOutbound')]",
+      "properties": {
+        "access": "Allow",
+        "destinationAddressPrefix": "VirtualNetwork",
+        "destinationAddressPrefixes": [],
+        "destinationPortRanges": [
+          "22",
+          "3389"
+        ],
+        "direction": "Outbound",
+        "priority": 1040,
+        "protocol": "*",
+        "sourceAddressPrefix": "*",
+        "sourceAddressPrefixes": [],
+        "sourcePortRange": "*",
+        "sourcePortRanges": []
+      },
+      "type": "Microsoft.Network/networkSecurityGroups/securityRules"
+    },
+    {
+      "apiVersion": "2024-07-01",
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_nsg_bastion_name'))]"
+      ],
+      "name": "[concat(parameters('networkSecurityGroups_nsg_bastion_name'), '/AllowTagHTTPSInbound')]",
+      "properties": {
+        "access": "Allow",
+        "destinationAddressPrefix": "*",
+        "destinationAddressPrefixes": [],
+        "destinationPortRange": "443",
+        "destinationPortRanges": [],
+        "direction": "Inbound",
+        "priority": 1000,
+        "protocol": "TCP",
+        "sourceAddressPrefix": "Internet",
+        "sourceAddressPrefixes": [],
+        "sourcePortRange": "*",
+        "sourcePortRanges": []
+      },
+      "type": "Microsoft.Network/networkSecurityGroups/securityRules"
+    },
+    {
+      "apiVersion": "2024-07-01",
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_nsg_apim_name'))]"
+      ],
+      "name": "[concat(parameters('networkSecurityGroups_nsg_apim_name'), '/TrafficManager')]",
+      "properties": {
+        "access": "Allow",
+        "description": "Needed only for multi-region APIM deployments",
+        "destinationAddressPrefix": "VirtualNetwork",
+        "destinationAddressPrefixes": [],
+        "destinationPortRange": "443",
+        "destinationPortRanges": [],
+        "direction": "Inbound",
+        "priority": 130,
+        "protocol": "TCP",
+        "sourceAddressPrefix": "AzureTrafficManager",
+        "sourceAddressPrefixes": [],
+        "sourcePortRange": "*",
+        "sourcePortRanges": []
+      },
+      "type": "Microsoft.Network/networkSecurityGroups/securityRules"
+    },
+    {
+      "apiVersion": "2024-06-01-preview",
+      "dependsOn": [
+        "[resourceId('Microsoft.ApiManagement/service/apis', parameters('service_rocky_apim_test_2_name'), 'rocky-chat-api')]",
+        "[resourceId('Microsoft.ApiManagement/service', parameters('service_rocky_apim_test_2_name'))]"
+      ],
+      "name": "[concat(parameters('service_rocky_apim_test_2_name'), '/rocky-chat-api/ChatCompletions_Create')]",
+      "properties": {
+        "description": "Creates a completion for the chat message",
+        "displayName": "Creates a completion for the chat message",
+        "method": "POST",
+        "request": {
+          "headers": [],
+          "queryParameters": [],
+          "representations": [
+            {
+              "contentType": "application/json",
+              "examples": {
+                "default": {
+                  "value": {
+                    "data_sources": [
+                      {
+                        "type": "azure_search"
+                      }
+                    ],
+                    "frequency_penalty": 0,
+                    "function_call": {},
+                    "functions": [
+                      {
+                        "description": "string",
+                        "name": "string",
+                        "parameters": {}
+                      }
+                    ],
+                    "logit_bias": {},
+                    "max_tokens": 4096,
+                    "messages": [
+                      {
+                        "role": "system"
+                      }
+                    ],
+                    "n": 1,
+                    "presence_penalty": 0,
+                    "response_format": {
+                      "type": "text"
+                    },
+                    "seed": 0,
+                    "stream": false,
+                    "temperature": 1,
+                    "tool_choice": {},
+                    "tools": [
+                      {
+                        "function": {
+                          "description": "string",
+                          "name": "string",
+                          "parameters": {}
+                        },
+                        "type": "function"
+                      }
+                    ],
+                    "top_p": 1,
+                    "user": "user-1234"
+                  }
+                }
+              },
+              "schemaId": "687574fd217d201b2093b60c",
+              "typeName": "createChatCompletionRequest"
+            }
+          ]
+        },
+        "responses": [
+          {
+            "description": "OK",
+            "headers": [
+              {
+                "description": "Request ID for troubleshooting purposes",
+                "name": "apim-request-id",
+                "schemaId": "687574fd217d201b2093b60c",
+                "type": "string",
+                "typeName": "Deployments-deployment-id-ChatCompletionsPost200apim-request-idResponseHeader",
+                "values": []
+              }
+            ],
+            "representations": [
+              {
+                "contentType": "application/json",
+                "examples": {
+                  "default": {
+                    "value": {
+                      "choices": [
+                        {
+                          "content_filter_results": {
+                            "error": {
+                              "code": "string",
+                              "message": "string"
+                            },
+                            "hate": {
+                              "filtered": true,
+                              "severity": "safe"
+                            },
+                            "profanity": {
+                              "detected": true,
+                              "filtered": true
+                            },
+                            "protected_material_code": {
+                              "citation": {
+                                "URL": "string",
+                                "license": "string"
+                              },
+                              "detected": true,
+                              "filtered": true
+                            },
+                            "protected_material_text": {
+                              "detected": true,
+                              "filtered": true
+                            },
+                            "self_harm": {
+                              "filtered": true,
+                              "severity": "safe"
+                            },
+                            "sexual": {
+                              "filtered": true,
+                              "severity": "safe"
+                            },
+                            "violence": {
+                              "filtered": true,
+                              "severity": "safe"
+                            }
+                          },
+                          "finish_reason": "string",
+                          "index": 0,
+                          "message": {
+                            "content": "string",
+                            "context": {
+                              "citations": [
+                                {
+                                  "chunk_id": "string",
+                                  "content": "string",
+                                  "filepath": "string",
+                                  "title": "string",
+                                  "url": "string"
+                                }
+                              ],
+                              "intent": "string"
+                            },
+                            "function_call": {
+                              "arguments": "string",
+                              "name": "string"
+                            },
+                            "role": "assistant",
+                            "tool_calls": [
+                              {
+                                "function": {
+                                  "arguments": "string",
+                                  "name": "string"
+                                },
+                                "id": "string",
+                                "type": "function"
+                              }
+                            ]
+                          }
+                        }
+                      ],
+                      "created": 0,
+                      "id": "string",
+                      "model": "string",
+                      "object": "chat.completion",
+                      "prompt_filter_results": [
+                        {
+                          "content_filter_results": {
+                            "error": {
+                              "code": "string",
+                              "message": "string"
+                            },
+                            "hate": {
+                              "filtered": true,
+                              "severity": "safe"
+                            },
+                            "jailbreak": {
+                              "detected": true,
+                              "filtered": true
+                            },
+                            "profanity": {
+                              "detected": true,
+                              "filtered": true
+                            },
+                            "self_harm": {
+                              "filtered": true,
+                              "severity": "safe"
+                            },
+                            "sexual": {
+                              "filtered": true,
+                              "severity": "safe"
+                            },
+                            "violence": {
+                              "filtered": true,
+                              "severity": "safe"
+                            }
+                          },
+                          "prompt_index": 0
+                        }
+                      ],
+                      "system_fingerprint": "string",
+                      "usage": {
+                        "completion_tokens": 0,
+                        "prompt_tokens": 0,
+                        "total_tokens": 0
+                      }
+                    }
+                  }
+                },
+                "schemaId": "687574fd217d201b2093b60c",
+                "typeName": "createChatCompletionResponse"
+              }
+            ],
+            "statusCode": 200
+          },
+          {
+            "description": "Service unavailable",
+            "headers": [
+              {
+                "description": "Request ID for troubleshooting purposes",
+                "name": "apim-request-id",
+                "schemaId": "687574fd217d201b2093b60c",
+                "type": "string",
+                "typeName": "Deployments-deployment-id-ChatCompletionsPostdefaultapim-request-idResponseHeader",
+                "values": []
+              }
+            ],
+            "representations": [
+              {
+                "contentType": "application/json",
+                "examples": {
+                  "default": {
+                    "value": {
+                      "error": {
+                        "code": "string",
+                        "inner_error": {
+                          "code": "ResponsibleAIPolicyViolation",
+                          "content_filter_results": {
+                            "error": {
+                              "code": "string",
+                              "message": "string"
+                            },
+                            "hate": {
+                              "filtered": true,
+                              "severity": "safe"
+                            },
+                            "jailbreak": {
+                              "detected": true,
+                              "filtered": true
+                            },
+                            "profanity": {
+                              "detected": true,
+                              "filtered": true
+                            },
+                            "self_harm": {
+                              "filtered": true,
+                              "severity": "safe"
+                            },
+                            "sexual": {
+                              "filtered": true,
+                              "severity": "safe"
+                            },
+                            "violence": {
+                              "filtered": true,
+                              "severity": "safe"
+                            }
+                          }
+                        },
+                        "message": "string",
+                        "param": "string",
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "schemaId": "687574fd217d201b2093b60c",
+                "typeName": "errorResponse"
+              }
+            ],
+            "statusCode": 400
+          },
+          {
+            "description": "Service unavailable",
+            "headers": [
+              {
+                "description": "Request ID for troubleshooting purposes",
+                "name": "apim-request-id",
+                "schemaId": "687574fd217d201b2093b60c",
+                "type": "string",
+                "typeName": "Deployments-deployment-id-ChatCompletionsPostdefaultapim-request-idResponseHeader",
+                "values": []
+              }
+            ],
+            "representations": [
+              {
+                "contentType": "application/json",
+                "examples": {
+                  "default": {
+                    "value": {
+                      "error": {
+                        "code": "string",
+                        "inner_error": {
+                          "code": "ResponsibleAIPolicyViolation",
+                          "content_filter_results": {
+                            "error": {
+                              "code": "string",
+                              "message": "string"
+                            },
+                            "hate": {
+                              "filtered": true,
+                              "severity": "safe"
+                            },
+                            "jailbreak": {
+                              "detected": true,
+                              "filtered": true
+                            },
+                            "profanity": {
+                              "detected": true,
+                              "filtered": true
+                            },
+                            "self_harm": {
+                              "filtered": true,
+                              "severity": "safe"
+                            },
+                            "sexual": {
+                              "filtered": true,
+                              "severity": "safe"
+                            },
+                            "violence": {
+                              "filtered": true,
+                              "severity": "safe"
+                            }
+                          }
+                        },
+                        "message": "string",
+                        "param": "string",
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "schemaId": "687574fd217d201b2093b60c",
+                "typeName": "errorResponse"
+              }
+            ],
+            "statusCode": 500
+          }
+        ],
+        "templateParameters": [
+          {
+            "name": "deployment-id",
+            "required": true,
+            "schemaId": "687574fd217d201b2093b60c",
+            "type": "string",
+            "typeName": "Deployments-deployment-id-ChatCompletionsPostRequest",
+            "values": []
+          },
+          {
+            "name": "api-version",
+            "required": true,
+            "schemaId": "687574fd217d201b2093b60c",
+            "type": "string",
+            "typeName": "Deployments-deployment-id-ChatCompletionsPostRequest-1",
+            "values": []
+          }
+        ],
+        "urlTemplate": "/deployments/{deployment-id}/chat/completions?api-version={api-version}"
+      },
+      "type": "Microsoft.ApiManagement/service/apis/operations"
+    },
+    {
+      "apiVersion": "2024-06-01-preview",
+      "dependsOn": [
+        "[resourceId('Microsoft.ApiManagement/service/apis', parameters('service_rocky_apim_test_2_name'), 'rocky-chat-api')]",
+        "[resourceId('Microsoft.ApiManagement/service', parameters('service_rocky_apim_test_2_name'))]"
+      ],
+      "name": "[concat(parameters('service_rocky_apim_test_2_name'), '/rocky-chat-api/Completions_Create')]",
+      "properties": {
+        "description": "Creates a completion for the provided prompt, parameters and chosen model.",
+        "displayName": "Creates a completion for the provided prompt, parameters and chosen model.",
+        "method": "POST",
+        "request": {
+          "headers": [],
+          "queryParameters": [],
+          "representations": [
+            {
+              "contentType": "application/json",
+              "examples": {
+                "default": {
+                  "value": {
+                    "max_tokens": 50,
+                    "prompt": "Negate the following sentence.The price for bubblegum increased on thursday.\n\n Negated Sentence:"
+                  }
+                }
+              },
+              "schemaId": "687574fd217d201b2093b60c",
+              "typeName": "Deployments-deployment-id-CompletionsPostRequest-2"
+            }
+          ]
+        },
+        "responses": [
+          {
+            "description": "OK",
+            "headers": [
+              {
+                "description": "Request ID for troubleshooting purposes",
+                "name": "apim-request-id",
+                "schemaId": "687574fd217d201b2093b60c",
+                "type": "string",
+                "typeName": "Deployments-deployment-id-CompletionsPost200apim-request-idResponseHeader",
+                "values": []
+              }
+            ],
+            "representations": [
+              {
+                "contentType": "application/json",
+                "examples": {
+                  "default": {
+                    "value": {
+                      "choices": [
+                        {
+                          "finish_reason": "stop",
+                          "index": 0,
+                          "logprobs": null,
+                          "text": "The price for bubblegum decreased on thursday."
+                        }
+                      ],
+                      "created": 1637097562,
+                      "id": "cmpl-4509KAos68kxOqpE2uYGw81j6m7uo",
+                      "model": "davinci",
+                      "object": "text_completion"
+                    }
+                  }
+                },
+                "schemaId": "687574fd217d201b2093b60c",
+                "typeName": "Deployments-deployment-id-CompletionsPost200ApplicationJsonResponse"
+              }
+            ],
+            "statusCode": 200
+          },
+          {
+            "description": "Service unavailable",
+            "headers": [
+              {
+                "description": "Request ID for troubleshooting purposes",
+                "name": "apim-request-id",
+                "schemaId": "687574fd217d201b2093b60c",
+                "type": "string",
+                "typeName": "Deployments-deployment-id-CompletionsPostdefaultapim-request-idResponseHeader",
+                "values": []
+              }
+            ],
+            "representations": [
+              {
+                "contentType": "application/json",
+                "examples": {
+                  "default": {
+                    "value": {
+                      "error": {
+                        "code": "string",
+                        "inner_error": {
+                          "code": "ResponsibleAIPolicyViolation",
+                          "content_filter_results": {
+                            "error": {
+                              "code": "string",
+                              "message": "string"
+                            },
+                            "hate": {
+                              "filtered": true,
+                              "severity": "safe"
+                            },
+                            "jailbreak": {
+                              "detected": true,
+                              "filtered": true
+                            },
+                            "profanity": {
+                              "detected": true,
+                              "filtered": true
+                            },
+                            "self_harm": {
+                              "filtered": true,
+                              "severity": "safe"
+                            },
+                            "sexual": {
+                              "filtered": true,
+                              "severity": "safe"
+                            },
+                            "violence": {
+                              "filtered": true,
+                              "severity": "safe"
+                            }
+                          }
+                        },
+                        "message": "string",
+                        "param": "string",
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "schemaId": "687574fd217d201b2093b60c",
+                "typeName": "errorResponse"
+              }
+            ],
+            "statusCode": 400
+          },
+          {
+            "description": "Service unavailable",
+            "headers": [
+              {
+                "description": "Request ID for troubleshooting purposes",
+                "name": "apim-request-id",
+                "schemaId": "687574fd217d201b2093b60c",
+                "type": "string",
+                "typeName": "Deployments-deployment-id-CompletionsPostdefaultapim-request-idResponseHeader",
+                "values": []
+              }
+            ],
+            "representations": [
+              {
+                "contentType": "application/json",
+                "examples": {
+                  "default": {
+                    "value": {
+                      "error": {
+                        "code": "string",
+                        "inner_error": {
+                          "code": "ResponsibleAIPolicyViolation",
+                          "content_filter_results": {
+                            "error": {
+                              "code": "string",
+                              "message": "string"
+                            },
+                            "hate": {
+                              "filtered": true,
+                              "severity": "safe"
+                            },
+                            "jailbreak": {
+                              "detected": true,
+                              "filtered": true
+                            },
+                            "profanity": {
+                              "detected": true,
+                              "filtered": true
+                            },
+                            "self_harm": {
+                              "filtered": true,
+                              "severity": "safe"
+                            },
+                            "sexual": {
+                              "filtered": true,
+                              "severity": "safe"
+                            },
+                            "violence": {
+                              "filtered": true,
+                              "severity": "safe"
+                            }
+                          }
+                        },
+                        "message": "string",
+                        "param": "string",
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "schemaId": "687574fd217d201b2093b60c",
+                "typeName": "errorResponse"
+              }
+            ],
+            "statusCode": 500
+          }
+        ],
+        "templateParameters": [
+          {
+            "name": "deployment-id",
+            "required": true,
+            "schemaId": "687574fd217d201b2093b60c",
+            "type": "string",
+            "typeName": "Deployments-deployment-id-CompletionsPostRequest",
+            "values": []
+          },
+          {
+            "name": "api-version",
+            "required": true,
+            "schemaId": "687574fd217d201b2093b60c",
+            "type": "string",
+            "typeName": "Deployments-deployment-id-CompletionsPostRequest-1",
+            "values": []
+          }
+        ],
+        "urlTemplate": "/deployments/{deployment-id}/completions?api-version={api-version}"
+      },
+      "type": "Microsoft.ApiManagement/service/apis/operations"
+    },
+    {
+      "apiVersion": "2024-06-01-preview",
+      "dependsOn": [
+        "[resourceId('Microsoft.ApiManagement/service/apis', parameters('service_rocky_apim_test_2_name'), 'echo-api')]",
+        "[resourceId('Microsoft.ApiManagement/service', parameters('service_rocky_apim_test_2_name'))]"
+      ],
+      "name": "[concat(parameters('service_rocky_apim_test_2_name'), '/echo-api/create-resource')]",
+      "properties": {
+        "description": "A demonstration of a POST call based on the echo backend above. The request body is expected to contain JSON-formatted data (see example below). A policy is used to automatically transform any request sent in JSON directly to XML. In a real-world scenario this could be used to enable modern clients to speak to a legacy backend.",
+        "displayName": "Create resource",
+        "method": "POST",
+        "request": {
+          "headers": [],
+          "queryParameters": [],
+          "representations": [
+            {
+              "contentType": "application/json",
+              "examples": {
+                "default": {
+                  "value": "{\r\n\t\"vehicleType\": \"train\",\r\n\t\"maxSpeed\": 125,\r\n\t\"avgSpeed\": 90,\r\n\t\"speedUnit\": \"mph\"\r\n}"
+                }
+              }
+            }
+          ]
+        },
+        "responses": [
+          {
+            "headers": [],
+            "representations": [],
+            "statusCode": 200
+          }
+        ],
+        "templateParameters": [],
+        "urlTemplate": "/resource"
+      },
+      "type": "Microsoft.ApiManagement/service/apis/operations"
+    },
+    {
+      "apiVersion": "2024-06-01-preview",
+      "dependsOn": [
+        "[resourceId('Microsoft.ApiManagement/service/apis', parameters('service_rocky_apim_test_2_name'), 'rocky-chat-api')]",
+        "[resourceId('Microsoft.ApiManagement/service', parameters('service_rocky_apim_test_2_name'))]"
+      ],
+      "name": "[concat(parameters('service_rocky_apim_test_2_name'), '/rocky-chat-api/embeddings_create')]",
+      "properties": {
+        "description": "Get a vector representation of a given input that can be easily consumed by machine learning models and algorithms.",
+        "displayName": "Get a vector representation of a given input that can be easily consumed by machine learning models and algorithms.",
+        "method": "POST",
+        "request": {
+          "headers": [],
+          "queryParameters": [],
+          "representations": [
+            {
+              "contentType": "application/json",
+              "examples": {
+                "default": {
+                  "value": {
+                    "input": {},
+                    "input_type": "query",
+                    "user": "string"
+                  }
+                }
+              },
+              "schemaId": "687574fd217d201b2093b60c",
+              "typeName": "Deployments-deployment-id-EmbeddingsPostRequest-2"
+            }
+          ]
+        },
+        "responses": [
+          {
+            "description": "OK",
+            "headers": [],
+            "representations": [
+              {
+                "contentType": "application/json",
+                "examples": {
+                  "default": {
+                    "value": {
+                      "data": [
+                        {
+                          "embedding": [
+                            0
+                          ],
+                          "index": 0,
+                          "object": "string"
+                        }
+                      ],
+                      "model": "string",
+                      "object": "string",
+                      "usage": {
+                        "prompt_tokens": 0,
+                        "total_tokens": 0
+                      }
+                    }
+                  }
+                },
+                "schemaId": "687574fd217d201b2093b60c",
+                "typeName": "Deployments-deployment-id-EmbeddingsPost200ApplicationJsonResponse"
+              }
+            ],
+            "statusCode": 200
+          }
+        ],
+        "templateParameters": [
+          {
+            "description": "The deployment id of the model which was deployed.",
+            "name": "deployment-id",
+            "required": true,
+            "schemaId": "687574fd217d201b2093b60c",
+            "type": "string",
+            "typeName": "Deployments-deployment-id-EmbeddingsPostRequest",
+            "values": []
+          },
+          {
+            "name": "api-version",
+            "required": true,
+            "schemaId": "687574fd217d201b2093b60c",
+            "type": "string",
+            "typeName": "Deployments-deployment-id-EmbeddingsPostRequest-1",
+            "values": []
+          }
+        ],
+        "urlTemplate": "/deployments/{deployment-id}/embeddings?api-version={api-version}"
+      },
+      "type": "Microsoft.ApiManagement/service/apis/operations"
+    },
+    {
+      "apiVersion": "2024-06-01-preview",
+      "dependsOn": [
+        "[resourceId('Microsoft.ApiManagement/service/apis', parameters('service_rocky_apim_test_2_name'), 'rocky-chat-api')]",
+        "[resourceId('Microsoft.ApiManagement/service', parameters('service_rocky_apim_test_2_name'))]"
+      ],
+      "name": "[concat(parameters('service_rocky_apim_test_2_name'), '/rocky-chat-api/ImageGenerations_Create')]",
+      "properties": {
+        "description": "Generates a batch of images from a text caption on a given DALLE model deployment",
+        "displayName": "Generates a batch of images from a text caption on a given DALLE model deployment",
+        "method": "POST",
+        "request": {
+          "headers": [],
+          "queryParameters": [],
+          "representations": [
+            {
+              "contentType": "application/json",
+              "examples": {
+                "default": {
+                  "value": {
+                    "n": 1,
+                    "prompt": "a corgi in a field",
+                    "quality": "standard",
+                    "response_format": "url",
+                    "size": "1024x1024",
+                    "style": "vivid",
+                    "user": "user123456"
+                  }
+                }
+              },
+              "schemaId": "687574fd217d201b2093b60c",
+              "typeName": "imageGenerationsRequest"
+            }
+          ]
+        },
+        "responses": [
+          {
+            "description": "Ok",
+            "headers": [],
+            "representations": [
+              {
+                "contentType": "application/json",
+                "examples": {
+                  "default": {
+                    "value": {
+                      "created": "1676540381",
+                      "data": [
+                        {
+                          "b64_json": "string",
+                          "content_filter_results": {
+                            "hate": {
+                              "filtered": true,
+                              "severity": "safe"
+                            },
+                            "self_harm": {
+                              "filtered": true,
+                              "severity": "safe"
+                            },
+                            "sexual": {
+                              "filtered": true,
+                              "severity": "safe"
+                            },
+                            "violence": {
+                              "filtered": true,
+                              "severity": "safe"
+                            }
+                          },
+                          "prompt_filter_results": {
+                            "hate": {
+                              "filtered": true,
+                              "severity": "safe"
+                            },
+                            "jailbreak": {
+                              "detected": true,
+                              "filtered": true
+                            },
+                            "profanity": {
+                              "detected": true,
+                              "filtered": true
+                            },
+                            "self_harm": {
+                              "filtered": true,
+                              "severity": "safe"
+                            },
+                            "sexual": {
+                              "filtered": true,
+                              "severity": "safe"
+                            },
+                            "violence": {
+                              "filtered": true,
+                              "severity": "safe"
+                            }
+                          },
+                          "revised_prompt": "string",
+                          "url": "https://www.contoso.com"
+                        }
+                      ]
+                    }
+                  }
+                },
+                "schemaId": "687574fd217d201b2093b60c",
+                "typeName": "generateImagesResponse"
+              }
+            ],
+            "statusCode": 200
+          },
+          {
+            "description": "An error occurred.",
+            "headers": [],
+            "representations": [
+              {
+                "contentType": "application/json",
+                "examples": {
+                  "default": {
+                    "value": {
+                      "error": {
+                        "code": "string",
+                        "inner_error": {
+                          "code": "ResponsibleAIPolicyViolation",
+                          "content_filter_results": {
+                            "hate": {
+                              "filtered": true,
+                              "severity": "safe"
+                            },
+                            "jailbreak": {
+                              "detected": true,
+                              "filtered": true
+                            },
+                            "profanity": {
+                              "detected": true,
+                              "filtered": true
+                            },
+                            "self_harm": {
+                              "filtered": true,
+                              "severity": "safe"
+                            },
+                            "sexual": {
+                              "filtered": true,
+                              "severity": "safe"
+                            },
+                            "violence": {
+                              "filtered": true,
+                              "severity": "safe"
+                            }
+                          },
+                          "revised_prompt": "string"
+                        },
+                        "message": "string",
+                        "param": "string",
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "schemaId": "687574fd217d201b2093b60c",
+                "typeName": "dalleErrorResponse"
+              }
+            ],
+            "statusCode": 400
+          },
+          {
+            "description": "An error occurred.",
+            "headers": [],
+            "representations": [
+              {
+                "contentType": "application/json",
+                "examples": {
+                  "default": {
+                    "value": {
+                      "error": {
+                        "code": "string",
+                        "inner_error": {
+                          "code": "ResponsibleAIPolicyViolation",
+                          "content_filter_results": {
+                            "hate": {
+                              "filtered": true,
+                              "severity": "safe"
+                            },
+                            "jailbreak": {
+                              "detected": true,
+                              "filtered": true
+                            },
+                            "profanity": {
+                              "detected": true,
+                              "filtered": true
+                            },
+                            "self_harm": {
+                              "filtered": true,
+                              "severity": "safe"
+                            },
+                            "sexual": {
+                              "filtered": true,
+                              "severity": "safe"
+                            },
+                            "violence": {
+                              "filtered": true,
+                              "severity": "safe"
+                            }
+                          },
+                          "revised_prompt": "string"
+                        },
+                        "message": "string",
+                        "param": "string",
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "schemaId": "687574fd217d201b2093b60c",
+                "typeName": "dalleErrorResponse"
+              }
+            ],
+            "statusCode": 500
+          }
+        ],
+        "templateParameters": [
+          {
+            "name": "deployment-id",
+            "required": true,
+            "schemaId": "687574fd217d201b2093b60c",
+            "type": "string",
+            "typeName": "Deployments-deployment-id-ImagesGenerationsPostRequest",
+            "values": []
+          },
+          {
+            "name": "api-version",
+            "required": true,
+            "schemaId": "687574fd217d201b2093b60c",
+            "type": "string",
+            "typeName": "Deployments-deployment-id-ImagesGenerationsPostRequest-1",
+            "values": []
+          }
+        ],
+        "urlTemplate": "/deployments/{deployment-id}/images/generations?api-version={api-version}"
+      },
+      "type": "Microsoft.ApiManagement/service/apis/operations"
+    },
+    {
+      "apiVersion": "2024-06-01-preview",
+      "dependsOn": [
+        "[resourceId('Microsoft.ApiManagement/service/apis', parameters('service_rocky_apim_test_2_name'), 'echo-api')]",
+        "[resourceId('Microsoft.ApiManagement/service', parameters('service_rocky_apim_test_2_name'))]"
+      ],
+      "name": "[concat(parameters('service_rocky_apim_test_2_name'), '/echo-api/modify-resource')]",
+      "properties": {
+        "description": "A demonstration of a PUT call handled by the same \"echo\" backend as above. You can now specify a request body in addition to headers and it will be returned as well.",
+        "displayName": "Modify Resource",
+        "method": "PUT",
+        "responses": [
+          {
+            "headers": [],
+            "representations": [],
+            "statusCode": 200
+          }
+        ],
+        "templateParameters": [],
+        "urlTemplate": "/resource"
+      },
+      "type": "Microsoft.ApiManagement/service/apis/operations"
+    },
+    {
+      "apiVersion": "2024-06-01-preview",
+      "dependsOn": [
+        "[resourceId('Microsoft.ApiManagement/service/apis', parameters('service_rocky_apim_test_2_name'), 'echo-api')]",
+        "[resourceId('Microsoft.ApiManagement/service', parameters('service_rocky_apim_test_2_name'))]"
+      ],
+      "name": "[concat(parameters('service_rocky_apim_test_2_name'), '/echo-api/remove-resource')]",
+      "properties": {
+        "description": "A demonstration of a DELETE call which traditionally deletes the resource. It is based on the same \"echo\" backend as in all other operations so nothing is actually deleted.",
+        "displayName": "Remove resource",
+        "method": "DELETE",
+        "responses": [
+          {
+            "headers": [],
+            "representations": [],
+            "statusCode": 200
+          }
+        ],
+        "templateParameters": [],
+        "urlTemplate": "/resource"
+      },
+      "type": "Microsoft.ApiManagement/service/apis/operations"
+    },
+    {
+      "apiVersion": "2024-06-01-preview",
+      "dependsOn": [
+        "[resourceId('Microsoft.ApiManagement/service/apis', parameters('service_rocky_apim_test_2_name'), 'echo-api')]",
+        "[resourceId('Microsoft.ApiManagement/service', parameters('service_rocky_apim_test_2_name'))]"
+      ],
+      "name": "[concat(parameters('service_rocky_apim_test_2_name'), '/echo-api/retrieve-header-only')]",
+      "properties": {
+        "description": "The HEAD operation returns only headers. In this demonstration a policy is used to set additional headers when the response is returned and to enable JSONP.",
+        "displayName": "Retrieve header only",
+        "method": "HEAD",
+        "responses": [
+          {
+            "headers": [],
+            "representations": [],
+            "statusCode": 200
+          }
+        ],
+        "templateParameters": [],
+        "urlTemplate": "/resource"
+      },
+      "type": "Microsoft.ApiManagement/service/apis/operations"
+    },
+    {
+      "apiVersion": "2024-06-01-preview",
+      "dependsOn": [
+        "[resourceId('Microsoft.ApiManagement/service/apis', parameters('service_rocky_apim_test_2_name'), 'echo-api')]",
+        "[resourceId('Microsoft.ApiManagement/service', parameters('service_rocky_apim_test_2_name'))]"
+      ],
+      "name": "[concat(parameters('service_rocky_apim_test_2_name'), '/echo-api/retrieve-resource')]",
+      "properties": {
+        "description": "A demonstration of a GET call on a sample resource. It is handled by an \"echo\" backend which returns a response equal to the request (the supplied headers and body are being returned as received).",
+        "displayName": "Retrieve resource",
+        "method": "GET",
+        "request": {
+          "headers": [],
+          "queryParameters": [
+            {
+              "defaultValue": "sample",
+              "description": "A sample parameter that is required and has a default value of \"sample\".",
+              "name": "param1",
+              "required": true,
+              "type": "string",
+              "values": [
+                "sample"
+              ]
+            },
+            {
+              "description": "Another sample parameter, set to not required.",
+              "name": "param2",
+              "type": "number",
+              "values": []
+            }
+          ],
+          "representations": []
+        },
+        "responses": [
+          {
+            "description": "Returned in all cases.",
+            "headers": [],
+            "representations": [],
+            "statusCode": 200
+          }
+        ],
+        "templateParameters": [],
+        "urlTemplate": "/resource"
+      },
+      "type": "Microsoft.ApiManagement/service/apis/operations"
+    },
+    {
+      "apiVersion": "2024-06-01-preview",
+      "dependsOn": [
+        "[resourceId('Microsoft.ApiManagement/service/apis', parameters('service_rocky_apim_test_2_name'), 'echo-api')]",
+        "[resourceId('Microsoft.ApiManagement/service', parameters('service_rocky_apim_test_2_name'))]"
+      ],
+      "name": "[concat(parameters('service_rocky_apim_test_2_name'), '/echo-api/retrieve-resource-cached')]",
+      "properties": {
+        "description": "A demonstration of a GET call with caching enabled on the same \"echo\" backend as above. Cache TTL is set to 1 hour. When you make the first request the headers you supplied will be cached. Subsequent calls will return the same headers as the first time even if you change them in your request.",
+        "displayName": "Retrieve resource (cached)",
+        "method": "GET",
+        "request": {
+          "headers": [],
+          "queryParameters": [
+            {
+              "defaultValue": "sample",
+              "description": "A sample parameter that is required and has a default value of \"sample\".",
+              "name": "param1",
+              "required": true,
+              "type": "string",
+              "values": [
+                "sample"
+              ]
+            },
+            {
+              "description": "Another sample parameter, set to not required.",
+              "name": "param2",
+              "type": "string",
+              "values": []
+            }
+          ],
+          "representations": []
+        },
+        "responses": [
+          {
+            "headers": [],
+            "representations": [],
+            "statusCode": 200
+          }
+        ],
+        "templateParameters": [],
+        "urlTemplate": "/resource-cached"
+      },
+      "type": "Microsoft.ApiManagement/service/apis/operations"
+    },
+    {
+      "apiVersion": "2024-06-01-preview",
+      "dependsOn": [
+        "[resourceId('Microsoft.ApiManagement/service/apis', parameters('service_rocky_apim_test_2_name'), 'rocky-chat-api')]",
+        "[resourceId('Microsoft.ApiManagement/service', parameters('service_rocky_apim_test_2_name'))]"
+      ],
+      "name": "[concat(parameters('service_rocky_apim_test_2_name'), '/rocky-chat-api/Transcriptions_Create')]",
+      "properties": {
+        "description": "Transcribes audio into the input language.",
+        "displayName": "Transcribes audio into the input language.",
+        "method": "POST",
+        "request": {
+          "headers": [],
+          "queryParameters": [],
+          "representations": [
+            {
+              "contentType": "multipart/form-data",
+              "formParameters": [
+                {
+                  "description": "The audio file object to transcribe.",
+                  "name": "file",
+                  "required": true,
+                  "type": "string",
+                  "values": []
+                },
+                {
+                  "description": "An optional text to guide the model's style or continue a previous audio segment. The prompt should match the audio language.",
+                  "name": "prompt",
+                  "type": "string",
+                  "values": []
+                },
+                {
+                  "description": "AudioResponseFormat",
+                  "name": "response_format",
+                  "schemaId": "audioResponseFormat",
+                  "type": "string",
+                  "values": [
+                    "json",
+                    "text",
+                    "srt",
+                    "verbose_json",
+                    "vtt"
+                  ]
+                },
+                {
+                  "defaultValue": "0",
+                  "description": "The sampling temperature, between 0 and 1. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic. If set to 0, the model will use log probability to automatically increase the temperature until certain thresholds are hit.",
+                  "name": "temperature",
+                  "type": "number",
+                  "values": []
+                },
+                {
+                  "description": "The language of the input audio. Supplying the input language in ISO-639-1 format will improve accuracy and latency.",
+                  "name": "language",
+                  "type": "string",
+                  "values": []
+                }
+              ]
+            }
+          ]
+        },
+        "responses": [
+          {
+            "description": "OK",
+            "headers": [],
+            "representations": [
+              {
+                "contentType": "application/json",
+                "examples": {
+                  "default": {
+                    "value": {
+                      "text": "string"
+                    }
+                  }
+                },
+                "schemaId": "687574fd217d201b2093b60c",
+                "typeName": "Deployments-deployment-id-AudioTranscriptionsPost200ApplicationJsonResponse"
+              },
+              {
+                "contentType": "text/plain",
+                "examples": {
+                  "default": {}
+                },
+                "schemaId": "687574fd217d201b2093b60c",
+                "typeName": "Deployments-deployment-id-AudioTranscriptionsPost200TextPlainResponse"
+              }
+            ],
+            "statusCode": 200
+          }
+        ],
+        "templateParameters": [
+          {
+            "name": "deployment-id",
+            "required": true,
+            "schemaId": "687574fd217d201b2093b60c",
+            "type": "string",
+            "typeName": "Deployments-deployment-id-AudioTranscriptionsPostRequest",
+            "values": []
+          },
+          {
+            "name": "api-version",
+            "required": true,
+            "schemaId": "687574fd217d201b2093b60c",
+            "type": "string",
+            "typeName": "Deployments-deployment-id-AudioTranscriptionsPostRequest-1",
+            "values": []
+          }
+        ],
+        "urlTemplate": "/deployments/{deployment-id}/audio/transcriptions?api-version={api-version}"
+      },
+      "type": "Microsoft.ApiManagement/service/apis/operations"
+    },
+    {
+      "apiVersion": "2024-06-01-preview",
+      "dependsOn": [
+        "[resourceId('Microsoft.ApiManagement/service/apis', parameters('service_rocky_apim_test_2_name'), 'rocky-chat-api')]",
+        "[resourceId('Microsoft.ApiManagement/service', parameters('service_rocky_apim_test_2_name'))]"
+      ],
+      "name": "[concat(parameters('service_rocky_apim_test_2_name'), '/rocky-chat-api/Translations_Create')]",
+      "properties": {
+        "description": "Transcribes and translates input audio into English text.",
+        "displayName": "Transcribes and translates input audio into English text.",
+        "method": "POST",
+        "request": {
+          "headers": [],
+          "queryParameters": [],
+          "representations": [
+            {
+              "contentType": "multipart/form-data",
+              "formParameters": [
+                {
+                  "description": "The audio file to translate.",
+                  "name": "file",
+                  "required": true,
+                  "type": "string",
+                  "values": []
+                },
+                {
+                  "description": "An optional text to guide the model's style or continue a previous audio segment. The prompt should be in English.",
+                  "name": "prompt",
+                  "type": "string",
+                  "values": []
+                },
+                {
+                  "description": "AudioResponseFormat",
+                  "name": "response_format",
+                  "schemaId": "audioResponseFormat",
+                  "type": "string",
+                  "values": [
+                    "json",
+                    "text",
+                    "srt",
+                    "verbose_json",
+                    "vtt"
+                  ]
+                },
+                {
+                  "defaultValue": "0",
+                  "description": "The sampling temperature, between 0 and 1. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic. If set to 0, the model will use log probability to automatically increase the temperature until certain thresholds are hit.",
+                  "name": "temperature",
+                  "type": "number",
+                  "values": []
+                }
+              ]
+            }
+          ]
+        },
+        "responses": [
+          {
+            "description": "OK",
+            "headers": [],
+            "representations": [
+              {
+                "contentType": "application/json",
+                "examples": {
+                  "default": {
+                    "value": {
+                      "text": "string"
+                    }
+                  }
+                },
+                "schemaId": "687574fd217d201b2093b60c",
+                "typeName": "Deployments-deployment-id-AudioTranslationsPost200ApplicationJsonResponse"
+              },
+              {
+                "contentType": "text/plain",
+                "examples": {
+                  "default": {}
+                },
+                "schemaId": "687574fd217d201b2093b60c",
+                "typeName": "Deployments-deployment-id-AudioTranslationsPost200TextPlainResponse"
+              }
+            ],
+            "statusCode": 200
+          }
+        ],
+        "templateParameters": [
+          {
+            "name": "deployment-id",
+            "required": true,
+            "schemaId": "687574fd217d201b2093b60c",
+            "type": "string",
+            "typeName": "Deployments-deployment-id-AudioTranslationsPostRequest",
+            "values": []
+          },
+          {
+            "name": "api-version",
+            "required": true,
+            "schemaId": "687574fd217d201b2093b60c",
+            "type": "string",
+            "typeName": "Deployments-deployment-id-AudioTranslationsPostRequest-1",
+            "values": []
+          }
+        ],
+        "urlTemplate": "/deployments/{deployment-id}/audio/translations?api-version={api-version}"
+      },
+      "type": "Microsoft.ApiManagement/service/apis/operations"
+    },
+    {
+      "apiVersion": "2024-06-01-preview",
+      "dependsOn": [
+        "[resourceId('Microsoft.ApiManagement/service/apis', parameters('service_rocky_apim_test_2_name'), 'rocky-chat-api')]",
+        "[resourceId('Microsoft.ApiManagement/service', parameters('service_rocky_apim_test_2_name'))]"
+      ],
+      "name": "[concat(parameters('service_rocky_apim_test_2_name'), '/rocky-chat-api/policy')]",
+      "properties": {
+        "format": "xml",
+        "value": "<policies>\r\n  <inbound>\r\n    <base />\r\n    <set-backend-service id=\"apim-generated-policy\" backend-id=\"rocky-chat-api-openai-endpoint\" />\r\n  </inbound>\r\n  <backend>\r\n    <base />\r\n  </backend>\r\n  <outbound>\r\n    <base />\r\n  </outbound>\r\n  <on-error>\r\n    <base />\r\n  </on-error>\r\n</policies>"
+      },
+      "type": "Microsoft.ApiManagement/service/apis/policies"
+    },
+    {
+      "apiVersion": "2024-06-01-preview",
+      "dependsOn": [
+        "[resourceId('Microsoft.ApiManagement/service/apis', parameters('service_rocky_apim_test_2_name'), 'rocky-chat-api')]",
+        "[resourceId('Microsoft.ApiManagement/service', parameters('service_rocky_apim_test_2_name'))]"
+      ],
+      "name": "[concat(parameters('service_rocky_apim_test_2_name'), '/rocky-chat-api/687574fd217d201b2093b60c')]",
+      "properties": {
+        "contentType": "application/vnd.oai.openapi.components+json",
+        "document": {}
+      },
+      "type": "Microsoft.ApiManagement/service/apis/schemas"
+    },
+    {
+      "apiVersion": "2024-06-01-preview",
+      "dependsOn": [
+        "[resourceId('Microsoft.ApiManagement/service/apis', parameters('service_rocky_apim_test_2_name'), 'echo-api')]",
+        "[resourceId('Microsoft.ApiManagement/service', parameters('service_rocky_apim_test_2_name'))]"
+      ],
+      "name": "[concat(parameters('service_rocky_apim_test_2_name'), '/echo-api/default')]",
+      "properties": {
+        "documents": []
+      },
+      "type": "Microsoft.ApiManagement/service/apis/wikis"
+    },
+    {
+      "apiVersion": "2024-06-01-preview",
+      "dependsOn": [
+        "[resourceId('Microsoft.ApiManagement/service/apis', parameters('service_rocky_apim_test_2_name'), 'rocky-chat-api')]",
+        "[resourceId('Microsoft.ApiManagement/service', parameters('service_rocky_apim_test_2_name'))]"
+      ],
+      "name": "[concat(parameters('service_rocky_apim_test_2_name'), '/rocky-chat-api/default')]",
+      "properties": {
+        "documents": []
+      },
+      "type": "Microsoft.ApiManagement/service/apis/wikis"
+    },
+    {
+      "apiVersion": "2024-06-01-preview",
+      "dependsOn": [
+        "[resourceId('Microsoft.ApiManagement/service', parameters('service_rocky_apim_test_2_name'))]",
+        "[resourceId('Microsoft.ApiManagement/service/loggers', parameters('service_rocky_apim_test_2_name'), 'azuremonitor')]"
+      ],
+      "name": "[concat(parameters('service_rocky_apim_test_2_name'), '/azuremonitor')]",
+      "properties": {
+        "backend": {
+          "request": {
+            "dataMasking": {
+              "queryParams": [
+                {
+                  "mode": "Hide",
+                  "value": "*"
+                }
+              ]
+            }
+          }
+        },
+        "frontend": {
+          "request": {
+            "dataMasking": {
+              "queryParams": [
+                {
+                  "mode": "Hide",
+                  "value": "*"
+                }
+              ]
+            }
+          }
+        },
+        "logClientIp": true,
+        "loggerId": "[resourceId('Microsoft.ApiManagement/service/loggers', parameters('service_rocky_apim_test_2_name'), 'azuremonitor')]",
+        "sampling": {
+          "percentage": 100,
+          "samplingType": "fixed"
+        }
+      },
+      "type": "Microsoft.ApiManagement/service/diagnostics"
+    },
+    {
+      "apiVersion": "2018-01-01",
+      "dependsOn": [
+        "[resourceId('Microsoft.ApiManagement/service/diagnostics', parameters('service_rocky_apim_test_2_name'), 'azuremonitor')]",
+        "[resourceId('Microsoft.ApiManagement/service', parameters('service_rocky_apim_test_2_name'))]"
+      ],
+      "name": "[concat(parameters('service_rocky_apim_test_2_name'), '/azuremonitor/azuremonitor')]",
+      "type": "Microsoft.ApiManagement/service/diagnostics/loggers"
+    },
+    {
+      "apiVersion": "2024-06-01-preview",
+      "dependsOn": [
+        "[resourceId('Microsoft.ApiManagement/service/groups', parameters('service_rocky_apim_test_2_name'), 'administrators')]",
+        "[resourceId('Microsoft.ApiManagement/service', parameters('service_rocky_apim_test_2_name'))]"
+      ],
+      "name": "[concat(parameters('service_rocky_apim_test_2_name'), '/administrators/1')]",
+      "type": "Microsoft.ApiManagement/service/groups/users"
+    },
+    {
+      "apiVersion": "2024-06-01-preview",
+      "dependsOn": [
+        "[resourceId('Microsoft.ApiManagement/service/groups', parameters('service_rocky_apim_test_2_name'), 'developers')]",
+        "[resourceId('Microsoft.ApiManagement/service', parameters('service_rocky_apim_test_2_name'))]"
+      ],
+      "name": "[concat(parameters('service_rocky_apim_test_2_name'), '/developers/1')]",
+      "type": "Microsoft.ApiManagement/service/groups/users"
+    },
+    {
+      "apiVersion": "2024-06-01-preview",
+      "dependsOn": [
+        "[resourceId('Microsoft.ApiManagement/service/products', parameters('service_rocky_apim_test_2_name'), 'starter')]",
+        "[resourceId('Microsoft.ApiManagement/service', parameters('service_rocky_apim_test_2_name'))]"
+      ],
+      "name": "[concat(parameters('service_rocky_apim_test_2_name'), '/starter/echo-api')]",
+      "type": "Microsoft.ApiManagement/service/products/apis"
+    },
+    {
+      "apiVersion": "2024-06-01-preview",
+      "dependsOn": [
+        "[resourceId('Microsoft.ApiManagement/service/products', parameters('service_rocky_apim_test_2_name'), 'unlimited')]",
+        "[resourceId('Microsoft.ApiManagement/service', parameters('service_rocky_apim_test_2_name'))]"
+      ],
+      "name": "[concat(parameters('service_rocky_apim_test_2_name'), '/unlimited/echo-api')]",
+      "type": "Microsoft.ApiManagement/service/products/apis"
+    },
+    {
+      "apiVersion": "2024-06-01-preview",
+      "dependsOn": [
+        "[resourceId('Microsoft.ApiManagement/service/products', parameters('service_rocky_apim_test_2_name'), 'starter')]",
+        "[resourceId('Microsoft.ApiManagement/service', parameters('service_rocky_apim_test_2_name'))]"
+      ],
+      "name": "[concat(parameters('service_rocky_apim_test_2_name'), '/starter/administrators')]",
+      "type": "Microsoft.ApiManagement/service/products/groups"
+    },
+    {
+      "apiVersion": "2024-06-01-preview",
+      "dependsOn": [
+        "[resourceId('Microsoft.ApiManagement/service/products', parameters('service_rocky_apim_test_2_name'), 'unlimited')]",
+        "[resourceId('Microsoft.ApiManagement/service', parameters('service_rocky_apim_test_2_name'))]"
+      ],
+      "name": "[concat(parameters('service_rocky_apim_test_2_name'), '/unlimited/administrators')]",
+      "type": "Microsoft.ApiManagement/service/products/groups"
+    },
+    {
+      "apiVersion": "2024-06-01-preview",
+      "dependsOn": [
+        "[resourceId('Microsoft.ApiManagement/service/products', parameters('service_rocky_apim_test_2_name'), 'starter')]",
+        "[resourceId('Microsoft.ApiManagement/service', parameters('service_rocky_apim_test_2_name'))]"
+      ],
+      "name": "[concat(parameters('service_rocky_apim_test_2_name'), '/starter/developers')]",
+      "type": "Microsoft.ApiManagement/service/products/groups"
+    },
+    {
+      "apiVersion": "2024-06-01-preview",
+      "dependsOn": [
+        "[resourceId('Microsoft.ApiManagement/service/products', parameters('service_rocky_apim_test_2_name'), 'unlimited')]",
+        "[resourceId('Microsoft.ApiManagement/service', parameters('service_rocky_apim_test_2_name'))]"
+      ],
+      "name": "[concat(parameters('service_rocky_apim_test_2_name'), '/unlimited/developers')]",
+      "type": "Microsoft.ApiManagement/service/products/groups"
+    },
+    {
+      "apiVersion": "2024-06-01-preview",
+      "dependsOn": [
+        "[resourceId('Microsoft.ApiManagement/service/products', parameters('service_rocky_apim_test_2_name'), 'starter')]",
+        "[resourceId('Microsoft.ApiManagement/service', parameters('service_rocky_apim_test_2_name'))]"
+      ],
+      "name": "[concat(parameters('service_rocky_apim_test_2_name'), '/starter/guests')]",
+      "type": "Microsoft.ApiManagement/service/products/groups"
+    },
+    {
+      "apiVersion": "2024-06-01-preview",
+      "dependsOn": [
+        "[resourceId('Microsoft.ApiManagement/service/products', parameters('service_rocky_apim_test_2_name'), 'unlimited')]",
+        "[resourceId('Microsoft.ApiManagement/service', parameters('service_rocky_apim_test_2_name'))]"
+      ],
+      "name": "[concat(parameters('service_rocky_apim_test_2_name'), '/unlimited/guests')]",
+      "type": "Microsoft.ApiManagement/service/products/groups"
+    },
+    {
+      "apiVersion": "2024-06-01-preview",
+      "dependsOn": [
+        "[resourceId('Microsoft.ApiManagement/service/products', parameters('service_rocky_apim_test_2_name'), 'starter')]",
+        "[resourceId('Microsoft.ApiManagement/service', parameters('service_rocky_apim_test_2_name'))]"
+      ],
+      "name": "[concat(parameters('service_rocky_apim_test_2_name'), '/starter/policy')]",
+      "properties": {
+        "format": "xml",
+        "value": "<!--\r\n            IMPORTANT:\r\n            - Policy elements can appear only within the <inbound>, <outbound>, <backend> section elements.\r\n            - Only the <forward-request> policy element can appear within the <backend> section element.\r\n            - To apply a policy to the incoming request (before it is forwarded to the backend service), place a corresponding policy element within the <inbound> section element.\r\n            - To apply a policy to the outgoing response (before it is sent back to the caller), place a corresponding policy element within the <outbound> section element.\r\n            - To add a policy position the cursor at the desired insertion point and click on the round button associated with the policy.\r\n            - To remove a policy, delete the corresponding policy statement from the policy document.\r\n            - Position the <base> element within a section element to inherit all policies from the corresponding section element in the enclosing scope.\r\n            - Remove the <base> element to prevent inheriting policies from the corresponding section element in the enclosing scope.\r\n            - Policies are applied in the order of their appearance, from the top down.\r\n        -->\r\n<policies>\r\n  <inbound>\r\n    <rate-limit calls=\"5\" renewal-period=\"60\" />\r\n    <quota calls=\"100\" renewal-period=\"604800\" />\r\n    <base />\r\n  </inbound>\r\n  <backend>\r\n    <base />\r\n  </backend>\r\n  <outbound>\r\n    <base />\r\n  </outbound>\r\n</policies>"
+      },
+      "type": "Microsoft.ApiManagement/service/products/policies"
+    },
+    {
+      "apiVersion": "2024-06-01-preview",
+      "dependsOn": [
+        "[resourceId('Microsoft.ApiManagement/service/products', parameters('service_rocky_apim_test_2_name'), 'starter')]",
+        "[resourceId('Microsoft.ApiManagement/service', parameters('service_rocky_apim_test_2_name'))]"
+      ],
+      "name": "[concat(parameters('service_rocky_apim_test_2_name'), '/starter/default')]",
+      "properties": {
+        "documents": []
+      },
+      "type": "Microsoft.ApiManagement/service/products/wikis"
+    },
+    {
+      "apiVersion": "2024-06-01-preview",
+      "dependsOn": [
+        "[resourceId('Microsoft.ApiManagement/service/products', parameters('service_rocky_apim_test_2_name'), 'unlimited')]",
+        "[resourceId('Microsoft.ApiManagement/service', parameters('service_rocky_apim_test_2_name'))]"
+      ],
+      "name": "[concat(parameters('service_rocky_apim_test_2_name'), '/unlimited/default')]",
+      "properties": {
+        "documents": []
+      },
+      "type": "Microsoft.ApiManagement/service/products/wikis"
+    },
+    {
+      "apiVersion": "2024-07-01",
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/publicIPAddresses', parameters('publicIPAddresses_a7009d_test_vwan_spoke_ip_name'))]",
+        "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_a7009d_test_vwan_spoke_name'), 'AzureBastionSubnet')]"
+      ],
+      "location": "canadacentral",
+      "name": "[parameters('bastionHosts_a7009d_test_vwan_spoke_bastion_name')]",
+      "properties": {
+        "disableCopyPaste": false,
+        "dnsName": "bst-fb67c79f-1ed1-49fe-8e1d-faba37c7d71c.bastion.azure.com",
+        "enableIpConnect": false,
+        "enableKerberos": false,
+        "enablePrivateOnlyBastion": false,
+        "enableSessionRecording": false,
+        "enableShareableLink": false,
+        "enableTunneling": false,
+        "ipConfigurations": [
+          {
+            "id": "[concat(resourceId('Microsoft.Network/bastionHosts', parameters('bastionHosts_a7009d_test_vwan_spoke_bastion_name')), '/bastionHostIpConfigurations/IpConf')]",
+            "name": "IpConf",
+            "properties": {
+              "privateIPAllocationMethod": "Dynamic",
+              "publicIPAddress": {
+                "id": "[resourceId('Microsoft.Network/publicIPAddresses', parameters('publicIPAddresses_a7009d_test_vwan_spoke_ip_name'))]"
+              },
+              "subnet": {
+                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_a7009d_test_vwan_spoke_name'), 'AzureBastionSubnet')]"
+              }
+            }
+          }
+        ],
+        "scaleUnits": 2
+      },
+      "sku": {
+        "name": "Standard"
+      },
+      "tags": {
+        "billing_group": "a7009d",
+        "ministry_name": "CITZ"
+      },
+      "type": "Microsoft.Network/bastionHosts"
+    },
+    {
+      "apiVersion": "2024-07-01",
+      "dependsOn": [
+        "[resourceId('Microsoft.CognitiveServices/accounts', parameters('accounts_rockey_openai_test_name'))]",
+        "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_a7009d_test_vwan_spoke_name'), 'private-endpoints-subnet')]"
+      ],
+      "location": "canadacentral",
+      "name": "[parameters('privateEndpoints_Azure_Openai_Private_Endpoint_name')]",
+      "properties": {
+        "customDnsConfigs": [],
+        "customNetworkInterfaceName": "[concat(parameters('privateEndpoints_Azure_Openai_Private_Endpoint_name'), '-nic')]",
+        "ipConfigurations": [],
+        "manualPrivateLinkServiceConnections": [],
+        "privateLinkServiceConnections": [
+          {
+            "id": "[concat(resourceId('Microsoft.Network/privateEndpoints', parameters('privateEndpoints_Azure_Openai_Private_Endpoint_name')), concat('/privateLinkServiceConnections/', parameters('privateEndpoints_Azure_Openai_Private_Endpoint_name')))]",
+            "name": "[parameters('privateEndpoints_Azure_Openai_Private_Endpoint_name')]",
+            "properties": {
+              "groupIds": [
+                "account"
+              ],
+              "privateLinkServiceConnectionState": {
+                "actionsRequired": "None",
+                "description": "Approved",
+                "status": "Approved"
+              },
+              "privateLinkServiceId": "[resourceId('Microsoft.CognitiveServices/accounts', parameters('accounts_rockey_openai_test_name'))]"
+            }
+          }
+        ],
+        "subnet": {
+          "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_a7009d_test_vwan_spoke_name'), 'private-endpoints-subnet')]"
+        }
+      },
+      "tags": {
+        "billing_group": "a7009d",
+        "ministry_name": "CITZ"
+      },
+      "type": "Microsoft.Network/privateEndpoints"
+    },
+    {
+      "apiVersion": "2024-07-01",
+      "dependsOn": [
+        "[resourceId('Microsoft.Search/searchServices', parameters('searchServices_rocky_search_test_name'))]",
+        "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_a7009d_test_vwan_spoke_name'), 'private-endpoints-subnet')]"
+      ],
+      "location": "canadacentral",
+      "name": "[parameters('privateEndpoints_rocky_search_private_endpoint_name')]",
+      "properties": {
+        "customDnsConfigs": [],
+        "ipConfigurations": [],
+        "manualPrivateLinkServiceConnections": [],
+        "privateLinkServiceConnections": [
+          {
+            "id": "[concat(resourceId('Microsoft.Network/privateEndpoints', parameters('privateEndpoints_rocky_search_private_endpoint_name')), concat('/privateLinkServiceConnections/', parameters('privateEndpoints_rocky_search_private_endpoint_name'), '_4ad03e50-c38f-4405-8459-19f1ee47045e'))]",
+            "name": "[concat(parameters('privateEndpoints_rocky_search_private_endpoint_name'), '_4ad03e50-c38f-4405-8459-19f1ee47045e')]",
+            "properties": {
+              "groupIds": [
+                "searchService"
+              ],
+              "privateLinkServiceConnectionState": {
+                "actionsRequired": "None",
+                "description": "Auto-approved",
+                "status": "Approved"
+              },
+              "privateLinkServiceId": "[resourceId('Microsoft.Search/searchServices', parameters('searchServices_rocky_search_test_name'))]"
+            }
+          }
+        ],
+        "subnet": {
+          "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_a7009d_test_vwan_spoke_name'), 'private-endpoints-subnet')]"
+        }
+      },
+      "tags": {
+        "billing_group": "a7009d",
+        "ministry_name": "CITZ"
+      },
+      "type": "Microsoft.Network/privateEndpoints"
+    },
+    {
+      "apiVersion": "2024-07-01",
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_a7009d_test_vwan_spoke_name'))]",
+        "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_nsg_apim_name'))]"
+      ],
+      "name": "[concat(parameters('virtualNetworks_a7009d_test_vwan_spoke_name'), '/apim-subnet')]",
+      "properties": {
+        "addressPrefixes": [
+          "10.46.72.192/27"
+        ],
+        "delegations": [],
+        "networkSecurityGroup": {
+          "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_nsg_apim_name'))]"
+        },
+        "privateEndpointNetworkPolicies": "Disabled",
+        "privateLinkServiceNetworkPolicies": "Enabled"
+      },
+      "type": "Microsoft.Network/virtualNetworks/subnets"
+    },
+    {
+      "apiVersion": "2024-07-01",
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_a7009d_test_vwan_spoke_name'))]",
+        "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_nsg_bastion_name'))]"
+      ],
+      "name": "[concat(parameters('virtualNetworks_a7009d_test_vwan_spoke_name'), '/AzureBastionSubnet')]",
+      "properties": {
+        "addressPrefixes": [
+          "10.46.72.128/26"
+        ],
+        "delegations": [],
+        "networkSecurityGroup": {
+          "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_nsg_bastion_name'))]"
+        },
+        "privateEndpointNetworkPolicies": "Disabled",
+        "privateLinkServiceNetworkPolicies": "Enabled"
+      },
+      "type": "Microsoft.Network/virtualNetworks/subnets"
+    },
+    {
+      "apiVersion": "2024-07-01",
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_a7009d_test_vwan_spoke_name'))]",
+        "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_nsg_private_endpoints_name'))]"
+      ],
+      "name": "[concat(parameters('virtualNetworks_a7009d_test_vwan_spoke_name'), '/private-endpoints-subnet')]",
+      "properties": {
+        "addressPrefixes": [
+          "10.46.72.0/25"
+        ],
+        "delegations": [],
+        "networkSecurityGroup": {
+          "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_nsg_private_endpoints_name'))]"
+        },
+        "privateEndpointNetworkPolicies": "Disabled",
+        "privateLinkServiceNetworkPolicies": "Enabled"
+      },
+      "type": "Microsoft.Network/virtualNetworks/subnets"
+    },
+    {
+      "apiVersion": "2025-05-01",
+      "dependsOn": [
+        "[resourceId('Microsoft.Search/searchServices', parameters('searchServices_rocky_search_test_name'))]",
+        "[resourceId('Microsoft.Network/privateEndpoints', parameters('privateEndpoints_rocky_search_private_endpoint_name'))]"
+      ],
+      "name": "[concat(parameters('searchServices_rocky_search_test_name'), '/rocky-search-private-endpoint.b0b5887f-1066-4a19-a3d4-585801e2ea80')]",
+      "properties": {
+        "groupId": "searchService",
+        "privateEndpoint": {
+          "id": "[resourceId('Microsoft.Network/privateEndpoints', parameters('privateEndpoints_rocky_search_private_endpoint_name'))]"
+        },
+        "privateLinkServiceConnectionState": {
+          "actionsRequired": "None",
+          "description": "Auto-approved",
+          "status": "Approved"
+        },
+        "provisioningState": "Succeeded"
+      },
+      "type": "Microsoft.Search/searchServices/privateEndpointConnections"
+    },
+    {
+      "apiVersion": "2024-06-01-preview",
+      "dependsOn": [
+        "[resourceId('Microsoft.ApiManagement/service/apis/operations', parameters('service_rocky_apim_test_2_name'), 'echo-api', 'create-resource')]",
+        "[resourceId('Microsoft.ApiManagement/service/apis', parameters('service_rocky_apim_test_2_name'), 'echo-api')]",
+        "[resourceId('Microsoft.ApiManagement/service', parameters('service_rocky_apim_test_2_name'))]"
+      ],
+      "name": "[concat(parameters('service_rocky_apim_test_2_name'), '/echo-api/create-resource/policy')]",
+      "properties": {
+        "format": "xml",
+        "value": "<policies>\r\n  <inbound>\r\n    <base />\r\n    <json-to-xml apply=\"always\" consider-accept-header=\"false\" />\r\n  </inbound>\r\n  <backend>\r\n    <base />\r\n  </backend>\r\n  <outbound>\r\n    <base />\r\n  </outbound>\r\n</policies>"
+      },
+      "type": "Microsoft.ApiManagement/service/apis/operations/policies"
+    },
+    {
+      "apiVersion": "2024-06-01-preview",
+      "dependsOn": [
+        "[resourceId('Microsoft.ApiManagement/service/apis/operations', parameters('service_rocky_apim_test_2_name'), 'echo-api', 'retrieve-header-only')]",
+        "[resourceId('Microsoft.ApiManagement/service/apis', parameters('service_rocky_apim_test_2_name'), 'echo-api')]",
+        "[resourceId('Microsoft.ApiManagement/service', parameters('service_rocky_apim_test_2_name'))]"
+      ],
+      "name": "[concat(parameters('service_rocky_apim_test_2_name'), '/echo-api/retrieve-header-only/policy')]",
+      "properties": {
+        "format": "xml",
+        "value": "<policies>\r\n  <inbound>\r\n    <base />\r\n  </inbound>\r\n  <backend>\r\n    <base />\r\n  </backend>\r\n  <outbound>\r\n    <base />\r\n    <set-header name=\"X-My-Sample\" exists-action=\"override\">\r\n      <value>This is a sample</value>\r\n      <!-- for multiple headers with the same name add additional value elements -->\r\n    </set-header>\r\n    <jsonp callback-parameter-name=\"ProcessResponse\" />\r\n  </outbound>\r\n</policies>"
+      },
+      "type": "Microsoft.ApiManagement/service/apis/operations/policies"
+    },
+    {
+      "apiVersion": "2024-06-01-preview",
+      "dependsOn": [
+        "[resourceId('Microsoft.ApiManagement/service/apis/operations', parameters('service_rocky_apim_test_2_name'), 'echo-api', 'retrieve-resource-cached')]",
+        "[resourceId('Microsoft.ApiManagement/service/apis', parameters('service_rocky_apim_test_2_name'), 'echo-api')]",
+        "[resourceId('Microsoft.ApiManagement/service', parameters('service_rocky_apim_test_2_name'))]"
+      ],
+      "name": "[concat(parameters('service_rocky_apim_test_2_name'), '/echo-api/retrieve-resource-cached/policy')]",
+      "properties": {
+        "format": "xml",
+        "value": "<policies>\r\n  <inbound>\r\n    <base />\r\n    <cache-lookup vary-by-developer=\"false\" vary-by-developer-groups=\"false\">\r\n      <vary-by-header>Accept</vary-by-header>\r\n      <vary-by-header>Accept-Charset</vary-by-header>\r\n    </cache-lookup>\r\n    <rewrite-uri template=\"/resource\" />\r\n  </inbound>\r\n  <backend>\r\n    <base />\r\n  </backend>\r\n  <outbound>\r\n    <base />\r\n    <cache-store duration=\"3600\" />\r\n  </outbound>\r\n</policies>"
+      },
+      "type": "Microsoft.ApiManagement/service/apis/operations/policies"
+    },
+    {
+      "apiVersion": "2024-06-01-preview",
+      "dependsOn": [
+        "[resourceId('Microsoft.ApiManagement/service/products', parameters('service_rocky_apim_test_2_name'), 'starter')]",
+        "[resourceId('Microsoft.ApiManagement/service', parameters('service_rocky_apim_test_2_name'))]",
+        "[resourceId('Microsoft.ApiManagement/service/apis', parameters('service_rocky_apim_test_2_name'), 'echo-api')]"
+      ],
+      "name": "[concat(parameters('service_rocky_apim_test_2_name'), '/starter/20EBCEF5-384B-43F4-8B60-9BE79CEE4D75')]",
+      "properties": {
+        "apiId": "[resourceId('Microsoft.ApiManagement/service/apis', parameters('service_rocky_apim_test_2_name'), 'echo-api')]"
+      },
+      "type": "Microsoft.ApiManagement/service/products/apiLinks"
+    },
+    {
+      "apiVersion": "2024-06-01-preview",
+      "dependsOn": [
+        "[resourceId('Microsoft.ApiManagement/service/products', parameters('service_rocky_apim_test_2_name'), 'unlimited')]",
+        "[resourceId('Microsoft.ApiManagement/service', parameters('service_rocky_apim_test_2_name'))]",
+        "[resourceId('Microsoft.ApiManagement/service/apis', parameters('service_rocky_apim_test_2_name'), 'echo-api')]"
+      ],
+      "name": "[concat(parameters('service_rocky_apim_test_2_name'), '/unlimited/5881B143-8417-4D2B-A6DE-C847F088F710')]",
+      "properties": {
+        "apiId": "[resourceId('Microsoft.ApiManagement/service/apis', parameters('service_rocky_apim_test_2_name'), 'echo-api')]"
+      },
+      "type": "Microsoft.ApiManagement/service/products/apiLinks"
+    },
+    {
+      "apiVersion": "2024-06-01-preview",
+      "dependsOn": [
+        "[resourceId('Microsoft.ApiManagement/service/products', parameters('service_rocky_apim_test_2_name'), 'unlimited')]",
+        "[resourceId('Microsoft.ApiManagement/service', parameters('service_rocky_apim_test_2_name'))]",
+        "[resourceId('Microsoft.ApiManagement/service/groups', parameters('service_rocky_apim_test_2_name'), 'guests')]"
+      ],
+      "name": "[concat(parameters('service_rocky_apim_test_2_name'), '/unlimited/138D3579-9C5F-492E-9951-C4C9025CD9E3')]",
+      "properties": {
+        "groupId": "[resourceId('Microsoft.ApiManagement/service/groups', parameters('service_rocky_apim_test_2_name'), 'guests')]"
+      },
+      "type": "Microsoft.ApiManagement/service/products/groupLinks"
+    },
+    {
+      "apiVersion": "2024-06-01-preview",
+      "dependsOn": [
+        "[resourceId('Microsoft.ApiManagement/service/products', parameters('service_rocky_apim_test_2_name'), 'starter')]",
+        "[resourceId('Microsoft.ApiManagement/service', parameters('service_rocky_apim_test_2_name'))]",
+        "[resourceId('Microsoft.ApiManagement/service/groups', parameters('service_rocky_apim_test_2_name'), 'administrators')]"
+      ],
+      "name": "[concat(parameters('service_rocky_apim_test_2_name'), '/starter/777E51E6-3B4E-4183-86CD-C5793635542E')]",
+      "properties": {
+        "groupId": "[resourceId('Microsoft.ApiManagement/service/groups', parameters('service_rocky_apim_test_2_name'), 'administrators')]"
+      },
+      "type": "Microsoft.ApiManagement/service/products/groupLinks"
+    },
+    {
+      "apiVersion": "2024-06-01-preview",
+      "dependsOn": [
+        "[resourceId('Microsoft.ApiManagement/service/products', parameters('service_rocky_apim_test_2_name'), 'starter')]",
+        "[resourceId('Microsoft.ApiManagement/service', parameters('service_rocky_apim_test_2_name'))]",
+        "[resourceId('Microsoft.ApiManagement/service/groups', parameters('service_rocky_apim_test_2_name'), 'guests')]"
+      ],
+      "name": "[concat(parameters('service_rocky_apim_test_2_name'), '/starter/A7648625-7D37-4625-8783-8A25BFBB93BD')]",
+      "properties": {
+        "groupId": "[resourceId('Microsoft.ApiManagement/service/groups', parameters('service_rocky_apim_test_2_name'), 'guests')]"
+      },
+      "type": "Microsoft.ApiManagement/service/products/groupLinks"
+    },
+    {
+      "apiVersion": "2024-06-01-preview",
+      "dependsOn": [
+        "[resourceId('Microsoft.ApiManagement/service/products', parameters('service_rocky_apim_test_2_name'), 'unlimited')]",
+        "[resourceId('Microsoft.ApiManagement/service', parameters('service_rocky_apim_test_2_name'))]",
+        "[resourceId('Microsoft.ApiManagement/service/groups', parameters('service_rocky_apim_test_2_name'), 'developers')]"
+      ],
+      "name": "[concat(parameters('service_rocky_apim_test_2_name'), '/unlimited/A8A2FF4A-1634-4391-9D60-CF2BE85338D0')]",
+      "properties": {
+        "groupId": "[resourceId('Microsoft.ApiManagement/service/groups', parameters('service_rocky_apim_test_2_name'), 'developers')]"
+      },
+      "type": "Microsoft.ApiManagement/service/products/groupLinks"
+    },
+    {
+      "apiVersion": "2024-06-01-preview",
+      "dependsOn": [
+        "[resourceId('Microsoft.ApiManagement/service/products', parameters('service_rocky_apim_test_2_name'), 'unlimited')]",
+        "[resourceId('Microsoft.ApiManagement/service', parameters('service_rocky_apim_test_2_name'))]",
+        "[resourceId('Microsoft.ApiManagement/service/groups', parameters('service_rocky_apim_test_2_name'), 'administrators')]"
+      ],
+      "name": "[concat(parameters('service_rocky_apim_test_2_name'), '/unlimited/D3AD68DA-6C40-47CA-B498-42C4E2222F84')]",
+      "properties": {
+        "groupId": "[resourceId('Microsoft.ApiManagement/service/groups', parameters('service_rocky_apim_test_2_name'), 'administrators')]"
+      },
+      "type": "Microsoft.ApiManagement/service/products/groupLinks"
+    },
+    {
+      "apiVersion": "2024-06-01-preview",
+      "dependsOn": [
+        "[resourceId('Microsoft.ApiManagement/service/products', parameters('service_rocky_apim_test_2_name'), 'starter')]",
+        "[resourceId('Microsoft.ApiManagement/service', parameters('service_rocky_apim_test_2_name'))]",
+        "[resourceId('Microsoft.ApiManagement/service/groups', parameters('service_rocky_apim_test_2_name'), 'developers')]"
+      ],
+      "name": "[concat(parameters('service_rocky_apim_test_2_name'), '/starter/FAFB886D-3F2A-4916-9194-7139633964F3')]",
+      "properties": {
+        "groupId": "[resourceId('Microsoft.ApiManagement/service/groups', parameters('service_rocky_apim_test_2_name'), 'developers')]"
+      },
+      "type": "Microsoft.ApiManagement/service/products/groupLinks"
+    },
+    {
+      "apiVersion": "2024-06-01-preview",
+      "dependsOn": [
+        "[resourceId('Microsoft.ApiManagement/service', parameters('service_rocky_apim_test_2_name'))]",
+        "[resourceId('Microsoft.ApiManagement/service/users', parameters('service_rocky_apim_test_2_name'), '1')]",
+        "[resourceId('Microsoft.ApiManagement/service/products', parameters('service_rocky_apim_test_2_name'), 'starter')]"
+      ],
+      "name": "[concat(parameters('service_rocky_apim_test_2_name'), '/68756f5bd5619c0075070001')]",
+      "properties": {
+        "allowTracing": false,
+        "displayName": "[parameters('subscriptions_68756f5bd5619c0075070001_displayName')]",
+        "ownerId": "[resourceId('Microsoft.ApiManagement/service/users', parameters('service_rocky_apim_test_2_name'), '1')]",
+        "scope": "[resourceId('Microsoft.ApiManagement/service/products', parameters('service_rocky_apim_test_2_name'), 'starter')]",
+        "state": "active"
+      },
+      "type": "Microsoft.ApiManagement/service/subscriptions"
+    },
+    {
+      "apiVersion": "2024-06-01-preview",
+      "dependsOn": [
+        "[resourceId('Microsoft.ApiManagement/service', parameters('service_rocky_apim_test_2_name'))]",
+        "[resourceId('Microsoft.ApiManagement/service/users', parameters('service_rocky_apim_test_2_name'), '1')]",
+        "[resourceId('Microsoft.ApiManagement/service/products', parameters('service_rocky_apim_test_2_name'), 'unlimited')]"
+      ],
+      "name": "[concat(parameters('service_rocky_apim_test_2_name'), '/68756f5bd5619c0075070002')]",
+      "properties": {
+        "allowTracing": false,
+        "displayName": "[parameters('subscriptions_68756f5bd5619c0075070002_displayName')]",
+        "ownerId": "[resourceId('Microsoft.ApiManagement/service/users', parameters('service_rocky_apim_test_2_name'), '1')]",
+        "scope": "[resourceId('Microsoft.ApiManagement/service/products', parameters('service_rocky_apim_test_2_name'), 'unlimited')]",
+        "state": "active"
+      },
+      "type": "Microsoft.ApiManagement/service/subscriptions"
+    },
+    {
+      "apiVersion": "2024-07-01",
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_nsg_private_endpoints_name'))]",
+        "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_nsg_bastion_name'))]",
+        "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_nsg_apim_name'))]"
+      ],
+      "location": "canadacentral",
+      "name": "[parameters('virtualNetworks_a7009d_test_vwan_spoke_name')]",
+      "properties": {
+        "addressSpace": {
+          "addressPrefixes": [
+            "10.46.72.0/24"
+          ]
+        },
+        "dhcpOptions": {
+          "dnsServers": [
+            "10.53.244.4"
+          ]
+        },
+        "enableDdosProtection": false,
+        "privateEndpointVNetPolicies": "Disabled",
+        "subnets": [
+          {
+            "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_a7009d_test_vwan_spoke_name'), 'private-endpoints-subnet')]",
+            "name": "private-endpoints-subnet",
+            "properties": {
+              "addressPrefixes": [
+                "10.46.72.0/25"
+              ],
+              "delegations": [],
+              "networkSecurityGroup": {
+                "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_nsg_private_endpoints_name'))]"
+              },
+              "privateEndpointNetworkPolicies": "Disabled",
+              "privateLinkServiceNetworkPolicies": "Enabled"
+            },
+            "type": "Microsoft.Network/virtualNetworks/subnets"
+          },
+          {
+            "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_a7009d_test_vwan_spoke_name'), 'AzureBastionSubnet')]",
+            "name": "AzureBastionSubnet",
+            "properties": {
+              "addressPrefixes": [
+                "10.46.72.128/26"
+              ],
+              "delegations": [],
+              "networkSecurityGroup": {
+                "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_nsg_bastion_name'))]"
+              },
+              "privateEndpointNetworkPolicies": "Disabled",
+              "privateLinkServiceNetworkPolicies": "Enabled"
+            },
+            "type": "Microsoft.Network/virtualNetworks/subnets"
+          },
+          {
+            "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_a7009d_test_vwan_spoke_name'), 'apim-subnet')]",
+            "name": "apim-subnet",
+            "properties": {
+              "addressPrefixes": [
+                "10.46.72.192/27"
+              ],
+              "delegations": [],
+              "networkSecurityGroup": {
+                "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_nsg_apim_name'))]"
+              },
+              "privateEndpointNetworkPolicies": "Disabled",
+              "privateLinkServiceNetworkPolicies": "Enabled"
+            },
+            "type": "Microsoft.Network/virtualNetworks/subnets"
+          }
+        ],
+        "virtualNetworkPeerings": [
+          {
+            "id": "[resourceId('Microsoft.Network/virtualNetworks/virtualNetworkPeerings', parameters('virtualNetworks_a7009d_test_vwan_spoke_name'), 'RemoteVnetToHubPeering_248fea99-6c92-49fe-9f94-e804706a4074')]",
+            "name": "RemoteVnetToHubPeering_248fea99-6c92-49fe-9f94-e804706a4074",
+            "properties": {
+              "allowForwardedTraffic": false,
+              "allowGatewayTransit": false,
+              "allowVirtualNetworkAccess": true,
+              "doNotVerifyRemoteGateways": true,
+              "peerCompleteVnets": true,
+              "peeringState": "Connected",
+              "peeringSyncLevel": "FullyInSync",
+              "remoteAddressSpace": {
+                "addressPrefixes": [
+                  "10.53.240.0/20"
+                ]
+              },
+              "remoteVirtualNetwork": {
+                "id": "[parameters('virtualNetworks_HV_bcgov_managed_lz_liv_d3392fd0_0782_45c9_8989_87d98fbfcaef_externalid')]"
+              },
+              "remoteVirtualNetworkAddressSpace": {
+                "addressPrefixes": [
+                  "10.53.240.0/20"
+                ]
+              },
+              "useRemoteGateways": true
+            },
+            "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings"
+          }
+        ]
+      },
+      "tags": {
+        "deployedBy": "azure-lz-vending-live"
+      },
+      "type": "Microsoft.Network/virtualNetworks"
+    }
+  ],
+  "variables": {}
+}

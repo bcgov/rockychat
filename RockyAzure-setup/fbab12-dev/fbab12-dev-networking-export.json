@@ -1,0 +1,78 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "actionGroups_budget_alert_name": {
+      "type": "String"
+    },
+    "virtualNetworks_fbab12_dev_vwan_spoke_name": {
+      "type": "String"
+    }
+  },
+  "resources": [
+    {
+      "apiVersion": "2024-10-01-preview",
+      "location": "Global",
+      "name": "[parameters('actionGroups_budget_alert_name')]",
+      "properties": {
+        "armRoleReceivers": [],
+        "automationRunbookReceivers": [],
+        "azureAppPushReceivers": [],
+        "azureFunctionReceivers": [],
+        "emailReceivers": [
+          {
+            "emailAddress": "shelly.han@gov.bc.ca",
+            "name": "shelly_-EmailAction-",
+            "useCommonAlertSchema": false
+          },
+          {
+            "emailAddress": "olena.mitovska@gov.bc.ca",
+            "name": "Olena_-EmailAction-",
+            "useCommonAlertSchema": false
+          }
+        ],
+        "enabled": true,
+        "eventHubReceivers": [],
+        "groupShortName": "for budget",
+        "itsmReceivers": [],
+        "logicAppReceivers": [],
+        "smsReceivers": [],
+        "voiceReceivers": [],
+        "webhookReceivers": []
+      },
+      "tags": {
+        "account_coding": "000000000000000000000000",
+        "app": "rocky-test",
+        "billing_group": "fbab12",
+        "ministry_name": "CITZ"
+      },
+      "type": "microsoft.insights/actionGroups"
+    },
+    {
+      "apiVersion": "2024-07-01",
+      "location": "canadacentral",
+      "name": "[parameters('virtualNetworks_fbab12_dev_vwan_spoke_name')]",
+      "properties": {
+        "addressSpace": {
+          "addressPrefixes": [
+            "10.41.2.0/24"
+          ]
+        },
+        "dhcpOptions": {
+          "dnsServers": [
+            "10.41.253.4"
+          ]
+        },
+        "enableDdosProtection": false,
+        "privateEndpointVNetPolicies": "Disabled",
+        "subnets": []
+      },
+      "tags": {
+        "billing_group": "fbab12",
+        "deployedBy": "azure-lz-vending-forge"
+      },
+      "type": "Microsoft.Network/virtualNetworks"
+    }
+  ],
+  "variables": {}
+}

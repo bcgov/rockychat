@@ -1,0 +1,8 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "virtualNetworks_fbab12_dev_vwan_spoke_name": { "value": "fbab12-dev-vwan-spoke" },
+    "actionGroups_budget_alert_name": { "value": "budget-alert" }
+  }
+}
