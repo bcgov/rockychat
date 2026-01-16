@@ -1,0 +1,57 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "accounts_rockey_openai_test_name": {
+      "value": "rockey-openai-test"
+    },
+    "bastionHosts_a7009d_test_vwan_spoke_bastion_name": {
+      "value": "a7009d-test-vwan-spoke-bastion"
+    },
+    "networkInterfaces_rockyjumpbox503_z1_name": {
+      "value": "rockyjumpbox503_z1"
+    },
+    "networkSecurityGroups_nsg_apim_name": {
+      "value": "nsg-apim"
+    },
+    "networkSecurityGroups_nsg_bastion_name": {
+      "value": "nsg-bastion"
+    },
+    "networkSecurityGroups_nsg_private_endpoints_name": {
+      "value": "nsg-private-endpoints"
+    },
+    "privateEndpoints_Azure_Openai_Private_Endpoint_name": {
+      "value": "Azure_Openai_Private_Endpoint"
+    },
+    "privateEndpoints_rocky_search_private_endpoint_name": {
+      "value": "rocky-search-private-endpoint"
+    },
+    "publicIPAddresses_a7009d_test_vwan_spoke_ip_name": {
+      "value": "a7009d-test-vwan-spoke-ip"
+    },
+    "searchServices_rocky_search_test_name": {
+      "value": "rocky-search-test"
+    },
+    "service_rocky_apim_test_2_name": {
+      "value": "rocky-apim-test-2"
+    },
+    "sshPublicKeys_rockyjumpbox_key_name": {
+      "value": "rockyjumpbox_key"
+    },
+    "virtualMachines_rockyjumpbox_name": {
+      "value": "rockyjumpbox"
+    },
+    "virtualNetworks_a7009d_test_vwan_spoke_name": {
+      "value": "a7009d-test-vwan-spoke"
+    },
+    "subscriptions_68756f5bd5619c0075070001_displayName": {
+      "value": "a7009d-test - Platform Services GenAI Chatbot"
+    },
+    "subscriptions_68756f5bd5619c0075070002_displayName": {
+      "value": "a7009d-test - Platform Services GenAI Chatbot"
+    },
+    "users_1_lastName": {
+      "value": "Li"
+    }
+  }
+}
